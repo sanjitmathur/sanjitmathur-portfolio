@@ -1,42 +1,46 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
+import { useState, useEffect } from "react";
+import Loader from "./components/Loader";
+import Cursor from "./components/Cursor";
+import Nav from "./components/Nav";
+import Hero from "./pages/Hero";
+import Experience from "./pages/Experience";
+import Projects from "./pages/Projects";
+import Skills from "./pages/Skills";
+import Contact from "./pages/Contact";
 
-const queryClient = new QueryClient();
+export default function App() {
+  const [loaded, setLoaded] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
-function Home() {
+  const handleLoaderComplete = () => {
+    setLoaded(true);
+    setTimeout(() => setShowContent(true), 50);
+  };
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Replit Agent is building...</h1>
-        <p className="mt-2 text-sm text-gray-600">Your app will appear here once it's ready.</p>
+    <div className="noise" style={{ background: "#0f0e0d", minHeight: "100vh", position: "relative" }}>
+      {/* Custom cursor */}
+      <Cursor />
+
+      {/* Loader */}
+      {!loaded && <Loader onComplete={handleLoaderComplete} />}
+
+      {/* Main content */}
+      <div
+        style={{
+          opacity: showContent ? 1 : 0,
+          transition: "opacity 0.6s ease",
+        }}
+      >
+        <Nav />
+        <main>
+          <Hero />
+          <Experience />
+          <Projects />
+          <Skills />
+          <Contact />
+        </main>
       </div>
     </div>
   );
 }
-
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-}
-
-export default App;
