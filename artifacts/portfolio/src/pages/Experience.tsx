@@ -1,113 +1,151 @@
 import { useRevealChildren } from "../components/useReveal";
-import Tilt3DCard from "../components/Tilt3DCard";
 import { useMouse3D } from "../components/Mouse3DContext";
+import { useState } from "react";
 
 const exp = [
   {
+    n: "01",
     role: "AI Engineering Intern",
     co: "Baraka Financial Ltd.",
-    loc: "Dubai",
-    period: "Feb 2026 – Present",
+    loc: "Dubai · Feb 2026 – Present",
     type: "FinTech · AI",
     bullets: [
-      "Deployed containerised services to Kubernetes; built AI-powered tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
-      "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices — cutting manual portfolio lookup time for operations teams.",
+      "Deployed containerised services to Kubernetes; built AI tooling automating error classification and log analysis — eliminating manual triage across support workflows.",
+      "Built Position Search and Trading Account Monitor integrating OMS, Instruments, and Wallet microservices.",
       "Unified inconsistent data schemas across distributed services into a single portfolio state model.",
     ],
     tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
-    accent: "teal",
   },
   {
+    n: "02",
     role: "Digital Intern",
     co: "IndiGo — InterGlobe Aviation",
-    loc: "Gurgaon",
-    period: "Aug 2025 – Sep 2025",
+    loc: "Gurgaon · Aug – Sep 2025",
     type: "Aviation · ML",
     bullets: [
-      "Built a Logistic Regression model to predict on-time arrival on DEL–BOM using 1,000 flight records and 6 engineered features, achieving 88% accuracy.",
-      "Engineered features from raw operational data including one-hot encoding of aircraft types and block-hour overrun computation.",
+      "Logistic Regression model to predict on-time arrival (DEL–BOM) using 1,000 flight records — 88% accuracy.",
+      "Engineered features from raw operational data: one-hot encoding of aircraft types, block-hour overrun computation.",
     ],
     tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
-    accent: "fawn",
   },
   {
+    n: "03",
     role: "Software Engineering Intern",
     co: "Lab of Future",
-    loc: "Dubai",
-    period: "Jun 2025 – Aug 2025",
+    loc: "Dubai · Jun – Aug 2025",
     type: "EdTech",
     bullets: ["Built internal educational software used by 500+ students across 4 campuses."],
     tags: ["React", "Node.js", "Full-Stack"],
-    accent: "teal",
   },
 ];
 
+function Row({ item, idx }: { item: typeof exp[0]; idx: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="r3d"
+      style={{ borderTop: "1px solid var(--carbon-12)", cursor: "none", transitionDelay: `${idx * 0.1}s` }}
+      onClick={() => setOpen(!open)}
+    >
+      {/* Header row */}
+      <div style={{
+        display: "grid", gridTemplateColumns: "4rem 1fr auto",
+        alignItems: "center", gap: "2rem", padding: "2rem 0",
+        transition: "opacity 0.2s",
+      }}
+        onMouseEnter={e => (e.currentTarget.style.opacity = "0.7")}
+        onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+      >
+        {/* Number */}
+        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.6rem", letterSpacing: "0.2em", color: "var(--fawn)" }}>
+          {item.n}
+        </span>
+
+        {/* Company + Role */}
+        <div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "1.25rem", flexWrap: "wrap" }}>
+            <h3 style={{
+              fontFamily: "var(--app-font-serif)",
+              fontSize: "clamp(1.4rem, 3vw, 2.2rem)",
+              fontWeight: 400, letterSpacing: "-0.025em",
+              color: "var(--carbon)",
+              transition: "color 0.3s",
+            }}>
+              {item.co}
+            </h3>
+            <span style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.8rem", color: "var(--carbon-60)", fontWeight: 300 }}>
+              {item.role}
+            </span>
+          </div>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.14em", color: "var(--fawn)", textTransform: "uppercase" }}>{item.type}</span>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.08em", color: "var(--carbon-30)", marginLeft: "1rem" }}>{item.loc}</span>
+        </div>
+
+        {/* Toggle */}
+        <div style={{ width: 32, height: 32, border: "1px solid var(--carbon-12)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.35s ease", transform: open ? "rotate(45deg)" : "rotate(0deg)" }}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1v10M1 6h10" stroke="var(--carbon)" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Expanded content */}
+      <div style={{
+        overflow: "hidden",
+        maxHeight: open ? "600px" : "0",
+        opacity: open ? 1 : 0,
+        transition: "max-height 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease",
+      }}>
+        <div style={{ paddingBottom: "2.5rem", paddingLeft: "6rem" }}>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.5rem" }}>
+            {item.bullets.map((b, j) => (
+              <li key={j} style={{ display: "flex", gap: "1rem", fontSize: "0.84rem", color: "var(--carbon-60)", lineHeight: 1.75, fontFamily: "var(--app-font-sans)", fontWeight: 300 }}>
+                <span style={{ color: "var(--fawn)", flexShrink: 0 }}>—</span>{b}
+              </li>
+            ))}
+          </ul>
+          <div style={{ display: "flex", gap: "0.38rem", flexWrap: "wrap" }}>
+            {item.tags.map(t => <span key={t} className="tag">{t}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Experience() {
-  const ref = useRevealChildren(0.05);
+  const ref = useRevealChildren(0.04);
   const mouse = useMouse3D();
 
   return (
-    <section id="experience" style={{ padding: "9rem 0", background: "var(--bg-2)", position: "relative", overflow: "hidden" }}>
-      {/* 3D perspective depth glow */}
+    <section id="experience" style={{ padding: "9rem 0", background: "var(--bg-alt)", position: "relative", overflow: "hidden" }}>
       <div style={{
-        position: "absolute", top: "30%", left: "-8%",
-        width: "500px", height: "700px",
-        background: "radial-gradient(ellipse, rgba(58,112,104,0.06) 0%, transparent 65%)",
-        transform: `translate(${mouse.x * 16}px, ${-mouse.y * 16}px)`,
-        transition: "transform 0.14s linear", pointerEvents: "none",
+        position: "absolute", top: "20%", left: "-10%", width: "50vw", height: "80vh",
+        background: "radial-gradient(ellipse, var(--fawn-20) 0%, transparent 65%)",
+        transform: `translate(${mouse.x * 14}px, ${-mouse.y * 14}px)`,
+        transition: "transform 0.15s linear", pointerEvents: "none",
       }} />
 
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 3rem" }}>
         <div ref={ref} style={{ perspective: "1400px" }}>
-          {/* Header */}
+          {/* Heading */}
           <div className="r3d" style={{ marginBottom: "5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1rem" }}>
               <span className="sec-label">02 / Experience</span>
-              <div className="divider" />
+              <div style={{ flex: 1, height: "1px", background: "var(--carbon-12)" }} />
             </div>
-            <h2 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.8rem,6vw,5rem)", fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.03em", lineHeight: 1.06 }}>
-              Where I've<br /><em style={{ color: "var(--fawn)" }}>Worked</em>
+            <h2 style={{
+              fontFamily: "var(--app-font-serif)",
+              fontSize: "clamp(3rem, 7vw, 5.5rem)",
+              fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.035em", lineHeight: 1.04,
+            }}>
+              Where I've<br /><em style={{ color: "var(--fawn)", fontStyle: "italic" }}>Worked</em>
             </h2>
           </div>
 
-          {/* Cards */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "var(--border-dim)" }}>
-            {exp.map((e, i) => {
-              const tc = e.accent === "teal" ? "var(--teal)" : "var(--fawn-dark)";
-              const tp = e.accent === "teal" ? "var(--teal-pale)" : "var(--fawn)";
-              return (
-                <Tilt3DCard key={i} className="r3d" intensity={6} glare style={{ background: "var(--bg-3)", cursor: "none", transitionDelay: `${i * 0.1}s` }}>
-                  <div style={{ padding: "2.75rem 2.5rem", position: "relative" }}>
-                    {/* Left accent bar */}
-                    <div style={{ position: "absolute", left: 0, top: "2rem", bottom: "2rem", width: "2px", background: `linear-gradient(to bottom, ${tc}, transparent)` }} />
-
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-                      <div>
-                        <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", marginBottom: "0.55rem", flexWrap: "wrap" }}>
-                          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.15em", color: tc, border: `1px solid ${tc}30`, padding: "0.15rem 0.55rem", borderRadius: "100px", textTransform: "uppercase" }}>{e.type}</span>
-                          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.1em", color: "var(--iron-dim)" }}>{e.period}</span>
-                        </div>
-                        <h3 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(1.3rem,2.5vw,1.8rem)", fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.01em", marginBottom: "0.2rem" }}>{e.role}</h3>
-                        <p style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.82rem", color: "var(--iron)", fontWeight: 300 }}>{e.co} · {e.loc}</p>
-                      </div>
-                    </div>
-
-                    <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
-                      {e.bullets.map((b, j) => (
-                        <li key={j} style={{ display: "flex", gap: "0.8rem", fontSize: "0.83rem", color: "var(--iron)", lineHeight: 1.75, fontFamily: "var(--app-font-sans)", fontWeight: 300 }}>
-                          <span style={{ color: tc, flexShrink: 0 }}>—</span>{b}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
-                      {e.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                    </div>
-                  </div>
-                </Tilt3DCard>
-              );
-            })}
-          </div>
+          {/* Rows — no cards */}
+          {exp.map((e, i) => <Row key={i} item={e} idx={i} />)}
+          <div style={{ borderTop: "1px solid var(--carbon-12)" }} />
         </div>
       </div>
     </section>

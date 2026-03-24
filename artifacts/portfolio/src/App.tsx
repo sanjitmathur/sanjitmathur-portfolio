@@ -17,7 +17,9 @@ export default function App() {
     <Mouse3DProvider>
       <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
         <Cursor />
-        {!loaded && <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 60); }} />}
+        {!loaded && (
+          <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 60); }} />
+        )}
         <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.6s ease" }}>
           <Nav />
           <main>
