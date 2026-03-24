@@ -5,7 +5,7 @@ import { useMouse3D } from "../components/Mouse3DContext";
 function AnimatedChar({ char, index }: { char: string; index: number }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 300 + index * 52);
+    const t = setTimeout(() => setVisible(true), 300 + index * 48);
     return () => clearTimeout(t);
   }, [index]);
 
@@ -15,9 +15,9 @@ function AnimatedChar({ char, index }: { char: string; index: number }) {
       opacity: visible ? 1 : 0,
       transform: visible
         ? "translateY(0) translateZ(0) rotateX(0deg)"
-        : "translateY(65px) translateZ(-90px) rotateX(-50deg)",
-      transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
-      transitionDelay: `${index * 0.052}s`,
+        : "translateY(60px) translateZ(-80px) rotateX(-45deg)",
+      transition: "opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1)",
+      transitionDelay: `${index * 0.048}s`,
       transformOrigin: "50% 100%",
     }}>
       {char === " " ? "\u00a0" : char}
@@ -25,13 +25,63 @@ function AnimatedChar({ char, index }: { char: string; index: number }) {
   );
 }
 
-function SplitText3D({ text, color, italic = false }: { text: string; color: string; italic?: boolean }) {
+function TerminalBlock() {
+  const lines = [
+    { prefix: "→", text: "AI Engineer & Full-Stack Dev", color: "var(--teal-pale)" },
+    { prefix: "$", text: "specialization = ['LLMs', 'MLOps', 'Systems']", color: "var(--iron)" },
+    { prefix: "→", text: "currently @ Baraka Financial · Dubai", color: "var(--oak)" },
+    { prefix: "#", text: "UOWD · Computer & Autonomous Systems Eng.", color: "var(--iron)" },
+  ];
+  const [shown, setShown] = useState(0);
+
+  useEffect(() => {
+    let i = 0;
+    const t = setInterval(() => {
+      i += 1;
+      setShown(i);
+      if (i >= lines.length) clearInterval(t);
+    }, 420);
+    return () => clearInterval(t);
+  }, []);
+
   return (
-    <span style={{ color, fontStyle: italic ? "italic" : "normal", display: "inline-block" }}>
-      {text.split("").map((char, i) => (
-        <AnimatedChar key={i} char={char} index={i} />
+    <div style={{
+      fontFamily: "var(--app-font-mono)",
+      fontSize: "clamp(0.62rem, 1.3vw, 0.75rem)",
+      lineHeight: 2,
+      textAlign: "left",
+      maxWidth: "520px",
+      margin: "0 auto",
+      padding: "1.25rem 1.5rem",
+      background: "rgba(20,18,16,0.7)",
+      border: "1px solid rgba(74,63,56,0.3)",
+      borderTop: "2px solid var(--teal)",
+      backdropFilter: "blur(8px)",
+      position: "relative",
+    }}>
+      {/* Terminal traffic lights */}
+      <div style={{ display: "flex", gap: "0.35rem", marginBottom: "1rem" }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(196,168,130,0.25)" }} />
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(107,96,89,0.2)" }} />
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(58,112,104,0.3)" }} />
+      </div>
+      {lines.slice(0, shown).map((line, i) => (
+        <div key={i} style={{ display: "flex", gap: "0.6rem", opacity: 1, animation: "fadeInLine 0.3s ease" }}>
+          <span style={{ color: "var(--teal)", flexShrink: 0, width: "0.9rem", textAlign: "center" }}>{line.prefix}</span>
+          <span style={{ color: line.color }}>{line.text}</span>
+        </div>
       ))}
-    </span>
+      {shown < lines.length && (
+        <div style={{ display: "flex", gap: "0.6rem" }}>
+          <span style={{ color: "var(--teal)" }}>→</span>
+          <span style={{ color: "var(--iron)", animation: "blink 1s step-end infinite" }}>▌</span>
+        </div>
+      )}
+      <style>{`
+        @keyframes fadeInLine { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      `}</style>
+    </div>
   );
 }
 
@@ -42,26 +92,26 @@ export default function Hero() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const items = [subtitleRef.current, ctaRef.current, scrollRef.current];
-    items.forEach((el, i) => {
+    [subtitleRef, ctaRef, scrollRef].forEach((ref, i) => {
+      const el = ref.current;
       if (!el) return;
       el.style.opacity = "0";
-      el.style.transform = "translateY(35px) translateZ(-30px)";
+      el.style.transform = "translateY(28px)";
       setTimeout(() => {
         if (!el) return;
         el.style.transition = "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)";
         el.style.opacity = "1";
-        el.style.transform = "translateY(0) translateZ(0)";
-      }, 950 + i * 140);
+        el.style.transform = "translateY(0)";
+      }, 1100 + i * 130);
     });
   }, []);
 
-  const heroTiltX = mouse.y * 5;
-  const heroTiltY = mouse.x * 7;
-  const layer1X   = mouse.x * 14;
-  const layer1Y   = -mouse.y * 14;
-  const layer3X   = mouse.x * 26;
-  const layer3Y   = -mouse.y * 26;
+  const heroTiltX = mouse.y * 4;
+  const heroTiltY = mouse.x * 5;
+  const layer1X   = mouse.x * 12;
+  const layer1Y   = -mouse.y * 12;
+  const layer3X   = mouse.x * 22;
+  const layer3Y   = -mouse.y * 22;
 
   return (
     <section id="about" style={{
@@ -73,118 +123,105 @@ export default function Hero() {
       overflow: "hidden",
       perspective: "1200px",
     }}>
-      <Scene3D intensity={1.1} />
+      <Scene3D intensity={1.0} />
 
-      {/* Dual tonal gradient: teal left, fawn right */}
+      {/* Bottom fade to next section */}
       <div style={{
-        position: "absolute", inset: 0,
-        background: "radial-gradient(ellipse 55% 55% at 25% 50%, rgba(58,112,104,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 75% 50%, rgba(196,168,130,0.05) 0%, transparent 60%)",
-        pointerEvents: "none", zIndex: 1,
-      }} />
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: "38%",
+        position: "absolute", bottom: 0, left: 0, right: 0, height: "30%",
         background: "linear-gradient(to top, var(--carbon), transparent)",
         pointerEvents: "none", zIndex: 2,
       }} />
 
-      {/* Floating "available" badge — teal accent */}
+      {/* Floating status badge — top right */}
       <div style={{
-        position: "absolute", top: "16%", right: "7%",
+        position: "absolute", top: "15%", right: "6%",
         transform: `translate(${layer3X}px, ${layer3Y}px)`,
         transition: "transform 0.08s linear",
         zIndex: 5,
       }}>
         <div style={{
-          fontFamily: "var(--app-font-mono)", fontSize: "0.55rem",
-          letterSpacing: "0.2em", color: "var(--teal-pale)",
+          fontFamily: "var(--app-font-mono)", fontSize: "0.52rem",
+          letterSpacing: "0.18em", color: "var(--teal-pale)",
           textTransform: "uppercase",
-          border: "1px solid rgba(58,112,104,0.25)",
-          padding: "0.38rem 0.75rem",
-          transform: "rotate(-2deg)",
+          border: "1px solid rgba(58,112,104,0.3)",
+          padding: "0.3rem 0.65rem",
           background: "rgba(58,112,104,0.04)",
+          display: "flex", alignItems: "center", gap: "0.4rem",
         }}>
-          Available for hire
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--teal-pale)", display: "inline-block", animation: "blink 2s ease-in-out infinite" }} />
+          Open to Work
         </div>
       </div>
 
-      {/* Floating location — iron */}
+      {/* Floating coordinates — bottom left */}
       <div style={{
         position: "absolute", bottom: "18%", left: "4%",
-        transform: `translate(${layer3X * 0.55}px, ${layer3Y * 0.55}px)`,
+        transform: `translate(${layer3X * 0.45}px, ${layer3Y * 0.45}px)`,
         transition: "transform 0.08s linear",
         zIndex: 5,
+        fontFamily: "var(--app-font-mono)", fontSize: "0.5rem",
+        letterSpacing: "0.14em", color: "var(--iron)", lineHeight: 2,
       }}>
-        <div style={{
-          fontFamily: "var(--app-font-mono)", fontSize: "0.52rem",
-          letterSpacing: "0.14em", color: "var(--iron)", lineHeight: 1.9,
-        }}>
-          24.9°N / 67.1°E<br />Dubai, UAE
-        </div>
+        25.2°N / 55.3°E<br />Dubai, UAE
       </div>
 
-      {/* Main content — 3D tilt block */}
+      {/* Main 3D tilt block */}
       <div style={{
         position: "relative", zIndex: 10,
         textAlign: "center",
-        padding: "0 2rem", maxWidth: "960px",
+        padding: "0 2rem", maxWidth: "820px", width: "100%",
         transformStyle: "preserve-3d",
         transform: `rotateX(${heroTiltX}deg) rotateY(${heroTiltY}deg)`,
         transition: "transform 0.08s linear",
       }}>
-        {/* Section tag — stormy teal */}
+        {/* Section tag */}
         <div style={{
-          marginBottom: "1.75rem",
+          marginBottom: "1.5rem",
           display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem",
-          transform: `translate(${layer1X * 0.28}px, ${layer1Y * 0.28}px) translateZ(22px)`,
+          transform: `translate(${layer1X * 0.24}px, ${layer1Y * 0.24}px) translateZ(18px)`,
           transition: "transform 0.08s linear",
         }}>
-          <div style={{ height: "1px", width: "44px", background: "rgba(58,112,104,0.4)" }} />
-          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.6rem", letterSpacing: "0.24em", color: "var(--teal-pale)", textTransform: "uppercase" }}>
-            Computer & Autonomous Systems
+          <div style={{ height: "1px", width: "36px", background: "rgba(58,112,104,0.45)" }} />
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.58rem", letterSpacing: "0.22em", color: "var(--teal-pale)", textTransform: "uppercase" }}>
+            AI Engineer / Full-Stack Developer
           </span>
-          <div style={{ height: "1px", width: "44px", background: "rgba(58,112,104,0.4)" }} />
+          <div style={{ height: "1px", width: "36px", background: "rgba(58,112,104,0.45)" }} />
         </div>
 
-        {/* Split-text 3D name */}
+        {/* Name — 3D letter-by-letter */}
         <h1 style={{
           fontFamily: "var(--app-font-serif)",
-          fontSize: "clamp(4rem, 12vw, 9.5rem)",
+          fontSize: "clamp(3.8rem, 11vw, 9rem)",
           fontWeight: 400,
           lineHeight: 0.92,
           letterSpacing: "-0.04em",
-          marginBottom: "1.5rem",
-          perspective: "800px",
+          marginBottom: "2rem",
+          perspective: "700px",
           transformStyle: "preserve-3d",
-          transform: `translateZ(32px) translate(${layer1X * 0.18}px, ${layer1Y * 0.18}px)`,
+          transform: `translateZ(28px) translate(${layer1X * 0.14}px, ${layer1Y * 0.14}px)`,
           transition: "transform 0.08s linear",
         }}>
           <div style={{ display: "block" }}>
-            <SplitText3D text="Sanjit" color="var(--ivory)" />
+            {"Sanjit".split("").map((c, i) => (
+              <AnimatedChar key={i} char={c} index={i} />
+            ))}
           </div>
           <div style={{ display: "block" }}>
-            <SplitText3D text="Mathur" color="var(--fawn)" italic />
+            <em style={{ fontStyle: "italic", color: "var(--fawn)" }}>
+              {"Mathur".split("").map((c, i) => (
+                <AnimatedChar key={i} char={c} index={i + 7} />
+              ))}
+            </em>
           </div>
         </h1>
 
-        {/* Subtitle — oak / ivory-dim */}
-        <div ref={subtitleRef} style={{ marginBottom: "2.75rem" }}>
-          <p style={{
-            fontFamily: "var(--app-font-sans)",
-            fontSize: "clamp(0.88rem, 1.8vw, 1.05rem)",
-            color: "var(--iron)",
-            fontWeight: 300,
-            letterSpacing: "0.02em",
-            maxWidth: "480px",
-            margin: "0 auto",
-            lineHeight: 1.8,
-          }}>
-            AI Engineer & Full-Stack Developer building ML pipelines,
-            LLM-powered tools, and autonomous systems at the edge of software and intelligence.
-          </p>
+        {/* Terminal block */}
+        <div ref={subtitleRef} style={{ marginBottom: "2rem" }}>
+          <TerminalBlock />
         </div>
 
         {/* CTAs */}
-        <div ref={ctaRef} style={{ display: "flex", gap: "0.85rem", justifyContent: "center", flexWrap: "wrap" }}>
+        <div ref={ctaRef} style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
           <a
             href="#experience"
             className="btn-primary clickable"
@@ -206,25 +243,29 @@ export default function Hero() {
 
       {/* Scroll cue */}
       <div ref={scrollRef} style={{
-        position: "absolute", bottom: "2rem", left: "50%",
+        position: "absolute", bottom: "1.8rem", left: "50%",
         transform: "translateX(-50%)",
-        display: "flex", flexDirection: "column", alignItems: "center", gap: "0.45rem",
+        display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem",
         zIndex: 10,
       }}>
-        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.26em", color: "var(--iron)", textTransform: "uppercase" }}>
-          Scroll
+        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.5rem", letterSpacing: "0.24em", color: "var(--iron)", textTransform: "uppercase" }}>
+          scroll
         </span>
         <div style={{
-          width: "1px", height: "52px",
-          background: "linear-gradient(to bottom, var(--iron-dim), transparent)",
-          animation: "scrollPulse 2.2s ease-in-out infinite",
+          width: "1px", height: "48px",
+          background: "linear-gradient(to bottom, rgba(58,112,104,0.5), transparent)",
+          animation: "scrollPulse 2s ease-in-out infinite",
         }} />
       </div>
 
       <style>{`
         @keyframes scrollPulse {
-          0%, 100% { opacity: 0.3; }
+          0%, 100% { opacity: 0.25; }
           50% { opacity: 0.8; }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
         }
       `}</style>
     </section>
