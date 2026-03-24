@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Loader from "./components/Loader";
 import Cursor from "./components/Cursor";
 import Nav from "./components/Nav";
@@ -7,6 +7,7 @@ import Experience from "./pages/Experience";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import Contact from "./pages/Contact";
+import { Mouse3DProvider } from "./components/Mouse3DContext";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -14,33 +15,25 @@ export default function App() {
 
   const handleLoaderComplete = () => {
     setLoaded(true);
-    setTimeout(() => setShowContent(true), 50);
+    setTimeout(() => setShowContent(true), 60);
   };
 
   return (
-    <div className="noise" style={{ background: "#0f0e0d", minHeight: "100vh", position: "relative" }}>
-      {/* Custom cursor */}
-      <Cursor />
-
-      {/* Loader */}
-      {!loaded && <Loader onComplete={handleLoaderComplete} />}
-
-      {/* Main content */}
-      <div
-        style={{
-          opacity: showContent ? 1 : 0,
-          transition: "opacity 0.6s ease",
-        }}
-      >
-        <Nav />
-        <main>
-          <Hero />
-          <Experience />
-          <Projects />
-          <Skills />
-          <Contact />
-        </main>
+    <Mouse3DProvider>
+      <div className="noise" style={{ background: "#0f0e0d", minHeight: "100vh", position: "relative" }}>
+        <Cursor />
+        {!loaded && <Loader onComplete={handleLoaderComplete} />}
+        <div style={{ opacity: showContent ? 1 : 0, transition: "opacity 0.7s ease" }}>
+          <Nav />
+          <main>
+            <Hero />
+            <Experience />
+            <Projects />
+            <Skills />
+            <Contact />
+          </main>
+        </div>
       </div>
-    </div>
+    </Mouse3DProvider>
   );
 }
