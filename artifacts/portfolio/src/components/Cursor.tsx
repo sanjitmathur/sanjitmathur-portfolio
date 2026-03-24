@@ -9,48 +9,45 @@ export default function Cursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
     let rafId: number;
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+    const onMove = (e: MouseEvent) => {
+      mouseX = e.clientX; mouseY = e.clientY;
       dot.style.left = mouseX + "px";
       dot.style.top = mouseY + "px";
     };
 
-    const animate = () => {
-      ringX += (mouseX - ringX) * 0.12;
-      ringY += (mouseY - ringY) * 0.12;
+    const loop = () => {
+      ringX += (mouseX - ringX) * 0.1;
+      ringY += (mouseY - ringY) * 0.1;
       ring.style.left = ringX + "px";
       ring.style.top = ringY + "px";
-      rafId = requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(loop);
     };
 
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isClickable = target.closest('a, button, [role="button"], .clickable');
-      if (isClickable) {
-        dot.style.transform = "translate(-50%, -50%) scale(2.5)";
-        ring.style.width = "48px";
-        ring.style.height = "48px";
-        ring.style.borderColor = "rgba(196, 168, 130, 0.7)";
+    const onOver = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const c = t.closest("a, button, [role=button], .clickable");
+      if (c) {
+        dot.style.transform = "translate(-50%,-50%) scale(3)";
+        dot.style.background = "var(--fawn)";
+        ring.style.width = "50px"; ring.style.height = "50px";
+        ring.style.borderColor = "rgba(196,168,130,0.6)";
       } else {
-        dot.style.transform = "translate(-50%, -50%) scale(1)";
-        ring.style.width = "32px";
-        ring.style.height = "32px";
-        ring.style.borderColor = "rgba(196, 168, 130, 0.4)";
+        dot.style.transform = "translate(-50%,-50%) scale(1)";
+        dot.style.background = "var(--carbon)";
+        ring.style.width = "32px"; ring.style.height = "32px";
+        ring.style.borderColor = "rgba(15,14,13,0.3)";
       }
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseover", onMouseOver);
-    rafId = requestAnimationFrame(animate);
-
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseover", onOver);
+    rafId = requestAnimationFrame(loop);
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseover", onMouseOver);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseover", onOver);
       cancelAnimationFrame(rafId);
     };
   }, []);

@@ -2,153 +2,111 @@ import { useRevealChildren } from "../components/useReveal";
 import Tilt3DCard from "../components/Tilt3DCard";
 import { useMouse3D } from "../components/Mouse3DContext";
 
-const experiences = [
+const exp = [
   {
     role: "AI Engineering Intern",
-    company: "Baraka Financial Ltd.",
-    location: "Dubai",
+    co: "Baraka Financial Ltd.",
+    loc: "Dubai",
     period: "Feb 2026 – Present",
     type: "FinTech · AI",
-    highlights: [
-      "Deployed containerized services to Kubernetes; built AI-powered internal tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
-      "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
+    bullets: [
+      "Deployed containerised services to Kubernetes; built AI-powered tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
+      "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices — cutting manual portfolio lookup time for operations teams.",
       "Unified inconsistent data schemas across distributed services into a single portfolio state model.",
     ],
     tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
+    accent: "teal",
   },
   {
     role: "Digital Intern",
-    company: "IndiGo — InterGlobe Aviation",
-    location: "Gurgaon",
+    co: "IndiGo — InterGlobe Aviation",
+    loc: "Gurgaon",
     period: "Aug 2025 – Sep 2025",
     type: "Aviation · ML",
-    link: "https://github.com/sanjitmathur",
-    highlights: [
-      "Built a Logistic Regression model to predict on-time arrival on DEL–BOM using 1,000 flight records and 6 engineered features, achieving 88% accuracy with balanced precision/recall.",
-      "Engineered features from raw operational data including one-hot encoding of aircraft types (A320, A320neo, A321neo) and block-hour overrun computation.",
+    bullets: [
+      "Built a Logistic Regression model to predict on-time arrival on DEL–BOM using 1,000 flight records and 6 engineered features, achieving 88% accuracy.",
+      "Engineered features from raw operational data including one-hot encoding of aircraft types and block-hour overrun computation.",
     ],
-    tags: ["Python", "scikit-learn", "ML", "Pandas", "Feature Engineering"],
+    tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
+    accent: "fawn",
   },
   {
     role: "Software Engineering Intern",
-    company: "Lab of Future",
-    location: "Dubai",
+    co: "Lab of Future",
+    loc: "Dubai",
     period: "Jun 2025 – Aug 2025",
     type: "EdTech",
-    highlights: [
-      "Built internal educational software used by 500+ students across 4 campuses.",
-    ],
+    bullets: ["Built internal educational software used by 500+ students across 4 campuses."],
     tags: ["React", "Node.js", "Full-Stack"],
+    accent: "teal",
   },
 ];
 
 export default function Experience() {
-  const containerRef = useRevealChildren(0.05);
+  const ref = useRevealChildren(0.05);
   const mouse = useMouse3D();
 
   return (
-    <section id="experience" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* Teal ambient glow — left */}
+    <section id="experience" style={{ padding: "9rem 0", background: "var(--bg-2)", position: "relative", overflow: "hidden" }}>
+      {/* 3D perspective depth glow */}
       <div style={{
-        position: "absolute", top: "25%", left: "-12%",
-        width: "380px", height: "600px",
-        background: "radial-gradient(ellipse, rgba(58,112,104,0.05) 0%, transparent 70%)",
-        pointerEvents: "none",
-        transform: `translate(${mouse.x * 14}px, ${-mouse.y * 14}px)`,
-        transition: "transform 0.12s linear",
+        position: "absolute", top: "30%", left: "-8%",
+        width: "500px", height: "700px",
+        background: "radial-gradient(ellipse, rgba(58,112,104,0.06) 0%, transparent 65%)",
+        transform: `translate(${mouse.x * 16}px, ${-mouse.y * 16}px)`,
+        transition: "transform 0.14s linear", pointerEvents: "none",
       }} />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem" }}>
-        <div ref={containerRef}>
+        <div ref={ref} style={{ perspective: "1400px" }}>
           {/* Header */}
-          <div className="reveal-up" style={{ marginBottom: "5rem" }}>
+          <div className="r3d" style={{ marginBottom: "5rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
-              <span className="section-label">02 / Experience</span>
+              <span className="sec-label">02 / Experience</span>
               <div className="divider" />
             </div>
-            <h2 style={{
-              fontFamily: "var(--app-font-serif)",
-              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-              fontWeight: 400,
-              color: "var(--ivory)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.08,
-            }}>
-              Where I've<br />
-              <em style={{ color: "var(--fawn)" }}>Worked</em>
+            <h2 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.8rem,6vw,5rem)", fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.03em", lineHeight: 1.06 }}>
+              Where I've<br /><em style={{ color: "var(--fawn)" }}>Worked</em>
             </h2>
           </div>
 
           {/* Cards */}
-          <div style={{ perspective: "1000px", display: "flex", flexDirection: "column", gap: "1px", border: "1px solid rgba(74,63,56,0.22)" }}>
-            {experiences.map((exp, i) => (
-              <Tilt3DCard
-                key={i}
-                className="reveal-up"
-                intensity={5}
-                glare
-                style={{
-                  borderBottom: i < experiences.length - 1 ? "1px solid rgba(74,63,56,0.2)" : "none",
-                  transitionDelay: `${i * 0.09}s`,
-                  cursor: "none",
-                  background: "var(--carbon-2)",
-                }}
-              >
-                <div style={{ padding: "2.5rem 2.25rem", position: "relative" }}>
-                  {/* Left accent — teal → fawn gradient */}
-                  <div style={{
-                    position: "absolute", left: 0, top: "2rem", bottom: "2rem", width: "2px",
-                    background: "linear-gradient(to bottom, var(--teal), var(--fawn))",
-                    opacity: 0.6,
-                  }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "var(--border-dim)" }}>
+            {exp.map((e, i) => {
+              const tc = e.accent === "teal" ? "var(--teal)" : "var(--fawn-dark)";
+              const tp = e.accent === "teal" ? "var(--teal-pale)" : "var(--fawn)";
+              return (
+                <Tilt3DCard key={i} className="r3d" intensity={6} glare style={{ background: "var(--bg-3)", cursor: "none", transitionDelay: `${i * 0.1}s` }}>
+                  <div style={{ padding: "2.75rem 2.5rem", position: "relative" }}>
+                    {/* Left accent bar */}
+                    <div style={{ position: "absolute", left: 0, top: "2rem", bottom: "2rem", width: "2px", background: `linear-gradient(to bottom, ${tc}, transparent)` }} />
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "1rem", alignItems: "start", marginBottom: "1.5rem" }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "0.55rem", flexWrap: "wrap" }}>
-                        {/* Teal type badge */}
-                        <span className="type-badge">{exp.type}</span>
-                        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.56rem", color: "var(--iron)", letterSpacing: "0.1em" }}>
-                          {exp.period}
-                        </span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+                      <div>
+                        <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", marginBottom: "0.55rem", flexWrap: "wrap" }}>
+                          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.15em", color: tc, border: `1px solid ${tc}30`, padding: "0.15rem 0.55rem", borderRadius: "100px", textTransform: "uppercase" }}>{e.type}</span>
+                          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.1em", color: "var(--iron-dim)" }}>{e.period}</span>
+                        </div>
+                        <h3 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(1.3rem,2.5vw,1.8rem)", fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.01em", marginBottom: "0.2rem" }}>{e.role}</h3>
+                        <p style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.82rem", color: "var(--iron)", fontWeight: 300 }}>{e.co} · {e.loc}</p>
                       </div>
-                      <h3 style={{
-                        fontFamily: "var(--app-font-serif)",
-                        fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
-                        fontWeight: 400,
-                        color: "var(--ivory)",
-                        marginBottom: "0.25rem",
-                        letterSpacing: "-0.01em",
-                      }}>
-                        {exp.role}
-                      </h3>
-                      <p style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.84rem", color: "var(--iron)", fontWeight: 300 }}>
-                        {exp.company} · {exp.location}
-                      </p>
                     </div>
-                    {exp.link && (
-                      <a href={exp.link} target="_blank" rel="noopener noreferrer" className="clickable link-underline" style={{ color: "var(--teal-pale)", fontSize: "0.65rem", fontFamily: "var(--app-font-mono)", whiteSpace: "nowrap" }}>
-                        View ↗
-                      </a>
-                    )}
-                  </div>
 
-                  <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.5rem" }}>
-                    {exp.highlights.map((h, j) => (
-                      <li key={j} style={{ display: "flex", gap: "0.8rem", fontSize: "0.84rem", color: "var(--iron)", lineHeight: 1.72, fontFamily: "var(--app-font-sans)", fontWeight: 300 }}>
-                        <span style={{ color: "var(--teal)", flexShrink: 0, marginTop: "0.06rem" }}>—</span>
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
+                    <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
+                      {e.bullets.map((b, j) => (
+                        <li key={j} style={{ display: "flex", gap: "0.8rem", fontSize: "0.83rem", color: "var(--iron)", lineHeight: 1.75, fontFamily: "var(--app-font-sans)", fontWeight: 300 }}>
+                          <span style={{ color: tc, flexShrink: 0 }}>—</span>{b}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-                    {exp.tags.map((t) => (
-                      <span key={t} className="tag-pill">{t}</span>
-                    ))}
+                    <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                      {e.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                    </div>
                   </div>
-                </div>
-              </Tilt3DCard>
-            ))}
+                </Tilt3DCard>
+              );
+            })}
           </div>
         </div>
       </div>

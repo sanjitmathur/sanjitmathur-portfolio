@@ -3,125 +3,53 @@ import Tilt3DCard from "../components/Tilt3DCard";
 import { useMouse3D } from "../components/Mouse3DContext";
 
 const stats = [
-  { value: "3+",   label: "Internships", accent: "fawn" },
-  { value: "500+", label: "Students Reached", accent: "teal" },
-  { value: "88%",  label: "ML Model Accuracy", accent: "fawn" },
-  { value: "2",    label: "Science Fair Awards", accent: "teal" },
+  { v: "3+",   l: "Internships",         a: "fawn" },
+  { v: "500+", l: "Students Reached",    a: "teal" },
+  { v: "88%",  l: "ML Accuracy Achieved",a: "fawn" },
+  { v: "2",    l: "Science Fair Awards", a: "teal" },
 ];
 
-const skillGroups = [
-  {
-    title: "AI & Machine Learning",
-    icon: "◈",
-    accent: "teal",
-    skills: ["Python", "TensorFlow", "scikit-learn", "OpenAI API", "LLM Fine-Tuning", "Prompt Engineering", "Signal Processing", "Computer Vision"],
-  },
-  {
-    title: "Full-Stack Engineering",
-    icon: "◇",
-    accent: "fawn",
-    skills: ["TypeScript", "React", "Next.js", "Node.js", "FastAPI", "PostgreSQL", "REST APIs", "WebSockets"],
-  },
-  {
-    title: "Infrastructure & DevOps",
-    icon: "◆",
-    accent: "teal",
-    skills: ["Kubernetes", "Docker", "Linux", "CI/CD", "Git", "Microservices"],
-  },
-  {
-    title: "Embedded & Hardware",
-    icon: "◉",
-    accent: "fawn",
-    skills: ["Raspberry Pi", "Arduino", "ROS", "ArduPilot", "BLE", "Sensor Fusion"],
-  },
+const groups = [
+  { title: "AI & Machine Learning", icon: "◈", a: "teal", skills: ["Python", "TensorFlow", "PyTorch", "scikit-learn", "OpenAI API", "LLM Fine-Tuning", "Computer Vision", "Signal Processing"] },
+  { title: "Full-Stack Engineering", icon: "◇", a: "fawn", skills: ["TypeScript", "React", "Next.js", "Node.js", "FastAPI", "PostgreSQL", "REST APIs", "WebSockets"] },
+  { title: "Infrastructure & DevOps", icon: "◆", a: "teal", skills: ["Kubernetes", "Docker", "Linux", "CI/CD", "Git", "Microservices"] },
+  { title: "Embedded & Hardware", icon: "◉", a: "fawn", skills: ["Raspberry Pi", "Arduino", "ROS", "ArduPilot", "BLE", "Sensor Fusion"] },
 ];
 
 export default function Skills() {
-  const containerRef = useRevealChildren(0.07);
+  const ref = useRevealChildren(0.06);
   const mouse = useMouse3D();
 
   return (
-    <section id="skills" style={{ padding: "8rem 0", position: "relative", background: "var(--carbon-2)" }}>
-      {/* Teal ambient — center */}
+    <section id="skills" style={{ padding: "9rem 0", background: "var(--bg-2)", position: "relative", overflow: "hidden" }}>
       <div style={{
-        position: "absolute", top: "20%", left: "50%",
-        width: "600px", height: "500px",
-        transform: `translateX(-50%) translate(${mouse.x * 8}px, ${-mouse.y * 8}px)`,
-        background: "radial-gradient(ellipse, rgba(58,112,104,0.05) 0%, transparent 65%)",
-        pointerEvents: "none",
-        transition: "transform 0.15s linear",
+        position: "absolute", top: "15%", left: "50%", transform: `translateX(-50%) translate(${mouse.x * 10}px, ${-mouse.y * 10}px)`,
+        width: "700px", height: "500px",
+        background: "radial-gradient(ellipse, rgba(196,168,130,0.07) 0%, transparent 65%)",
+        transition: "transform 0.15s linear", pointerEvents: "none",
       }} />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem" }}>
-        <div ref={containerRef}>
-          {/* Header */}
-          <div className="reveal-up" style={{ marginBottom: "4.5rem" }}>
+        <div ref={ref} style={{ perspective: "1400px" }}>
+          <div className="r3d" style={{ marginBottom: "4.5rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
-              <span className="section-label">04 / Skills</span>
+              <span className="sec-label">04 / Skills</span>
               <div className="divider" />
             </div>
-            <h2 style={{
-              fontFamily: "var(--app-font-serif)",
-              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-              fontWeight: 400,
-              color: "var(--ivory)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.08,
-            }}>
-              What I<br />
-              <em style={{ color: "var(--fawn)" }}>Work With</em>
+            <h2 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.8rem,6vw,5rem)", fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.03em", lineHeight: 1.06 }}>
+              What I<br /><em style={{ color: "var(--fawn)" }}>Work With</em>
             </h2>
           </div>
 
-          {/* Stat row */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "1px",
-            background: "rgba(74,63,56,0.15)",
-            marginBottom: "4rem",
-          }}>
-            {stats.map((stat, i) => {
-              const isTeal = stat.accent === "teal";
-              const color  = isTeal ? "var(--teal-pale)" : "var(--fawn)";
-              const glow   = isTeal ? "rgba(58,112,104,0.06)" : "rgba(196,168,130,0.05)";
+          {/* Stats */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "1px", background: "var(--border-dim)", marginBottom: "4rem" }}>
+            {stats.map((s, i) => {
+              const c = s.a === "teal" ? "var(--teal)" : "var(--fawn-dark)";
               return (
-                <Tilt3DCard
-                  key={i}
-                  className="reveal-scale"
-                  intensity={7}
-                  glare
-                  style={{
-                    background: "var(--carbon)",
-                    cursor: "none",
-                    transitionDelay: `${i * 0.07}s`,
-                  }}
-                >
-                  <div
-                    style={{ padding: "2.2rem 1.75rem", textAlign: "center" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = glow; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-                  >
-                    <div style={{
-                      fontFamily: "var(--app-font-serif)",
-                      fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
-                      fontWeight: 400,
-                      color: color,
-                      letterSpacing: "-0.04em",
-                      lineHeight: 1,
-                      marginBottom: "0.45rem",
-                    }}>
-                      {stat.value}
-                    </div>
-                    <div style={{
-                      fontFamily: "var(--app-font-mono)",
-                      fontSize: "0.56rem",
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                      color: "var(--iron)",
-                    }}>
-                      {stat.label}
-                    </div>
+                <Tilt3DCard key={i} className="r3d-flip" intensity={8} glare style={{ background: "var(--bg-3)", cursor: "none", transitionDelay: `${i * 0.08}s` }}>
+                  <div style={{ padding: "2.25rem 1.75rem", textAlign: "center" }}>
+                    <div style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.5rem,5vw,3.5rem)", fontWeight: 400, color: c, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "0.45rem" }}>{s.v}</div>
+                    <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.54rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--iron)" }}>{s.l}</div>
                   </div>
                 </Tilt3DCard>
               );
@@ -129,58 +57,23 @@ export default function Skills() {
           </div>
 
           {/* Skill groups */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))",
-            gap: "1px",
-            background: "rgba(74,63,56,0.15)",
-          }}>
-            {skillGroups.map((group, i) => {
-              const isTeal  = group.accent === "teal";
-              const accentC = isTeal ? "var(--teal)" : "var(--fawn)";
-              const accentP = isTeal ? "var(--teal-pale)" : "var(--oak)";
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,440px),1fr))", gap: "1px", background: "var(--border-dim)" }}>
+            {groups.map((g, i) => {
+              const c = g.a === "teal" ? "var(--teal)" : "var(--fawn-dark)";
+              const cp = g.a === "teal" ? "var(--teal-pale)" : "var(--fawn)";
               return (
-                <Tilt3DCard
-                  key={i}
-                  className="reveal-up"
-                  intensity={6}
-                  glare
-                  style={{
-                    background: "var(--carbon-2)",
-                    cursor: "none",
-                    transitionDelay: `${i * 0.08}s`,
-                  }}
-                >
+                <Tilt3DCard key={i} className="r3d" intensity={6} glare style={{ background: "var(--bg-3)", cursor: "none", transitionDelay: `${i * 0.09}s` }}>
                   <div style={{ padding: "2.25rem 2rem" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
-                      <span style={{ fontSize: "0.9rem", color: accentC }}>{group.icon}</span>
-                      <h3 style={{
-                        fontFamily: "var(--app-font-sans)",
-                        fontSize: "0.82rem",
-                        fontWeight: 500,
-                        letterSpacing: "0.04em",
-                        color: "var(--ivory-dim)",
-                      }}>
-                        {group.title}
-                      </h3>
+                    <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "1.5rem" }}>
+                      <span style={{ fontSize: "0.9rem", color: c }}>{g.icon}</span>
+                      <h3 style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.84rem", fontWeight: 500, color: "var(--carbon-2)", letterSpacing: "0.02em" }}>{g.title}</h3>
                     </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                      {group.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="tag-pill"
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = isTeal ? "rgba(58,112,104,0.08)" : "rgba(196,168,130,0.06)";
-                            e.currentTarget.style.borderColor = accentC;
-                            e.currentTarget.style.color = accentP;
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "transparent";
-                            e.currentTarget.style.borderColor = "rgba(107,96,89,0.28)";
-                            e.currentTarget.style.color = "var(--iron)";
-                          }}
-                        >
-                          {skill}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.38rem" }}>
+                      {g.skills.map(sk => (
+                        <span key={sk} className="tag"
+                          onMouseEnter={e => { e.currentTarget.style.background = "var(--carbon)"; e.currentTarget.style.color = "var(--bg)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--iron)"; }}>
+                          {sk}
                         </span>
                       ))}
                     </div>

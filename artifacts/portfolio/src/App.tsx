@@ -11,19 +11,14 @@ import { Mouse3DProvider } from "./components/Mouse3DContext";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-
-  const handleLoaderComplete = () => {
-    setLoaded(true);
-    setTimeout(() => setShowContent(true), 60);
-  };
+  const [show, setShow] = useState(false);
 
   return (
     <Mouse3DProvider>
-      <div className="noise" style={{ background: "#0f0e0d", minHeight: "100vh", position: "relative" }}>
+      <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
         <Cursor />
-        {!loaded && <Loader onComplete={handleLoaderComplete} />}
-        <div style={{ opacity: showContent ? 1 : 0, transition: "opacity 0.7s ease" }}>
+        {!loaded && <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 60); }} />}
+        <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.6s ease" }}>
           <Nav />
           <main>
             <Hero />

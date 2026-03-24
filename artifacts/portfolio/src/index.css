@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
-
 @import "tailwindcss";
 
 @theme inline {
@@ -10,30 +9,33 @@
   --font-mono: var(--app-font-mono);
 }
 
-/* ========================================================
-   COLOR PALETTES
-   Palette 1 — Stormy Teal / Oxidized Iron / Pale Oak
-   Palette 2 — Soft Fawn / Carbon Black / Ivory Mist
-   Both work together as one unified system.
-   ======================================================== */
+/* ============================================================
+   LIGHT PALETTE — Ivory Mist / Soft Fawn / Carbon Black
+   ============================================================ */
 :root {
-  /* Backgrounds */
-  --carbon:       #0c0b0a;   /* Carbon Black — deepest bg */
-  --carbon-2:     #141210;   /* Slightly lifted surface */
-  --carbon-3:     #1c1a17;   /* Card surface */
+  /* Backgrounds — warm light */
+  --bg:         #f0ebe3;   /* Ivory Mist — main bg */
+  --bg-2:       #faf7f2;   /* Lifted surface */
+  --bg-3:       #ffffff;   /* Card bg */
 
-  /* Palette 2 — warm */
-  --ivory:        #ede8df;   /* Ivory Mist — primary text */
-  --ivory-dim:    #c5bfb4;   /* Ivory Mist dim — secondary text */
-  --fawn:         #c4a882;   /* Soft Fawn — primary warm accent */
-  --oak:          #a8927a;   /* Pale Oak — secondary warm accent */
+  /* Text — Carbon Black family */
+  --carbon:     #0f0e0d;   /* Primary text */
+  --carbon-2:   #2e2820;   /* Secondary headings */
+  --iron:       #7a6b5d;   /* Muted text */
+  --iron-dim:   #b8a898;   /* Very muted */
 
-  /* Palette 1 — cool */
-  --teal:         #3a7068;   /* Stormy Teal — cool accent */
-  --teal-dim:     #2d5550;   /* Stormy Teal dark */
-  --teal-pale:    #5a9e94;   /* Stormy Teal light */
-  --iron:         #6b6059;   /* Oxidized Iron — structural mid-tone */
-  --iron-dim:     #4a3f38;   /* Oxidized Iron dark — borders */
+  /* Accents — Soft Fawn */
+  --fawn:       #c4a882;   /* Warm accent */
+  --fawn-dark:  #a8896a;   /* Deeper fawn */
+  --oak:        #d4c4ae;   /* Pale oak — highlights */
+
+  /* Accents — Stormy Teal */
+  --teal:       #3a7068;   /* Cool accent */
+  --teal-pale:  #5a9e94;   /* Light teal */
+
+  /* Borders */
+  --border:      rgba(15,14,13,0.1);
+  --border-dim:  rgba(15,14,13,0.06);
 
   --app-font-sans: 'Space Grotesk', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
@@ -45,8 +47,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--carbon);
-  color: var(--ivory);
+  background: var(--bg);
+  color: var(--carbon);
   font-family: var(--app-font-sans);
   overflow-x: hidden;
   cursor: none;
@@ -59,36 +61,26 @@ body {
   .cursor-dot, .cursor-ring { display: none !important; }
 }
 
-/* === SCROLLBAR === */
 ::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: var(--carbon); }
+::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--iron-dim); }
 
-/* === NOISE GRAIN (very subtle) === */
-.noise::after {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 99997;
-  opacity: 0.5;
-}
-
-/* === CURSOR === */
+/* ============================================================
+   CURSOR — dark for light background
+   ============================================================ */
 .cursor-dot {
   width: 5px; height: 5px;
-  background: var(--fawn);
+  background: var(--carbon);
   border-radius: 50%;
   position: fixed;
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, transform 0.12s ease;
-  mix-blend-mode: normal;
+  transition: transform 0.15s ease, width 0.2s, height 0.2s;
 }
 .cursor-ring {
-  width: 30px; height: 30px;
-  border: 1px solid rgba(196,168,130,0.35);
+  width: 32px; height: 32px;
+  border: 1px solid rgba(15,14,13,0.3);
   border-radius: 50%;
   position: fixed;
   pointer-events: none;
@@ -97,10 +89,12 @@ body {
   transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
 }
 
-/* === LOADER === */
-.loader-container {
+/* ============================================================
+   LOADER — ivory
+   ============================================================ */
+.loader-wrap {
   position: fixed; inset: 0;
-  background: var(--carbon);
+  background: var(--bg);
   z-index: 99990;
   display: flex;
   flex-direction: column;
@@ -108,102 +102,108 @@ body {
   justify-content: center;
   gap: 2.5rem;
 }
-.loader-text {
+.loader-name {
   font-family: var(--app-font-serif);
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
   font-weight: 400;
-  color: var(--ivory);
-  letter-spacing: -0.03em;
+  color: var(--carbon);
+  letter-spacing: -0.035em;
 }
-.loader-progress-bar {
-  width: min(280px, 75vw);
+.loader-bar-track {
+  width: min(300px, 75vw);
   height: 1px;
-  background: rgba(107,96,89,0.25);   /* iron-dim */
+  background: var(--border);
   position: relative; overflow: hidden;
 }
-.loader-progress-fill {
+.loader-bar-fill {
   height: 100%;
   background: linear-gradient(to right, var(--teal), var(--fawn));
   transform-origin: left;
   transform: scaleX(0);
 }
-.loader-counter {
+.loader-pct {
   font-family: var(--app-font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.25em;
-  color: var(--iron);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--iron-dim);
 }
 
 /* ============================================================
-   3D REVEAL ANIMATIONS — depth-first
+   3D REVEAL ANIMATIONS — dramatic depth
    ============================================================ */
-.reveal-up {
+.r3d {
   opacity: 0;
-  transform: translateY(48px) translateZ(-50px) rotateX(-7deg);
+  transform: perspective(900px) translateY(60px) translateZ(-140px) rotateX(-20deg);
   transition:
-    opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
-  perspective: 800px;
+    opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.reveal-up.revealed {
+.r3d.in {
   opacity: 1;
-  transform: translateY(0) translateZ(0) rotateX(0deg);
+  transform: perspective(900px) translateY(0) translateZ(0) rotateX(0deg);
 }
 
-.reveal-left {
+.r3d-left {
   opacity: 0;
-  transform: translateX(-44px) translateZ(-40px) rotateY(10deg);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: perspective(900px) translateX(-80px) translateZ(-100px) rotateY(20deg);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
 }
-.reveal-left.revealed { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
+.r3d-left.in { opacity: 1; transform: perspective(900px) translateX(0) translateZ(0) rotateY(0deg); }
 
-.reveal-right {
+.r3d-right {
   opacity: 0;
-  transform: translateX(44px) translateZ(-40px) rotateY(-10deg);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: perspective(900px) translateX(80px) translateZ(-100px) rotateY(-20deg);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
 }
-.reveal-right.revealed { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
+.r3d-right.in { opacity: 1; transform: perspective(900px) translateX(0) translateZ(0) rotateY(0deg); }
 
-.reveal-scale {
+.r3d-scale {
   opacity: 0;
-  transform: scale(0.93) translateZ(-35px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: perspective(900px) scale(0.88) translateZ(-80px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
 }
-.reveal-scale.revealed { opacity: 1; transform: scale(1) translateZ(0); }
+.r3d-scale.in { opacity: 1; transform: perspective(900px) scale(1) translateZ(0); }
+
+.r3d-flip {
+  opacity: 0;
+  transform: perspective(900px) translateY(40px) rotateX(-35deg) translateZ(-60px);
+  transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+.r3d-flip.in { opacity: 1; transform: perspective(900px) translateY(0) rotateX(0deg) translateZ(0); }
 
 /* ============================================================
-   SECTION LABEL — teal palette
+   SECTION LABEL
    ============================================================ */
-.section-label {
+.sec-label {
   font-family: var(--app-font-mono);
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--teal-pale);       /* Stormy Teal */
+  color: var(--teal);
 }
 
 /* ============================================================
-   DIVIDER LINE
+   DIVIDER
    ============================================================ */
 .divider {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, rgba(107,96,89,0.2), transparent);
+  background: linear-gradient(to right, var(--border), transparent);
 }
 
 /* ============================================================
    BUTTONS
    ============================================================ */
-.btn-primary {
+.btn-dark {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.8rem 2rem;
-  background: var(--fawn);
-  color: var(--carbon);
+  padding: 0.85rem 2.1rem;
+  background: var(--carbon);
+  color: var(--bg);
   font-family: var(--app-font-sans);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
@@ -211,127 +211,101 @@ body {
   cursor: none;
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.btn-primary::before {
+.btn-dark::before {
   content: '';
   position: absolute; inset: 0;
-  background: var(--ivory);
+  background: var(--fawn);
   transform: translateX(-101%);
-  transition: transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94);
+  transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
 }
-.btn-primary:hover::before { transform: translateX(0); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,168,130,0.15); }
-.btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+.btn-dark:hover::before { transform: translateX(0); }
+.btn-dark:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(15,14,13,0.18); }
+.btn-dark span, .btn-dark svg { position: relative; z-index: 1; }
 
-.btn-outline {
+.btn-ghost {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.6rem;
   background: transparent;
-  color: var(--oak);
+  color: var(--carbon);
   font-family: var(--app-font-sans);
   font-weight: 500;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 1px solid var(--iron-dim);
+  border: 1px solid var(--border);
   cursor: none;
-  transition: all 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+  transition: all 0.35s ease;
 }
-.btn-outline:hover {
-  background: rgba(58,112,104,0.08);    /* teal tint */
-  border-color: var(--teal);
-  color: var(--ivory);
+.btn-ghost:hover {
+  background: var(--carbon);
+  color: var(--bg);
+  border-color: var(--carbon);
   transform: translateY(-2px);
 }
 
 /* ============================================================
-   LINK UNDERLINE
+   TAG PILL
    ============================================================ */
-.link-underline { position: relative; text-decoration: none; }
-.link-underline::after {
-  content: '';
-  position: absolute;
-  bottom: -2px; left: 0;
-  width: 0; height: 1px;
-  background: var(--teal-pale);
-  transition: width 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-.link-underline:hover::after { width: 100%; }
-
-/* ============================================================
-   TAG PILL — iron palette
-   ============================================================ */
-.tag-pill {
+.tag {
   display: inline-flex;
   align-items: center;
-  padding: 0.22rem 0.7rem;
-  border: 1px solid rgba(107,96,89,0.28);    /* iron */
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--border);
   border-radius: 100px;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-family: var(--app-font-mono);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--iron);
   background: transparent;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
-.tag-pill:hover {
-  background: rgba(58,112,104,0.08);
-  border-color: var(--teal);
-  color: var(--teal-pale);
-}
-
-/* ============================================================
-   TYPE BADGE (FinTech · AI, Aviation, etc.)
-   ============================================================ */
-.type-badge {
-  font-family: var(--app-font-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.16em;
-  color: var(--teal-pale);
-  text-transform: uppercase;
-  padding: 0.2rem 0.65rem;
-  border: 1px solid rgba(58,112,104,0.3);
-  border-radius: 100px;
+.tag:hover {
+  background: var(--carbon);
+  color: var(--bg);
+  border-color: var(--carbon);
 }
 
 /* ============================================================
-   NAV DOTS
+   NAV DOT
    ============================================================ */
 .nav-dot {
   width: 4px; height: 4px;
   border-radius: 50%;
-  background: var(--iron);
-  opacity: 0.5;
-  transition: opacity 0.3s, transform 0.3s, background 0.3s;
+  background: var(--iron-dim);
+  transition: all 0.3s ease;
 }
 .nav-dot.active {
-  opacity: 1;
-  transform: scale(1.8);
-  background: var(--fawn);
+  background: var(--carbon);
+  transform: scale(2);
 }
 
 /* ============================================================
-   WORK ITEM (left-border reveal)
+   SECTION WRAPPER with 3D perspective
    ============================================================ */
-.work-item {
-  border-top: 1px solid rgba(74,63,56,0.35);   /* iron-dim */
-  transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+.section-3d {
   position: relative;
+  perspective: 1200px;
+  perspective-origin: 50% 30%;
   overflow: hidden;
 }
-.work-item::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--teal), var(--fawn));
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+
+/* ============================================================
+   FLOATING ELEMENT — continuous depth motion
+   ============================================================ */
+@keyframes floatZ {
+  0%, 100% { transform: translateZ(0) translateY(0); }
+  50% { transform: translateZ(30px) translateY(-12px); }
 }
-.work-item:hover::before { transform: scaleY(1); }
-.work-item:hover { background: rgba(58,112,104,0.03); }
+@keyframes floatZSlow {
+  0%, 100% { transform: translateZ(0) translateY(0) rotateZ(0deg); }
+  50% { transform: translateZ(20px) translateY(-8px) rotateZ(1deg); }
+}
+@keyframes scanLine {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(2000px); }
+}
