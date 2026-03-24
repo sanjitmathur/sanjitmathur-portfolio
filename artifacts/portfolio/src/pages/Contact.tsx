@@ -1,135 +1,151 @@
 import { useRevealChildren } from "../components/useReveal";
-import Scene3D from "../components/Scene3D";
-import Tilt3DCard from "../components/Tilt3DCard";
 import { useMouse3D } from "../components/Mouse3DContext";
 
 const links = [
-  { label: "Email", value: "sanjitmathur08@gmail.com", href: "mailto:sanjitmathur08@gmail.com", icon: "✉" },
-  { label: "LinkedIn", value: "linkedin.com/in/sanjit-mathur-/", href: "https://linkedin.com/in/sanjit-mathur-/", icon: "◈" },
-  { label: "GitHub", value: "github.com/sanjitmathur", href: "https://github.com/sanjitmathur", icon: "◎" },
-  { label: "Phone", value: "+971 564 613 530", href: "tel:+971564613530", icon: "◇" },
+  { label: "Email", handle: "sanjitmathur08@gmail.com", href: "mailto:sanjitmathur08@gmail.com", accent: "fawn" },
+  { label: "LinkedIn", handle: "/in/sanjit-mathur-/", href: "https://linkedin.com/in/sanjit-mathur-/", accent: "teal" },
+  { label: "GitHub", handle: "github.com/sanjitmathur", href: "https://github.com/sanjitmathur", accent: "fawn" },
 ];
 
 export default function Contact() {
-  const containerRef = useRevealChildren(0.05);
+  const containerRef = useRevealChildren(0.08);
   const mouse = useMouse3D();
 
   return (
-    <section
-      id="contact"
-      style={{
-        padding: "8rem 0 6rem",
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "60vh",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <div style={{ position: "absolute", inset: 0, opacity: 0.35 }}>
-        <Scene3D intensity={0.7} />
-      </div>
+    <section id="contact" style={{ padding: "8rem 0 6rem", position: "relative", overflow: "hidden" }}>
+      {/* Dual ambient glows — mirrored palette */}
       <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, height: "50%",
-        background: "linear-gradient(to top, #0f0e0d, transparent)",
-        pointerEvents: "none", zIndex: 2,
+        position: "absolute", top: "30%", left: "10%",
+        width: "350px", height: "500px",
+        background: "radial-gradient(ellipse, rgba(58,112,104,0.06) 0%, transparent 65%)",
+        pointerEvents: "none",
+        transform: `translate(${mouse.x * 12}px, ${-mouse.y * 12}px)`,
+        transition: "transform 0.12s linear",
+      }} />
+      <div style={{
+        position: "absolute", top: "20%", right: "10%",
+        width: "320px", height: "450px",
+        background: "radial-gradient(ellipse, rgba(196,168,130,0.05) 0%, transparent 65%)",
+        pointerEvents: "none",
+        transform: `translate(${-mouse.x * 12}px, ${-mouse.y * 12}px)`,
+        transition: "transform 0.12s linear",
       }} />
 
-      <div style={{ position: "relative", zIndex: 10, maxWidth: "1100px", margin: "0 auto", padding: "0 2rem", width: "100%" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem" }}>
         <div ref={containerRef}>
           {/* Header */}
-          <div className="reveal-up" style={{ marginBottom: "4.5rem", textAlign: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1.5rem", marginBottom: "1rem" }}>
-              <div style={{ height: "1px", width: "50px", background: "rgba(196,168,130,0.2)" }} />
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.63rem", letterSpacing: "0.25em", color: "rgba(196,168,130,0.5)", textTransform: "uppercase" }}>
-                05 / Contact
-              </span>
-              <div style={{ height: "1px", width: "50px", background: "rgba(196,168,130,0.2)" }} />
+          <div className="reveal-up" style={{ marginBottom: "5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
+              <span className="section-label">05 / Contact</span>
+              <div className="divider" />
             </div>
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(2.8rem, 8vw, 6rem)",
+              fontFamily: "var(--app-font-serif)",
+              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
               fontWeight: 400,
-              color: "#f0ebe3",
-              letterSpacing: "-0.035em",
-              lineHeight: 1.0,
-              marginBottom: "1.5rem",
-              transform: `translate(${mouse.x * 8}px, ${-mouse.y * 8}px)`,
-              transition: "transform 0.1s linear",
+              color: "var(--ivory)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.08,
+              maxWidth: "600px",
             }}>
-              Let's Build<br /><em style={{ color: "var(--fawn)" }}>Something</em>
+              Let's Build<br />
+              <em style={{ color: "var(--fawn)" }}>Something Great</em>
             </h2>
             <p style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "0.95rem",
-              color: "rgba(240,235,227,0.38)",
+              marginTop: "1.25rem",
+              fontFamily: "var(--app-font-sans)",
+              fontSize: "0.9rem",
+              color: "var(--iron)",
               fontWeight: 300,
-              maxWidth: "400px",
-              margin: "0 auto",
-              lineHeight: 1.75,
+              lineHeight: 1.8,
+              maxWidth: "420px",
             }}>
-              Currently open to opportunities in AI engineering, software development, and research.
+              I'm open to internships, part-time roles, and interesting project collaborations. Let's talk.
             </p>
           </div>
 
-          {/* Contact cards */}
-          <div className="reveal-up" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
-            gap: "1px",
-            border: "1px solid rgba(196,168,130,0.1)",
-            marginBottom: "3.5rem",
-            perspective: "800px",
-          }}>
-            {links.map((link, i) => (
-              <Tilt3DCard
-                key={i}
-                intensity={8}
-                glare
-                style={{
-                  borderRight: "1px solid rgba(196,168,130,0.06)",
-                  cursor: "none",
-                }}
-              >
-                <a
-                  href={link.href}
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="clickable"
-                  style={{ display: "block", padding: "2rem 1.75rem", textDecoration: "none", cursor: "none" }}
-                >
-                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "1rem", color: "rgba(196,168,130,0.3)", marginBottom: "0.75rem" }}>
-                    {link.icon}
-                  </div>
-                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", letterSpacing: "0.18em", color: "rgba(196,168,130,0.4)", textTransform: "uppercase", marginBottom: "0.4rem" }}>
-                    {link.label}
-                  </div>
-                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.8rem", color: "rgba(240,235,227,0.55)", fontWeight: 400, wordBreak: "break-all" }}>
-                    {link.value}
-                  </div>
-                </a>
-              </Tilt3DCard>
-            ))}
-          </div>
-
           {/* CTA */}
-          <div className="reveal-up" style={{ textAlign: "center" }}>
-            <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable" style={{ fontSize: "0.8rem", letterSpacing: "0.1em" }}>
-              <span>Get In Touch</span>
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                <path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <div className="reveal-up" style={{ marginBottom: "4rem" }}>
+            <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable" style={{ fontSize: "0.78rem" }}>
+              <span>Send me a message</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </a>
           </div>
 
+          {/* Links — two-palette split */}
+          <div className="reveal-up" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: "1px",
+            background: "rgba(74,63,56,0.15)",
+            border: "1px solid rgba(74,63,56,0.18)",
+          }}>
+            {links.map((l, i) => {
+              const isTeal  = l.accent === "teal";
+              const accentC = isTeal ? "var(--teal)" : "var(--fawn)";
+              const accentP = isTeal ? "var(--teal-pale)" : "var(--oak)";
+              const glowBg  = isTeal ? "rgba(58,112,104,0.05)" : "rgba(196,168,130,0.04)";
+              const glowBd  = isTeal ? "rgba(58,112,104,0.28)" : "rgba(196,168,130,0.2)";
+
+              return (
+                <a
+                  key={i}
+                  href={l.href}
+                  target={l.href.startsWith("mailto") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="clickable"
+                  style={{
+                    textDecoration: "none",
+                    display: "block",
+                    padding: "2rem 1.75rem",
+                    background: "var(--carbon-2)",
+                    borderLeft: `2px solid transparent`,
+                    transition: "all 0.35s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.background = glowBg;
+                    el.style.borderLeftColor = accentC;
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.background = "var(--carbon-2)";
+                    el.style.borderLeftColor = "transparent";
+                  }}
+                >
+                  <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.55rem", letterSpacing: "0.22em", color: accentP, textTransform: "uppercase", marginBottom: "0.6rem" }}>
+                    {l.label}
+                  </div>
+                  <div style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.84rem", color: "var(--ivory-dim)", fontWeight: 300 }}>
+                    {l.handle}
+                  </div>
+                  <div style={{ marginTop: "0.9rem", fontFamily: "var(--app-font-mono)", fontSize: "0.58rem", color: accentC, letterSpacing: "0.1em" }}>
+                    ↗ Open
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+
           {/* Footer */}
-          <div style={{ marginTop: "6rem", paddingTop: "2rem", borderTop: "1px solid rgba(196,168,130,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: "rgba(196,168,130,0.25)", letterSpacing: "0.1em" }}>
-              © 2026 Sanjit Mathur
-            </span>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: "rgba(196,168,130,0.2)", letterSpacing: "0.06em" }}>
-              Designed & Built with precision
-            </span>
+          <div className="reveal-up" style={{
+            marginTop: "5rem",
+            paddingTop: "2rem",
+            borderTop: "1px solid rgba(74,63,56,0.25)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}>
+            <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.58rem", letterSpacing: "0.14em", color: "var(--iron)" }}>
+              © 2025 Sanjit Mathur · Built with precision
+            </div>
+            <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.58rem", letterSpacing: "0.14em", color: "var(--iron)" }}>
+              UOWD · Dubai
+            </div>
           </div>
         </div>
       </div>

@@ -1,76 +1,64 @@
 import { useEffect, useRef, useState } from "react";
 
-interface LoaderProps {
-  onComplete: () => void;
-}
-
-export default function Loader({ onComplete }: LoaderProps) {
+export default function Loader({ onDone }: { onDone: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const [done, setDone] = useState(false);
   const fillRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const fill = fillRef.current;
-    const text = textRef.current;
-    const counter = counterRef.current;
-    const container = containerRef.current;
-
-    if (!fill || !text || !counter || !container) return;
-
-    // Fade in text
-    setTimeout(() => {
-      text.style.opacity = "1";
-      text.style.transform = "translateY(0)";
-      text.style.transition = "opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
-    }, 100);
-
-    // Animate progress
-    let progress = 0;
     const duration = 2200;
-    const start = performance.now();
-
-    const animate = (now: number) => {
-      const elapsed = now - start;
-      progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      fill.style.transform = `scaleX(${eased})`;
-      const displayNum = Math.round(eased * 100);
-      setCount(displayNum);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        // Exit animation
-        setTimeout(() => {
-          container.style.transition = "opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
-          container.style.opacity = "0";
-          container.style.transform = "scale(1.03)";
-          setTimeout(onComplete, 800);
-        }, 300);
+    const steps = 90;
+    const interval = duration / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += 1;
+      setProgress(Math.min(current, steps));
+      if (fillRef.current) {
+        fillRef.current.style.transform = `scaleX(${current / steps})`;
       }
-    };
-
-    requestAnimationFrame(animate);
-  }, [onComplete]);
+      if (current >= steps) {
+        clearInterval(timer);
+        setTimeout(() => {
+          setDone(true);
+          if (containerRef.current) {
+            containerRef.current.style.opacity = "0";
+            containerRef.current.style.transform = "scale(1.04)";
+          }
+          setTimeout(onDone, 750);
+        }, 180);
+      }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [onDone]);
 
   return (
-    <div ref={containerRef} className="loader-container">
-      <div
-        ref={textRef}
-        className="loader-text"
-        style={{ transform: "translateY(20px)", opacity: 0 }}
-      >
-        Sanjit Mathur
-      </div>
+    <div
+      ref={containerRef}
+      className="loader-container"
+      style={{
+        opacity: done ? 0 : 1,
+        transform: done ? "scale(1.04)" : "scale(1)",
+        transition: "opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
+        pointerEvents: done ? "none" : "all",
+      }}
+    >
+      {/* Subtle grain — teal + fawn noise overlay */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "radial-gradient(ellipse 60% 55% at 40% 50%, rgba(58,112,104,0.05) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 68% 52%, rgba(196,168,130,0.04) 0%, transparent 60%)",
+        pointerEvents: "none",
+      }} />
+
+      <h1 className="loader-text">Sanjit Mathur</h1>
+
       <div className="loader-progress-bar">
         <div ref={fillRef} className="loader-progress-fill" />
       </div>
-      <div ref={counterRef} className="loader-counter">
-        {String(count).padStart(3, "0")}
-      </div>
+
+      <span className="loader-counter">
+        {String(Math.round((progress / 90) * 100)).padStart(3, "0")}
+      </span>
     </div>
   );
 }

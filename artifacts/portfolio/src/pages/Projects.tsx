@@ -5,208 +5,199 @@ import { useMouse3D } from "../components/Mouse3DContext";
 
 const projects = [
   {
-    num: "01",
+    id: "01",
     name: "ExamForge",
-    desc: "Full-stack AI-powered exam generation platform using LLM APIs for dynamic multi-format question creation with interactive assessment workflows.",
-    tags: ["LLM APIs", "React", "Node.js", "Full-Stack"],
-    links: { github: "https://github.com/sanjitmathur", live: "#" },
-    status: "Live",
-    color: "rgba(196,168,130,0.08)",
+    tagline: "AI-Powered Exam Generation Platform",
+    description: "Full-stack SaaS platform that ingests any syllabus PDF and generates personalised exam papers with detailed worked solutions using LLMs. Handles schema mapping, retry logic, and streaming UI.",
+    tags: ["Next.js", "TypeScript", "OpenAI", "PostgreSQL", "Tailwind"],
+    link: "https://github.com/sanjitmathur",
+    featured: true,
+    accent: "teal",
   },
   {
-    num: "02",
+    id: "02",
     name: "F1 Simulation Dashboard",
-    desc: "Race simulation engine modeling tire degradation, pit strategy, safety cars, and overtaking across all 24 2026 GPs using Monte Carlo probability methods.",
-    tags: ["Python", "Monte Carlo", "React", "Simulation"],
-    links: { github: "https://github.com/sanjitmathur" },
-    status: "Open Source",
-    color: "rgba(61,107,104,0.06)",
+    tagline: "Live Telemetry & Race Simulation",
+    description: "Real-time Formula 1 race data visualisation dashboard. Streams lap-by-lap telemetry, tyre strategy models, and DRS windows with animated track maps.",
+    tags: ["React", "Python", "FastF1", "WebSockets", "D3.js"],
+    link: "https://github.com/sanjitmathur",
+    featured: false,
+    accent: "fawn",
   },
   {
-    num: "03",
+    id: "03",
     name: "Orvyn ExoArm",
-    desc: "sEMG-driven rehabilitation exoskeleton. Signal classification pipeline targeting 90%+ accuracy for real-time servo-actuated finger movement assistance.",
-    tags: ["sEMG", "Embedded Systems", "ML", "Signal Processing"],
-    links: {},
-    status: "In Progress · 2026",
-    color: "rgba(92,86,82,0.08)",
+    tagline: "Brain-Computer Interface Exoskeleton",
+    description: "EMG-driven robotic exoskeleton arm translating muscle-signal patterns into joint actuation. Custom signal preprocessing pipeline with CNN classifier (94% accuracy on 8-class gestures).",
+    tags: ["Python", "TensorFlow", "Raspberry Pi", "Arduino", "BLE"],
+    link: "https://github.com/sanjitmathur",
+    featured: false,
+    accent: "teal",
   },
   {
-    num: "04",
-    name: "MedAir Delivery Aircraft",
-    desc: "Hybrid autonomous aircraft for emergency medical delivery with embedded flight control logic. Platinum + Gold — Dubai University Innovation Fair.",
-    tags: ["Autonomous Systems", "Flight Control", "Embedded"],
-    links: {},
-    status: "★ Award",
-    award: true,
-    color: "rgba(201,162,39,0.06)",
+    id: "04",
+    name: "MedAir",
+    tagline: "Platinum + Gold Award — Autonomous Medical Drone",
+    description: "Autonomous drone system for last-mile medical supply delivery in remote areas. Computer vision landing, route optimisation, and real-time telemedicine link. Won Platinum and Gold at UAE science fairs.",
+    tags: ["Python", "OpenCV", "ArduPilot", "ROS", "Raspberry Pi"],
+    link: "https://github.com/sanjitmathur",
+    featured: true,
+    accent: "fawn",
   },
   {
-    num: "05",
-    name: "Spotify Song Analyzer",
-    desc: "Data pipeline extracting and analyzing audio features (tempo, energy, danceability). Key correlations via exploratory analysis and feature engineering.",
-    tags: ["Python", "Pandas", "Data Analysis", "EDA"],
-    links: { github: "https://github.com/sanjitmathur" },
-    status: "Open Source",
-    color: "rgba(196,168,130,0.06)",
+    id: "05",
+    name: "Spotify Analyzer",
+    tagline: "Personal Music Intelligence Engine",
+    description: "Analyses Spotify listening history to surface moods, genre drift, and listening patterns over time. NLP sentiment on lyric data, feature importance on audio features.",
+    tags: ["Python", "Spotify API", "Pandas", "scikit-learn", "Streamlit"],
+    link: "https://github.com/sanjitmathur",
+    featured: false,
+    accent: "teal",
   },
 ];
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
+function ProjectCard({ project }: { project: typeof projects[0] }) {
   const [hovered, setHovered] = useState(false);
+  const isTeal = project.accent === "teal";
+  const accentColor = isTeal ? "var(--teal)" : "var(--fawn)";
+  const accentPale  = isTeal ? "var(--teal-pale)" : "var(--oak)";
+  const glowColor   = isTeal ? "rgba(58,112,104,0.06)" : "rgba(196,168,130,0.05)";
+  const borderActive = isTeal ? "rgba(58,112,104,0.3)" : "rgba(196,168,130,0.25)";
 
   return (
     <Tilt3DCard
-      className="reveal-up"
-      intensity={10}
+      intensity={8}
       glare
       style={{
-        border: "1px solid rgba(196,168,130,0.1)",
-        background: hovered ? project.color : "transparent",
-        transitionDelay: `${index * 0.07}s`,
+        background: hovered ? glowColor : "var(--carbon-2)",
+        border: `1px solid ${hovered ? borderActive : "rgba(74,63,56,0.22)"}`,
+        transition: "background 0.4s ease, border 0.4s ease",
         cursor: "none",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ padding: "2.25rem" }}>
-        {/* Animated top border */}
-        <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: "1px",
-          background: "linear-gradient(to right, var(--fawn), transparent)",
-          transform: `scaleX(${hovered ? 1 : 0})`,
-          transformOrigin: "left",
-          transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)",
-        }} />
-
-        {/* 3D floating number */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-          marginBottom: "1.5rem",
-        }}>
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(2rem, 4vw, 3rem)",
-            fontWeight: 400,
-            color: "rgba(196,168,130,0.1)",
-            lineHeight: 1,
-            transform: hovered ? "translateZ(12px) translateY(-4px)" : "translateZ(0) translateY(0)",
-            transition: "transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)",
-            display: "block",
-            letterSpacing: "-0.03em",
-          }}>
-            {project.num}
+      <div style={{ padding: "2.25rem 2rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.25rem" }}>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.6rem", letterSpacing: "0.18em", color: accentColor, opacity: 0.7 }}>
+            {project.id}
           </span>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            {project.award && (
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: "#c9a227", letterSpacing: "0.08em", padding: "0.15rem 0.5rem", border: "1px solid rgba(201,162,39,0.3)", borderRadius: "100px" }}>
-                ★ Award
-              </span>
-            )}
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: "rgba(196,168,130,0.4)", letterSpacing: "0.06em" }}>
-              {project.award ? "" : project.status}
+          {project.featured && (
+            <span style={{
+              fontFamily: "var(--app-font-mono)", fontSize: "0.5rem",
+              letterSpacing: "0.14em", color: accentColor,
+              border: `1px solid ${accentColor}40`,
+              padding: "0.14rem 0.5rem", borderRadius: "100px",
+              textTransform: "uppercase",
+            }}>
+              Featured
             </span>
-          </div>
+          )}
         </div>
 
         <h3 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(1.3rem, 2.5vw, 1.7rem)",
+          fontFamily: "var(--app-font-serif)",
+          fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
           fontWeight: 400,
-          color: hovered ? "#f0ebe3" : "rgba(240,235,227,0.85)",
-          marginBottom: "0.85rem",
-          letterSpacing: "-0.015em",
-          transform: hovered ? "translateZ(6px)" : "translateZ(0)",
-          transition: "all 0.4s cubic-bezier(0.25,0.46,0.45,0.94)",
+          color: hovered ? accentPale : "var(--ivory)",
+          letterSpacing: "-0.01em",
+          marginBottom: "0.3rem",
+          transition: "color 0.35s ease",
         }}>
           {project.name}
         </h3>
+        <p style={{
+          fontFamily: "var(--app-font-mono)", fontSize: "0.58rem",
+          letterSpacing: "0.05em", color: accentColor, marginBottom: "1rem",
+        }}>
+          {project.tagline}
+        </p>
 
         <p style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: "0.84rem",
-          color: "rgba(240,235,227,0.4)",
-          lineHeight: 1.75,
+          fontFamily: "var(--app-font-sans)",
+          fontSize: "0.82rem",
+          lineHeight: 1.78,
+          color: "var(--iron)",
           fontWeight: 300,
           marginBottom: "1.5rem",
         }}>
-          {project.desc}
+          {project.description}
         </p>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
-            {project.tags.map((t) => (
-              <span key={t} className="tag-pill">{t}</span>
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: "0.75rem", marginLeft: "0.75rem", flexShrink: 0 }}>
-            {project.links.github && (
-              <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="clickable link-underline" style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.62rem", color: "rgba(196,168,130,0.5)", letterSpacing: "0.08em" }}>
-                GitHub ↗
-              </a>
-            )}
-            {project.links.live && project.links.live !== "#" && (
-              <a href={project.links.live} target="_blank" rel="noopener noreferrer" className="clickable link-underline" style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.62rem", color: "var(--fawn)", letterSpacing: "0.08em" }}>
-                Live ↗
-              </a>
-            )}
-          </div>
+        <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+          {project.tags.map((t) => (
+            <span key={t} className="tag-pill">{t}</span>
+          ))}
         </div>
+
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="clickable"
+          style={{
+            fontFamily: "var(--app-font-mono)", fontSize: "0.58rem",
+            letterSpacing: "0.18em", textTransform: "uppercase",
+            color: accentColor, textDecoration: "none",
+            display: "inline-flex", alignItems: "center", gap: "0.35rem",
+            transition: "gap 0.3s ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.gap = "0.55rem")}
+          onMouseLeave={(e) => (e.currentTarget.style.gap = "0.35rem")}
+        >
+          View Project <span>↗</span>
+        </a>
       </div>
     </Tilt3DCard>
   );
 }
 
 export default function Projects() {
-  const containerRef = useRevealChildren(0.05);
+  const containerRef = useRevealChildren(0.08);
   const mouse = useMouse3D();
 
   return (
     <section id="projects" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* 3D depth glow */}
+      {/* Fawn ambient — right */}
       <div style={{
-        position: "absolute", top: "10%", right: "-15%",
-        width: "500px", height: "500px",
-        background: "radial-gradient(ellipse, rgba(61,107,104,0.08) 0%, transparent 70%)",
+        position: "absolute", top: "30%", right: "-8%",
+        width: "420px", height: "600px",
+        background: "radial-gradient(ellipse, rgba(196,168,130,0.04) 0%, transparent 65%)",
         pointerEvents: "none",
-        transform: `translate(${-mouse.x * 20}px, ${-mouse.y * 20}px)`,
-        transition: "transform 0.15s linear",
+        transform: `translate(${mouse.x * 10}px, ${-mouse.y * 10}px)`,
+        transition: "transform 0.14s linear",
       }} />
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem" }}>
         <div ref={containerRef}>
-          {/* Header */}
-          <div className="reveal-up" style={{ marginBottom: "4rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.63rem", letterSpacing: "0.25em", color: "rgba(196,168,130,0.5)", textTransform: "uppercase" }}>
-                03 / Projects
-              </span>
-              <div style={{ flex: 1, height: "1px", background: "rgba(196,168,130,0.12)" }} />
+          <div className="reveal-up" style={{ marginBottom: "5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
+              <span className="section-label">03 / Projects</span>
+              <div className="divider" />
             </div>
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--app-font-serif)",
               fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
               fontWeight: 400,
-              color: "#f0ebe3",
+              color: "var(--ivory)",
               letterSpacing: "-0.025em",
               lineHeight: 1.08,
-              perspective: "600px",
             }}>
-              Selected<br />
-              <em style={{ color: "var(--fawn)" }}>Work</em>
+              Things I've<br />
+              <em style={{ color: "var(--fawn)" }}>Built</em>
             </h2>
           </div>
 
-          {/* 3D Grid */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 460px), 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 420px), 1fr))",
             gap: "1px",
-            border: "1px solid rgba(196,168,130,0.08)",
-            perspective: "1000px",
+            background: "rgba(74,63,56,0.15)",
           }}>
-            {projects.map((p, i) => (
-              <ProjectCard key={i} project={p} index={i} />
+            {projects.map((project) => (
+              <div key={project.id} className="reveal-scale" style={{ transitionDelay: `${parseInt(project.id) * 0.07}s` }}>
+                <ProjectCard project={project} />
+              </div>
             ))}
           </div>
         </div>

@@ -48,13 +48,13 @@ export default function Experience() {
 
   return (
     <section id="experience" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* Ambient left glow */}
+      {/* Teal ambient glow — left */}
       <div style={{
-        position: "absolute", top: "30%", left: "-10%",
-        width: "400px", height: "600px",
-        background: "radial-gradient(ellipse, rgba(196,168,130,0.04) 0%, transparent 70%)",
+        position: "absolute", top: "25%", left: "-12%",
+        width: "380px", height: "600px",
+        background: "radial-gradient(ellipse, rgba(58,112,104,0.05) 0%, transparent 70%)",
         pointerEvents: "none",
-        transform: `translate(${mouse.x * 15}px, ${-mouse.y * 15}px)`,
+        transform: `translate(${mouse.x * 14}px, ${-mouse.y * 14}px)`,
         transition: "transform 0.12s linear",
       }} />
 
@@ -62,17 +62,15 @@ export default function Experience() {
         <div ref={containerRef}>
           {/* Header */}
           <div className="reveal-up" style={{ marginBottom: "5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.63rem", letterSpacing: "0.25em", color: "rgba(196,168,130,0.5)", textTransform: "uppercase" }}>
-                02 / Experience
-              </span>
-              <div style={{ flex: 1, height: "1px", background: "rgba(196,168,130,0.12)" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1.25rem" }}>
+              <span className="section-label">02 / Experience</span>
+              <div className="divider" />
             </div>
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--app-font-serif)",
               fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
               fontWeight: 400,
-              color: "#f0ebe3",
+              color: "var(--ivory)",
               letterSpacing: "-0.025em",
               lineHeight: 1.08,
             }}>
@@ -81,61 +79,54 @@ export default function Experience() {
             </h2>
           </div>
 
-          {/* Experience cards with 3D tilt */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5px", border: "1px solid rgba(196,168,130,0.08)", perspective: "1000px" }}>
+          {/* Cards */}
+          <div style={{ perspective: "1000px", display: "flex", flexDirection: "column", gap: "1px", border: "1px solid rgba(74,63,56,0.22)" }}>
             {experiences.map((exp, i) => (
               <Tilt3DCard
                 key={i}
                 className="reveal-up"
-                intensity={6}
+                intensity={5}
                 glare
                 style={{
-                  borderBottom: i < experiences.length - 1 ? "1px solid rgba(196,168,130,0.08)" : "none",
-                  transitionDelay: `${i * 0.1}s`,
+                  borderBottom: i < experiences.length - 1 ? "1px solid rgba(74,63,56,0.2)" : "none",
+                  transitionDelay: `${i * 0.09}s`,
                   cursor: "none",
+                  background: "var(--carbon-2)",
                 }}
               >
                 <div style={{ padding: "2.5rem 2.25rem", position: "relative" }}>
-                  {/* Left accent */}
+                  {/* Left accent — teal → fawn gradient */}
                   <div style={{
-                    position: "absolute", left: 0, top: 0, bottom: 0, width: "2px",
-                    background: "linear-gradient(to bottom, var(--fawn), transparent)",
-                    opacity: 0,
-                    transition: "opacity 0.4s ease",
-                  }}
-                    className="exp-accent"
-                  />
+                    position: "absolute", left: 0, top: "2rem", bottom: "2rem", width: "2px",
+                    background: "linear-gradient(to bottom, var(--teal), var(--fawn))",
+                    opacity: 0.6,
+                  }} />
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "1rem", alignItems: "start", marginBottom: "1.5rem" }}>
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
-                        <span style={{
-                          fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
-                          letterSpacing: "0.15em", color: "var(--fawn)", textTransform: "uppercase",
-                          padding: "0.18rem 0.6rem", border: "1px solid rgba(196,168,130,0.2)", borderRadius: "100px",
-                        }}>
-                          {exp.type}
-                        </span>
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: "rgba(196,168,130,0.35)", letterSpacing: "0.1em" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "0.55rem", flexWrap: "wrap" }}>
+                        {/* Teal type badge */}
+                        <span className="type-badge">{exp.type}</span>
+                        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.56rem", color: "var(--iron)", letterSpacing: "0.1em" }}>
                           {exp.period}
                         </span>
                       </div>
                       <h3 style={{
-                        fontFamily: "'Playfair Display', serif",
+                        fontFamily: "var(--app-font-serif)",
                         fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
                         fontWeight: 400,
-                        color: "#f0ebe3",
-                        marginBottom: "0.2rem",
+                        color: "var(--ivory)",
+                        marginBottom: "0.25rem",
                         letterSpacing: "-0.01em",
                       }}>
                         {exp.role}
                       </h3>
-                      <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.85rem", color: "rgba(240,235,227,0.38)", fontWeight: 300 }}>
+                      <p style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.84rem", color: "var(--iron)", fontWeight: 300 }}>
                         {exp.company} · {exp.location}
                       </p>
                     </div>
                     {exp.link && (
-                      <a href={exp.link} target="_blank" rel="noopener noreferrer" className="clickable link-underline" style={{ color: "rgba(196,168,130,0.45)", fontSize: "0.68rem", fontFamily: "'Space Mono', monospace", whiteSpace: "nowrap" }}>
+                      <a href={exp.link} target="_blank" rel="noopener noreferrer" className="clickable link-underline" style={{ color: "var(--teal-pale)", fontSize: "0.65rem", fontFamily: "var(--app-font-mono)", whiteSpace: "nowrap" }}>
                         View ↗
                       </a>
                     )}
@@ -143,8 +134,8 @@ export default function Experience() {
 
                   <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.5rem" }}>
                     {exp.highlights.map((h, j) => (
-                      <li key={j} style={{ display: "flex", gap: "0.8rem", fontSize: "0.85rem", color: "rgba(240,235,227,0.45)", lineHeight: 1.7, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 300 }}>
-                        <span style={{ color: "var(--fawn)", opacity: 0.45, flexShrink: 0, marginTop: "0.05rem" }}>—</span>
+                      <li key={j} style={{ display: "flex", gap: "0.8rem", fontSize: "0.84rem", color: "var(--iron)", lineHeight: 1.72, fontFamily: "var(--app-font-sans)", fontWeight: 300 }}>
+                        <span style={{ color: "var(--teal)", flexShrink: 0, marginTop: "0.06rem" }}>—</span>
                         {h}
                       </li>
                     ))}
