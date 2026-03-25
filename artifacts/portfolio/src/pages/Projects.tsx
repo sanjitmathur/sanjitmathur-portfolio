@@ -10,28 +10,28 @@ const projects = [
   {
     id: "examforge",
     title: "ExamForge", category: "AI · EdTech", year: "2025",
-    description: "AI-powered exam generator that creates adaptive quizzes from any uploaded content. GPT-4 question synthesis with dynamic difficulty calibration.",
+    description: "Built a full-stack AI-powered exam generation platform using LLM APIs for dynamic multi-format question creation. Designed interactive workflows allowing students to generate, attempt, and review customized assessments.",
     tags: ["Python", "OpenAI API", "React", "FastAPI"],
     link: "https://github.com/sanjitmathur",
-    accent: "#6366F1",
-    span: "col-large",   // 2 cols
+    accent: "#d5b572",
+    span: "col-large",
     Widget: ExamForgeWidget,
   },
   {
     id: "spotify",
-    title: "Spotify Analyzer", category: "Data · Music", year: "2024",
-    description: "Personal music taste profiler using Spotify Web API. Visualises listening patterns, genre clusters, audio-feature distributions and BPM preferences.",
+    title: "Spotify Song Analyzer", category: "Data · Music", year: "2024",
+    description: "Built a Spotify data analysis pipeline to extract and analyze audio features (tempo, energy, danceability) using Python. Identified key correlations in music attributes through exploratory analysis and feature engineering.",
     tags: ["Python", "Spotify API", "Pandas", "Plotly"],
     link: "https://github.com/sanjitmathur",
     accent: "#1db954",
-    span: "col-medium-tall", // 1 col, tall
+    span: "col-medium-tall",
     Widget: SpotifyWidget,
   },
   {
     id: "f1",
-    title: "F1 Sim Dashboard", category: "Data Viz · Racing", year: "2025",
-    description: "Live Formula 1 telemetry dashboard pulling real-time race data via the Ergast API. Animated lap-time comparisons, sector maps, driver standings.",
-    tags: ["React", "D3.js", "WebSocket", "TypeScript"],
+    title: "F1 Simulation Dashboard", category: "Data Viz · Racing", year: "2025",
+    description: "Built a full-stack race simulation engine modeling tire degradation, pit strategy, safety cars, weather, and overtaking across all 24 2026 GPs using Monte Carlo probability methods. Implemented dual-mode interface: season-wide predictions and fully configurable custom race simulations.",
+    tags: ["React", "Monte Carlo", "TypeScript", "FastAPI"],
     link: "https://github.com/sanjitmathur",
     accent: "#ef4444",
     span: "col-medium",
@@ -39,19 +39,19 @@ const projects = [
   },
   {
     id: "orvyn",
-    title: "Orvyn ExoArm", category: "Robotics · CV", year: "2024",
-    description: "EMG-controlled robotic exoskeleton arm prototype. Custom signal processing pipeline filters muscle electrical signals into precise motor commands.",
-    tags: ["Arduino", "C++", "Signal Processing"],
+    title: "Orvyn ExoArm", category: "Robotics · Rehab", year: "2024",
+    description: "Developing signal classification pipeline to differentiate between intended finger movements and noise, targeting 90%+ accuracy for assisted rehab exercises. Designing a microcontroller-based rehabilitation exoskeleton that interprets sEMG signals to assist finger movement through real-time signal processing and controlled servo actuation.",
+    tags: ["Arduino", "C++", "Signal Processing", "sEMG"],
     link: "https://github.com/sanjitmathur",
-    accent: "#a78bfa",
+    accent: "#d5b572",
     span: "col-medium",
     Widget: OrvynWidget,
   },
   {
     id: "medair",
-    title: "MedAir", category: "Health · IoT", year: "2024",
-    description: "Smart air-quality monitor with ML-based risk prediction. Correlates PM2.5 and NO₂ with respiratory health. Platinum + Gold at Science Fair.",
-    tags: ["Python", "IoT", "ML", "Raspberry Pi"],
+    title: "MedAir", category: "Autonomous · Medical", year: "2024",
+    description: "Designed a hybrid autonomous aircraft for emergency medical delivery with embedded flight control logic and mission-based transition systems. Awarded Platinum and Gold at Dubai University Innovation Fair.",
+    tags: ["Python", "IoT", "Flight Control", "Raspberry Pi"],
     link: "https://github.com/sanjitmathur",
     accent: "#22c55e",
     span: "col-medium",
@@ -150,7 +150,6 @@ export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
 
-  // Split projects into bento rows
   const [examForge, spotify, f1, orvyn, medair] = projects;
 
   return (

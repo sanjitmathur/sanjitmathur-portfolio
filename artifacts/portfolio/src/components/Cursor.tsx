@@ -40,7 +40,7 @@ export default function Cursor() {
       const isClick = el.closest(".clickable") || el.closest("a") || el.closest("button");
       if (isClick) {
         if (dotRef.current)  { dotRef.current.style.transform = "translate(-50%,-50%) scale(3)"; dotRef.current.style.opacity = "0.3"; }
-        if (ringRef.current) { ringRef.current.style.width = "60px"; ringRef.current.style.height = "60px"; ringRef.current.style.borderColor = "var(--accent)"; ringRef.current.style.boxShadow = "0 0 20px rgba(99,102,241,0.35)"; }
+        if (ringRef.current) { ringRef.current.style.width = "60px"; ringRef.current.style.height = "60px"; ringRef.current.style.borderColor = "var(--accent)"; ringRef.current.style.boxShadow = "0 0 20px rgba(213,181,114,0.35)"; }
       }
     };
     const onLeave = () => {
@@ -67,7 +67,7 @@ export default function Cursor() {
         background: "var(--accent)",
         transform: "translate(-50%,-50%)",
         transition: "transform 0.25s cubic-bezier(0.16,1,0.3,1), opacity 0.25s",
-        boxShadow: "0 0 10px rgba(99,102,241,0.7)",
+        boxShadow: "0 0 10px rgba(213,181,114,0.7)",
       }} />
       <div ref={ringRef} style={{
         position: "fixed", zIndex: 99998, pointerEvents: "none",

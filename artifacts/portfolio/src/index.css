@@ -7,19 +7,19 @@
 }
 
 /* ============================================================
-   LINEAR / VERCEL / STRIPE PALETTE
+   WARM EDITORIAL PALETTE — Carbon Black / Soft Fawn / Ivory Mist
    ============================================================ */
 :root {
-  --bg:          #0B0B0C;
-  --surface:     #111113;
-  --surface-2:   #18181B;
-  --accent:      #6366F1;
-  --accent-dim:  rgba(99,102,241,0.15);
-  --accent-border: rgba(99,102,241,0.35);
-  --text:        #F5F5F7;
-  --muted:       #9CA3AF;
-  --border:      rgba(255,255,255,0.08);
-  --border-hover:rgba(255,255,255,0.14);
+  --bg:          #201f14;
+  --surface:     #2b2a1a;
+  --surface-2:   #38371f;
+  --accent:      #d5b572;
+  --accent-dim:  rgba(213,181,114,0.15);
+  --accent-border: rgba(213,181,114,0.35);
+  --text:        #f8f2e1;
+  --muted:       #9c8f6e;
+  --border:      rgba(213,181,114,0.12);
+  --border-hover:rgba(213,181,114,0.25);
   --font:        'Inter', system-ui, -apple-system, sans-serif;
   --max-w:       1200px;
   --section-px:  clamp(1.5rem, 5vw, 3.5rem);
@@ -45,7 +45,7 @@ body {
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(213,181,114,0.15); border-radius: 2px; }
 
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
@@ -89,13 +89,13 @@ button { font-family: inherit; }
 .btn-primary {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.7rem 1.5rem;
-  background: var(--accent); color: #fff;
+  background: var(--accent); color: #201f14;
   font-size: 0.875rem; font-weight: 600; letter-spacing: -0.01em;
   border: none; border-radius: 8px; cursor: none;
   text-decoration: none;
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.btn-primary:hover { background: #4f52d4; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(99,102,241,0.35); }
+.btn-primary:hover { background: #c9a85e; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(213,181,114,0.35); }
 .btn-primary:active { transform: translateY(0); }
 
 .btn-secondary {
@@ -107,7 +107,7 @@ button { font-family: inherit; }
   text-decoration: none;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
-.btn-secondary:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.04); transform: translateY(-1px); }
+.btn-secondary:hover { border-color: var(--accent-border); background: var(--accent-dim); transform: translateY(-1px); }
 
 /* ============================================================
    PROJECT CARD
@@ -124,10 +124,10 @@ button { font-family: inherit; }
 }
 .project-card::before {
   content: ''; position: absolute; inset: 0; border-radius: 16px;
-  background: radial-gradient(600px circle at var(--mx,50%) var(--my,50%), rgba(99,102,241,0.06), transparent 40%);
+  background: radial-gradient(600px circle at var(--mx,50%) var(--my,50%), rgba(213,181,114,0.06), transparent 40%);
   opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
 }
-.project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: rgba(99,102,241,0.3); }
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: rgba(213,181,114,0.3); }
 .project-card:hover::before { opacity: 1; }
 
 /* ============================================================
@@ -148,13 +148,13 @@ button { font-family: inherit; }
    ============================================================ */
 .nav-dot {
   width: 4px; height: 4px; border-radius: 50%;
-  background: rgba(255,255,255,0.2);
+  background: rgba(248,242,225,0.2);
   transition: all 0.3s;
 }
 .nav-dot.active { background: var(--accent); transform: scale(2); }
 
 /* ============================================================
-   SECTION DIVIDER
+   SECTION LABEL
    ============================================================ */
 .section-label {
   font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
@@ -176,6 +176,10 @@ button { font-family: inherit; }
 @keyframes pulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.08)} }
 @keyframes spin  { from{transform:rotate(0)} to{transform:rotate(360deg)} }
 @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes eqBounce {
+  0%, 100% { transform: scaleY(0.15); }
+  50%      { transform: scaleY(1); }
+}
 
 /* ============================================================
    BENTO GRID — responsive (uses CSS classes, not inline styles)

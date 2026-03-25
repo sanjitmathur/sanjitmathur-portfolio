@@ -14,14 +14,12 @@ export default function ExamForgeWidget() {
   const [qText, setQText] = useState("");
   const [aText, setAText] = useState("");
   const [blink, setBlink] = useState(true);
-  const [score] = useState(Math.floor(Math.random() * 6) + 14); // 14-19/20
+  const [score] = useState(Math.floor(Math.random() * 6) + 14);
   const [generating, setGenerating] = useState(true);
 
   const cur = QA_POOL[qIdx % QA_POOL.length];
-
   const taRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Typewriter
   useEffect(() => {
     setPhase("typing-q");
     setQText("");
@@ -57,7 +55,6 @@ export default function ExamForgeWidget() {
     };
   }, [qIdx]);
 
-  // Cursor blink
   useEffect(() => {
     const t = setInterval(() => setBlink(b => !b), 530);
     return () => clearInterval(t);
@@ -66,11 +63,11 @@ export default function ExamForgeWidget() {
   const progress = ((qIdx % QA_POOL.length) / QA_POOL.length) * 100;
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#0e1117", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
+    <div style={{ width: "100%", height: "100%", background: "#0e0f0a", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
       {/* Header bar */}
-      <div style={{ background: "#161b22", padding: "9px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ background: "#13140e", padding: "9px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(213,181,114,0.1)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #6366f1, #8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 700, color: "#fff" }}>EF</div>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #d5b572, #9c7d3a)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 700, color: "#1a160a" }}>EF</div>
           <div>
             <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "#f5f5f7" }}>ExamForge</div>
             <div style={{ fontSize: "0.48rem", color: "#4b5563" }}>GPT-4 · Adaptive Difficulty</div>
@@ -78,7 +75,7 @@ export default function ExamForgeWidget() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           {generating && (
-            <div style={{ fontSize: "0.48rem", color: "#6366f1", background: "rgba(99,102,241,0.12)", padding: "2px 7px", borderRadius: 100, border: "1px solid rgba(99,102,241,0.2)", animation: "blink 1.5s ease infinite" }}>
+            <div style={{ fontSize: "0.48rem", color: "#d5b572", background: "rgba(213,181,114,0.1)", padding: "2px 7px", borderRadius: 100, border: "1px solid rgba(213,181,114,0.2)", animation: "blink 1.5s ease infinite" }}>
               AI generating…
             </div>
           )}
@@ -89,8 +86,8 @@ export default function ExamForgeWidget() {
       {/* Document area */}
       <div style={{ flex: 1, padding: "12px 16px", display: "flex", flexDirection: "column", gap: 10, overflowY: "hidden" }}>
         {/* Question card */}
-        <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 8, padding: "10px 12px" }}>
-          <div style={{ fontSize: "0.48rem", color: "#6366f1", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 5 }}>
+        <div style={{ background: "rgba(213,181,114,0.06)", border: "1px solid rgba(213,181,114,0.2)", borderRadius: 8, padding: "10px 12px" }}>
+          <div style={{ fontSize: "0.48rem", color: "#d5b572", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 5 }}>
             Question {(qIdx % QA_POOL.length) + 1} / {QA_POOL.length}
           </div>
           <div style={{ fontSize: "0.65rem", color: "#f5f5f7", lineHeight: 1.6, minHeight: 28 }}>
@@ -109,8 +106,8 @@ export default function ExamForgeWidget() {
             </div>
             {phase === "done" && (
               <div style={{ marginTop: 8, display: "flex", gap: 4, flexWrap: "wrap" }}>
-                {["Conceptual", "Accurate", "Concise"].map(t => (
-                  <span key={t} style={{ fontSize: "0.42rem", color: "#22c55e", background: "rgba(34,197,94,0.08)", padding: "1px 6px", borderRadius: 100, border: "1px solid rgba(34,197,94,0.2)" }}>✓ {t}</span>
+                {["Conceptual", "Accurate", "Concise"].map(tag => (
+                  <span key={tag} style={{ fontSize: "0.42rem", color: "#22c55e", background: "rgba(34,197,94,0.08)", padding: "1px 6px", borderRadius: 100, border: "1px solid rgba(34,197,94,0.2)" }}>✓ {tag}</span>
                 ))}
               </div>
             )}
@@ -119,13 +116,13 @@ export default function ExamForgeWidget() {
       </div>
 
       {/* Progress */}
-      <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(213,181,114,0.08)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
           <span style={{ fontSize: "0.45rem", color: "#4b5563" }}>Exam Progress</span>
-          <span style={{ fontSize: "0.45rem", color: "#6366f1" }}>{Math.round(progress)}%</span>
+          <span style={{ fontSize: "0.45rem", color: "#d5b572" }}>{Math.round(progress)}%</span>
         </div>
         <div style={{ height: 2, background: "rgba(255,255,255,0.06)", borderRadius: 1, overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, #6366f1, #8b5cf6)", borderRadius: 1, transition: "width 0.5s ease" }} />
+          <div style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, #d5b572, #9c7d3a)", borderRadius: 1, transition: "width 0.5s ease" }} />
         </div>
       </div>
     </div>

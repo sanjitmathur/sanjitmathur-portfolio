@@ -9,23 +9,23 @@ const jobs = [
     n: "01", role: "AI Engineering Intern", co: "Baraka Financial Ltd.",
     type: "FinTech · AI", period: "Feb 2026 – Present", loc: "Dubai, UAE",
     bullets: [
-      "Deployed containerised services to Kubernetes; built AI tooling automating error classification and log analysis.",
-      "Built Position Search and Trading Account Monitor integrating OMS, Instruments, and Wallet microservices.",
-      "Unified inconsistent data schemas across distributed services into a single portfolio state model.",
+      "Deployed containerized services to Kubernetes; built AI-powered internal tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
+      "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
+      "Unified inconsistent data schemas across distributed services into a single portfolio state model, eliminating data discrepancies in cross-market account views.",
     ],
     tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
-    accent: "#6366F1",
+    accent: "#d5b572",
     Widget: BarakaWidget,
   },
   {
     n: "02", role: "Digital Intern", co: "IndiGo — InterGlobe Aviation",
     type: "Aviation · ML", period: "Aug – Sep 2025", loc: "Gurgaon, India",
     bullets: [
-      "Built Logistic Regression model predicting on-time arrival (DEL–BOM) with 88% accuracy on 1,000 flight records.",
-      "Engineered features from raw operational data: one-hot encoding of aircraft types, block-hour overrun computation.",
+      "Built a Logistic Regression model to predict on-time arrival performance on the DEL–BOM sector using 1,000 flight records and 6 engineered features (block-hour overrun, departure delay, aircraft type, weather index, ATC congestion), achieving 88% accuracy with balanced precision/recall across both classes.",
+      "Engineered features from raw operational data including one-hot encoding of 3 aircraft types (A320, A320neo, A321neo), computed block-hour overrun from scheduled vs. actual hours, and conducted correlation analysis across 10 numerical variables to inform feature selection for modeling.",
     ],
     tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
-    accent: "#8B5CF6",
+    accent: "#c4934a",
     Widget: IndiGoWidget,
   },
   {
@@ -33,10 +33,9 @@ const jobs = [
     type: "EdTech", period: "Jun – Aug 2025", loc: "Dubai, UAE",
     bullets: [
       "Built internal educational software used by 500+ students across 4 campuses.",
-      "Reduced lesson-preparation time by 30% through component-driven architecture.",
     ],
     tags: ["React", "Node.js", "Full-Stack"],
-    accent: "#A78BFA",
+    accent: "#b8895a",
     Widget: LabWidget,
   },
 ];
@@ -99,7 +98,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
             <span>Key contributions</span>
             <span style={{ transition: "transform 0.3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>↓</span>
           </button>
-          <div style={{ overflow: "hidden", maxHeight: open ? "300px" : "0", transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1)" }}>
+          <div style={{ overflow: "hidden", maxHeight: open ? "400px" : "0", transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1)" }}>
             <ul style={{ listStyle: "none", padding: "0 32px 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               {job.bullets.map((b, i) => (
                 <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>

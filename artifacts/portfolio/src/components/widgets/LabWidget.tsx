@@ -12,7 +12,6 @@ export default function LabWidget() {
   const [count, setCount] = useState(0);
   const [blink, setBlink] = useState(true);
 
-  // Typewriter: reveal lines one at a time
   useEffect(() => {
     setLines(0);
     const cur = snippets[snip];
@@ -28,13 +27,11 @@ export default function LabWidget() {
     return () => clearInterval(t);
   }, [snip]);
 
-  // Cursor blink
   useEffect(() => {
     const t = setInterval(() => setBlink(b => !b), 530);
     return () => clearInterval(t);
   }, []);
 
-  // Count up to 500
   useEffect(() => {
     let n = 0;
     const t = setInterval(() => {
@@ -48,9 +45,9 @@ export default function LabWidget() {
   const cur = snippets[snip];
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#1e2030", borderRadius: 12, overflow: "hidden", fontFamily: "'Fira Code', 'Cascadia Code', monospace", display: "flex", flexDirection: "column" }}>
+    <div style={{ width: "100%", height: "100%", background: "#1a1b14", borderRadius: 12, overflow: "hidden", fontFamily: "'Fira Code', 'Cascadia Code', monospace", display: "flex", flexDirection: "column" }}>
       {/* Editor header */}
-      <div style={{ background: "#15172a", padding: "8px 14px", display: "flex", alignItems: "center", gap: 6, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ background: "#14150f", padding: "8px 14px", display: "flex", alignItems: "center", gap: 6, borderBottom: "1px solid rgba(213,181,114,0.08)" }}>
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#ff5f57" }} />
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#febc2e" }} />
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#28c840" }} />
@@ -65,19 +62,19 @@ export default function LabWidget() {
             <span style={{ fontSize: "0.65rem", color: colors[i % colors.length], whiteSpace: "pre" }}>
               {i < lines ? cur[i] : ""}
             </span>
-            {i === lines - 1 && <span style={{ width: 5, height: "0.65rem", background: "#abb2bf", opacity: blink ? 1 : 0, transition: "opacity 0.1s" }} />}
+            {i === lines - 1 && <span style={{ width: 5, height: "0.65rem", background: "#d5b572", opacity: blink ? 1 : 0, transition: "opacity 0.1s" }} />}
           </div>
         ))}
       </div>
 
       {/* Footer stat */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "10px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ borderTop: "1px solid rgba(213,181,114,0.08)", padding: "10px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e" }} />
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#d5b572", boxShadow: "0 0 6px rgba(213,181,114,0.6)" }} />
           <span style={{ fontSize: "0.55rem", color: "#6b7280" }}>Lab of Future · EdTech</span>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-          <span style={{ fontSize: "1rem", fontWeight: 700, color: "#22c55e", fontFamily: "var(--font)" }}>{count}+</span>
+          <span style={{ fontSize: "1rem", fontWeight: 700, color: "#d5b572", fontFamily: "var(--font)" }}>{count}+</span>
           <span style={{ fontSize: "0.5rem", color: "#4b5563" }}>students</span>
         </div>
       </div>

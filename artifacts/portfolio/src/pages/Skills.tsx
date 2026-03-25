@@ -3,11 +3,11 @@ import { useRevealChildren } from "../components/useReveal";
 
 const stack = [
   { name: "Python",       pct: 95, cat: "Language", color: "#3b82f6" },
-  { name: "TypeScript",   pct: 88, cat: "Language", color: "#6366f1" },
+  { name: "TypeScript",   pct: 88, cat: "Language", color: "#d5b572" },
   { name: "React",        pct: 90, cat: "Frontend", color: "#61dafb" },
   { name: "FastAPI",      pct: 82, cat: "Backend",  color: "#22c55e" },
   { name: "TensorFlow",   pct: 78, cat: "ML / AI",  color: "#f59e0b" },
-  { name: "LLM APIs",     pct: 88, cat: "AI",       color: "#a78bfa" },
+  { name: "LLM APIs",     pct: 88, cat: "AI",       color: "#c4934a" },
   { name: "Kubernetes",   pct: 72, cat: "DevOps",   color: "#3b82f6" },
   { name: "Docker",       pct: 85, cat: "DevOps",   color: "#0ea5e9" },
 ];
@@ -19,8 +19,8 @@ const pills = [
 ];
 
 const domains = [
-  { area: "AI / ML", detail: "TensorFlow, PyTorch, OpenCV, LLMs, scikit-learn", color: "#a78bfa" },
-  { area: "Full-Stack", detail: "React, FastAPI, Node.js, PostgreSQL, Next.js", color: "#6366f1" },
+  { area: "AI / ML", detail: "TensorFlow, PyTorch, OpenCV, LLMs, scikit-learn", color: "#d5b572" },
+  { area: "Full-Stack", detail: "React, FastAPI, Node.js, PostgreSQL, Next.js", color: "#c4934a" },
   { area: "DevOps", detail: "Kubernetes, Docker, AWS, GCP", color: "#3b82f6" },
   { area: "Languages", detail: "Python, TypeScript, C++, SQL", color: "#22c55e" },
 ];
