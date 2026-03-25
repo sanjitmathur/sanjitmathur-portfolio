@@ -122,11 +122,13 @@ export default function F1Widget() {
             </Suspense>
 
             <OrbitControls
-              enableZoom={false}
+              enableZoom={true}
+              minDistance={1.4}
+              maxDistance={6}
               enablePan={false}
-              minPolarAngle={Math.PI / 4}
-              maxPolarAngle={Math.PI / 1.8}
-              dampingFactor={0.08}
+              minPolarAngle={Math.PI / 5}
+              maxPolarAngle={Math.PI / 1.7}
+              dampingFactor={0.09}
               enableDamping
             />
           </Canvas>

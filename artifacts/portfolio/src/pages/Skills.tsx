@@ -69,7 +69,7 @@ export default function Skills() {
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Skills</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--text)" }}>Technical Stack</h2>
+          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Technical Stack</h2>
           <p style={{ fontSize: "0.88rem", color: "var(--muted)", marginTop: "0.75rem", maxWidth: "500px", lineHeight: 1.7 }}>
             From embedded systems to cloud-native AI pipelines — across the full stack with a focus on intelligent, production-grade software.
           </p>
@@ -109,7 +109,7 @@ export default function Skills() {
       <div style={{ marginTop: "5rem", overflow: "hidden", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>
         <div style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
           {[...pills, ...pills].map((p, i) => (
-            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "rgba(248,242,225,0.12)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{p}</span>
+            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.35 }}>{p}</span>
           ))}
         </div>
       </div>

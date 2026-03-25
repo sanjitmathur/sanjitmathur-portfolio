@@ -191,11 +191,13 @@ export default function OrvynWidget() {
             </Suspense>
 
             <OrbitControls
-              enableZoom={false}
+              enableZoom={true}
+              minDistance={0.8}
+              maxDistance={3.5}
               enablePan={false}
-              minPolarAngle={Math.PI * 0.3}
-              maxPolarAngle={Math.PI * 0.7}
-              dampingFactor={0.08}
+              minPolarAngle={Math.PI * 0.2}
+              maxPolarAngle={Math.PI * 0.8}
+              dampingFactor={0.09}
               enableDamping
             />
           </Canvas>

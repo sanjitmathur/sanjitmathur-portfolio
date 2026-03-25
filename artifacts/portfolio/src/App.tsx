@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Lenis from "lenis";
+import { ThemeProvider } from "./components/ThemeContext";
 import Loader from "./components/Loader";
 import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
@@ -10,14 +11,20 @@ import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import Contact from "./pages/Contact";
 
-export default function App() {
+function AppInner() {
   const [loaded, setLoaded] = useState(false);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // ensure data-theme is applied immediately from localStorage
+    const saved = localStorage.getItem("sm-theme") || "dark";
+    document.documentElement.setAttribute("data-theme", saved);
+  }, []);
+
+  useEffect(() => {
     if (!show) return;
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.1,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -27,7 +34,7 @@ export default function App() {
   }, [show]);
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100vh", transition: "background 0.35s ease" }}>
       <Cursor />
       <Grain />
       {!loaded && (
@@ -44,5 +51,13 @@ export default function App() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppInner />
+    </ThemeProvider>
   );
 }

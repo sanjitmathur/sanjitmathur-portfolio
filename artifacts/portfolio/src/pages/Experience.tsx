@@ -74,7 +74,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, boxShadow: `0 0 10px ${job.accent}80` }} />
                 <span style={{ fontSize: "0.65rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{job.type}</span>
               </div>
-              <div style={{ fontSize: "clamp(1.1rem,2vw,1.3rem)", fontWeight: 700, letterSpacing: "-0.025em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
+              <div style={{ fontSize: "clamp(1.05rem,2vw,1.25rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
               <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{job.role}</div>
               <div style={{ fontSize: "0.7rem", color: "var(--muted)", opacity: 0.6 }}>{job.period} · {job.loc}</div>
             </div>
@@ -84,7 +84,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
           </div>
 
           {/* Right: interactive widget */}
-          <div style={{ padding: 16, background: "rgba(0,0,0,0.3)" }}>
+          <div style={{ padding: 16, background: "var(--surface-2)" }}>
             <job.Widget />
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function Experience() {
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Experience</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--text)" }}>Where I've made an impact</h2>
+          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Where I've made an impact</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {jobs.map((j, i) => <JobCard key={j.n} job={j} idx={i} />)}

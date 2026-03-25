@@ -115,7 +115,7 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
                 <span style={{ fontSize: "0.58rem", fontWeight: 600, color: proj.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>{proj.category}</span>
                 <span style={{ fontSize: "0.52rem", color: "var(--muted)", opacity: 0.5 }}>· {proj.year}</span>
               </div>
-              <h3 style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "-0.02em", color: "var(--text)" }}>{proj.title}</h3>
+              <h3 style={{ fontSize: "1.05rem", fontWeight: 700, fontFamily: "var(--font-display)", letterSpacing: "0.02em", color: "var(--text)" }}>{proj.title}</h3>
             </div>
             <a href={proj.link} target="_blank" rel="noopener noreferrer"
               style={{
@@ -160,7 +160,7 @@ export default function Projects() {
         <div className="fade-up" style={{ marginBottom: "3rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Projects</p>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-            <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--text)" }}>Things I've built</h2>
+            <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Things I've built</h2>
             <a href="https://github.com/sanjitmathur" target="_blank" rel="noopener noreferrer"
               className="btn-secondary clickable" style={{ fontSize: "0.8rem" }}>
               All on GitHub →
