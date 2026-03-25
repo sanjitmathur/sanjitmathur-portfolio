@@ -109,7 +109,7 @@ export default function Skills() {
       <div style={{ marginTop: "5rem", overflow: "hidden", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>
         <div style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
           {[...pills, ...pills].map((p, i) => (
-            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "rgba(255,255,255,0.15)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{p}</span>
+            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "rgba(15,13,10,0.15)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{p}</span>
           ))}
         </div>
       </div>

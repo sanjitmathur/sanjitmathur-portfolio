@@ -1,13 +1,7 @@
-import { useEffect, useRef } from "react";
 import Magnetic from "../components/Magnetic";
 
 export default function Hero() {
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-
-  const lines = [
-    { delay: "0.1s" }, { delay: "0.2s" }, { delay: "0.3s" },
-    { delay: "0.4s" }, { delay: "0.5s" },
-  ];
 
   return (
     <section id="about" style={{
@@ -15,21 +9,18 @@ export default function Hero() {
       padding: `0 var(--section-px)`,
       background: "var(--bg)", position: "relative", overflow: "hidden",
     }}>
-      {/* Subtle grid background */}
+      {/* Subtle dot grid */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-        backgroundSize: "80px 80px",
-        maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)",
+        backgroundImage: `radial-gradient(circle, rgba(15,13,10,0.08) 1px, transparent 1px)`,
+        backgroundSize: "32px 32px",
+        maskImage: "radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 100%)",
       }} />
-
-      {/* Accent glow behind */}
-      <div style={{ position: "absolute", top: "30%", left: "10%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", paddingTop: "6rem" }}>
         {/* Eyebrow */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem", animation: "fadeIn 0.6s 0.05s ease both" }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)", display: "inline-block", animation: "blink 2.5s ease infinite" }} />
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block", animation: "blink 2.5s ease infinite" }} />
           <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "var(--muted)", letterSpacing: "0.04em" }}>
             AI Engineer & Software Developer — Dubai, UAE
           </span>
@@ -37,26 +28,26 @@ export default function Hero() {
 
         {/* Main heading */}
         <h1 style={{
-          fontSize: "clamp(3rem, 8vw, 5rem)", fontWeight: 800,
+          fontSize: "clamp(3rem, 8vw, 5.5rem)", fontWeight: 800,
           letterSpacing: "-0.04em", lineHeight: 1.05,
           color: "var(--text)", marginBottom: "1.75rem",
           animation: "fadeIn 0.7s 0.1s ease both",
         }}>
           Hi, I'm{" "}
           <span style={{ position: "relative", display: "inline-block" }}>
-            <span style={{ color: "var(--accent)" }}>Sanjit Mathur</span>
+            Sanjit Mathur
             <span style={{
-              position: "absolute", bottom: "-4px", left: 0, right: 0, height: "3px",
-              background: "linear-gradient(90deg, var(--accent), transparent)",
-              borderRadius: "2px", opacity: 0.7,
+              position: "absolute", bottom: "0px", left: 0, right: 0, height: "3px",
+              background: "var(--text)",
+              borderRadius: "2px", opacity: 0.15,
             }} />
           </span>
         </h1>
 
         {/* Subtitle */}
         <p style={{
-          fontSize: "clamp(1rem,2vw,1.2rem)", fontWeight: 400,
-          color: "var(--muted)", maxWidth: "560px", lineHeight: 1.7,
+          fontSize: "clamp(1rem,2vw,1.15rem)", fontWeight: 400,
+          color: "var(--muted)", maxWidth: "520px", lineHeight: 1.75,
           marginBottom: "2.5rem",
           animation: "fadeIn 0.7s 0.2s ease both",
         }}>
@@ -101,7 +92,7 @@ export default function Hero() {
       <div style={{ position: "absolute", bottom: "2.5rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", animation: "fadeIn 0.6s 1s ease both" }}>
         <span style={{ fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)", fontWeight: 500 }}>scroll</span>
         <div style={{ width: "1px", height: "48px", overflow: "hidden" }}>
-          <div style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, var(--accent), transparent)", animation: "scrollLine 2s ease infinite" }} />
+          <div style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, var(--text), transparent)", animation: "scrollLine 2s ease infinite" }} />
         </div>
       </div>
     </section>
