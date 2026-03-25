@@ -2,8 +2,9 @@ import { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import { useInView } from "../useInView";
 
-const F1_MODEL_URL = "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/ferrari.glb";
+const F1_MODEL_URL = `${import.meta.env.BASE_URL}models/ferrari.glb`;
 
 function checkWebGL(): boolean {
   try {
@@ -54,6 +55,7 @@ function F1FallbackSVG() {
 }
 
 export default function F1Widget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [hovered, setHovered] = useState(false);
   const [webgl] = useState(() => checkWebGL());
   const [speed, setSpeed] = useState(0);
@@ -91,6 +93,7 @@ export default function F1Widget() {
 
   return (
     <div
+      ref={containerRef}
       style={{ width: "100%", height: "100%", background: "#0a0706", borderRadius: 10, overflow: "hidden", cursor: "none", display: "flex", flexDirection: "column" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -100,16 +103,16 @@ export default function F1Widget() {
         <div style={{ position: "absolute", top: 7, left: 10, zIndex: 2, fontSize: "0.48rem", fontWeight: 700, color: "#c8102e", letterSpacing: "0.12em", textTransform: "uppercase" }}>
           F1 · 2026 Season
         </div>
-        {hovered && (
+        {hovered && inView && (
           <div style={{ position: "absolute", top: 7, right: 10, zIndex: 2, fontSize: "0.45rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em" }}>
             DRAG TO ROTATE
           </div>
         )}
 
-        {webgl ? (
+        {webgl && inView ? (
           <Canvas
             camera={{ position: [2.2, 0.9, 3.2], fov: 46 }}
-            gl={{ antialias: true, alpha: true }}
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             style={{ width: "100%", height: "100%" }}
           >
             <ambientLight intensity={0.55} />

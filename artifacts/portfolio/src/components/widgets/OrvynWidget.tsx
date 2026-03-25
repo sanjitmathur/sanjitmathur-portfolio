@@ -2,9 +2,9 @@ import { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import { useInView } from "../useInView";
 
-const HAND_MODEL_URL =
-  "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb";
+const HAND_MODEL_URL = `${import.meta.env.BASE_URL}models/RobotExpressive.glb`;
 
 function checkWebGL(): boolean {
   try {
@@ -32,7 +32,6 @@ function RobotHandModel({ hovered }: { hovered: boolean }) {
     const clone = scene.clone(true);
     clonedScene.current = clone;
 
-    // Apply golden/metallic tint to all meshes
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
@@ -84,11 +83,7 @@ function RobotHandModel({ hovered }: { hovered: boolean }) {
   if (!clonedScene.current) return null;
 
   return (
-    <group
-      // Camera framed at hand height: robot is ~1.8 tall, hands ~1.3-1.5 up
-      position={[0.35, -1.08, 0]}
-      scale={1.0}
-    >
+    <group position={[0.35, -1.08, 0]} scale={1.0}>
       <primitive object={clonedScene.current} />
     </group>
   );
@@ -113,6 +108,7 @@ function OrvynFallbackSVG() {
 }
 
 export default function OrvynWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [hovered, setHovered] = useState(false);
   const [webgl] = useState(() => checkWebGL());
   const [emgPoints, setEmgPoints] = useState<number[]>(() =>
@@ -148,6 +144,7 @@ export default function OrvynWidget() {
 
   return (
     <div
+      ref={containerRef}
       style={{
         width: "100%", height: "100%",
         background: "#0b0d10", borderRadius: 10,
@@ -166,7 +163,7 @@ export default function OrvynWidget() {
         }}>
           Orvyn ExoArm · sEMG
         </div>
-        {hovered && (
+        {hovered && inView && (
           <div style={{
             position: "absolute", top: 7, right: 10, zIndex: 2,
             fontSize: "0.45rem", color: "rgba(200,168,90,0.55)", letterSpacing: "0.06em",
@@ -175,10 +172,10 @@ export default function OrvynWidget() {
           </div>
         )}
 
-        {webgl ? (
+        {webgl && inView ? (
           <Canvas
             camera={{ position: [0, 0.5, 1.4], fov: 42 }}
-            gl={{ antialias: true, alpha: true }}
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             style={{ width: "100%", height: "100%" }}
           >
             <ambientLight intensity={0.55} />

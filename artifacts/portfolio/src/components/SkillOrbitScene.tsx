@@ -2,6 +2,7 @@ import { useRef, useMemo, Suspense, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Points, PointMaterial, Float } from "@react-three/drei";
 import * as THREE from "three";
+import { useInView } from "./useInView";
 
 function checkWebGL(): boolean {
   try {
@@ -140,25 +141,31 @@ function Scene() {
 }
 
 export default function SkillOrbitScene({ height = 480 }: { height?: number }) {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [supported, setSupported] = useState<boolean | null>(null);
   useEffect(() => { setSupported(checkWebGL()); }, []);
 
-  if (supported === null) return <div style={{ height }} />;
-
-  if (!supported) {
-    return (
-      <div style={{ height, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 200, height: 200, borderRadius: "50%", border: "1px solid rgba(213,181,114,0.3)", animation: "spin 12s linear infinite" }} />
-        <div style={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(213,181,114,0.2) 0%, transparent 70%)" }} />
-      </div>
-    );
-  }
+  const fallback = (
+    <div style={{ height, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: 200, height: 200, borderRadius: "50%", border: "1px solid rgba(213,181,114,0.3)", animation: "spin 12s linear infinite" }} />
+      <div style={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(213,181,114,0.2) 0%, transparent 70%)" }} />
+    </div>
+  );
 
   return (
-    <Canvas camera={{ position: [0, 1, 7], fov: 55 }} dpr={[1, 1.5]} style={{ height }} gl={{ antialias: true, alpha: false }}>
-      <Suspense fallback={null}>
-        <Scene />
-      </Suspense>
-    </Canvas>
+    <div ref={containerRef} style={{ height }}>
+      {supported === null || !supported || !inView ? fallback : (
+        <Canvas
+          camera={{ position: [0, 1, 7], fov: 55 }}
+          dpr={[1, 1.5]}
+          style={{ height }}
+          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+        >
+          <Suspense fallback={null}>
+            <Scene />
+          </Suspense>
+        </Canvas>
+      )}
+    </div>
   );
 }
