@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 @theme inline {
@@ -11,19 +11,19 @@
 
 /* ============================================================
    EXACT PALETTE
-   Soft Fawn   #d5b572
+   Soft Fawn    #d5b572
    Carbon Black #201f14
-   Ivory Mist  #f8f2e1
+   Ivory Mist   #f8f2e1
    ============================================================ */
 :root {
-  --bg:        #f8f2e1;   /* Ivory Mist */
-  --bg-alt:    #f2ead5;   /* Slightly darker ivory for alternating sections */
-  --carbon:    #201f14;   /* Carbon Black */
+  --bg:        #f8f2e1;
+  --bg-alt:    #f2ead5;
+  --carbon:    #201f14;
   --carbon-60: rgba(32,31,20,0.6);
   --carbon-30: rgba(32,31,20,0.3);
   --carbon-12: rgba(32,31,20,0.12);
   --carbon-06: rgba(32,31,20,0.06);
-  --fawn:      #d5b572;   /* Soft Fawn */
+  --fawn:      #d5b572;
   --fawn-60:   rgba(213,181,114,0.6);
   --fawn-20:   rgba(213,181,114,0.2);
 
@@ -43,36 +43,16 @@ body {
   overflow-x: hidden;
   cursor: none;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @media (max-width: 768px) {
   body { cursor: auto; }
-  .cursor-dot, .cursor-ring { display: none !important; }
 }
 
 ::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--carbon-30); }
-
-/* ============================================================
-   CURSOR
-   ============================================================ */
-.cursor-dot {
-  width: 5px; height: 5px;
-  background: var(--carbon);
-  border-radius: 50%;
-  position: fixed; pointer-events: none; z-index: 99999;
-  transform: translate(-50%,-50%);
-  transition: transform 0.15s, width 0.2s, height 0.2s, background 0.2s;
-}
-.cursor-ring {
-  width: 32px; height: 32px;
-  border: 1px solid var(--carbon-30);
-  border-radius: 50%;
-  position: fixed; pointer-events: none; z-index: 99998;
-  transform: translate(-50%,-50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
-}
 
 /* ============================================================
    LOADER
@@ -103,15 +83,6 @@ body {
 }
 
 /* ============================================================
-   SECTION LABEL
-   ============================================================ */
-.sec-label {
-  font-family: var(--app-font-mono);
-  font-size: 0.56rem; letter-spacing: 0.28em; text-transform: uppercase;
-  color: var(--fawn);
-}
-
-/* ============================================================
    NAV DOT
    ============================================================ */
 .nav-dot {
@@ -122,32 +93,32 @@ body {
 .nav-dot.active { background: var(--carbon); transform: scale(2); }
 
 /* ============================================================
-   3D REVEAL — large depth values
+   3D REVEAL
    ============================================================ */
 .r3d {
   opacity: 0;
-  transform: perspective(1000px) translateY(70px) translateZ(-160px) rotateX(-22deg);
+  transform: perspective(1000px) translateY(65px) translateZ(-120px) rotateX(-20deg);
   transition: opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.1s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d.in { opacity: 1; transform: perspective(1000px) translateY(0) translateZ(0) rotateX(0); }
 
 .r3d-left {
   opacity: 0;
-  transform: perspective(1000px) translateX(-100px) translateZ(-80px) rotateY(22deg);
+  transform: perspective(1000px) translateX(-80px) translateZ(-60px) rotateY(18deg);
   transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d-left.in { opacity: 1; transform: perspective(1000px) translateX(0) translateZ(0) rotateY(0); }
 
 .r3d-right {
   opacity: 0;
-  transform: perspective(1000px) translateX(100px) translateZ(-80px) rotateY(-22deg);
+  transform: perspective(1000px) translateX(80px) translateZ(-60px) rotateY(-18deg);
   transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d-right.in { opacity: 1; transform: perspective(1000px) translateX(0) translateZ(0) rotateY(0); }
 
 .r3d-up {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(40px);
   transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d-up.in { opacity: 1; transform: translateY(0); }
@@ -156,32 +127,32 @@ body {
    BUTTONS
    ============================================================ */
 .btn-dark {
-  display: inline-flex; align-items: center; gap: 0.55rem;
-  padding: 0.9rem 2.2rem;
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 1rem 2.4rem;
   background: var(--carbon); color: var(--bg);
   font-family: var(--app-font-sans); font-weight: 600;
-  font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
   text-decoration: none; border: none; cursor: none; position: relative; overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 .btn-dark::before {
   content: ''; position: absolute; inset: 0;
   background: var(--fawn);
   transform: translateX(-101%);
-  transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .btn-dark:hover::before { transform: translateX(0); }
-.btn-dark:hover { transform: translateY(-2px); box-shadow: 0 12px 36px var(--carbon-12); color: var(--carbon); }
+.btn-dark:hover { transform: translateY(-2px); box-shadow: 0 14px 40px var(--carbon-12); color: var(--carbon); }
 .btn-dark span, .btn-dark svg { position: relative; z-index: 1; }
 
 .btn-outline {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.85rem 1.8rem;
+  padding: 0.95rem 1.9rem;
   background: transparent; color: var(--carbon);
   font-family: var(--app-font-sans); font-weight: 500;
-  font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
   text-decoration: none; border: 1px solid var(--carbon-30); cursor: none;
-  transition: all 0.35s ease;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
 }
 .btn-outline:hover { background: var(--carbon); color: var(--bg); border-color: var(--carbon); transform: translateY(-2px); }
 
@@ -190,18 +161,17 @@ body {
    ============================================================ */
 .tag {
   display: inline-flex; align-items: center;
-  padding: 0.22rem 0.7rem;
+  padding: 0.2rem 0.65rem;
   border: 1px solid var(--carbon-12); border-radius: 100px;
-  font-size: 0.62rem; font-family: var(--app-font-mono);
+  font-size: 0.58rem; font-family: var(--app-font-mono);
   letter-spacing: 0.05em; color: var(--carbon-60);
   transition: all 0.25s ease;
 }
-.tag:hover { background: var(--carbon); color: var(--bg); border-color: var(--carbon); }
 
 /* ============================================================
-   HORIZONTAL RULE separator
+   MARQUEE — used in Skills and Hero
    ============================================================ */
-.hr-line {
-  width: 100%; height: 1px;
-  background: var(--carbon-12);
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }

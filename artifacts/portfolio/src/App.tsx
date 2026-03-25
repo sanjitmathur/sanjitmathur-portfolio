@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Loader from "./components/Loader";
 import Cursor from "./components/Cursor";
+import Grain from "./components/Grain";
 import Nav from "./components/Nav";
 import Hero from "./pages/Hero";
 import Experience from "./pages/Experience";
@@ -17,10 +18,11 @@ export default function App() {
     <Mouse3DProvider>
       <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
         <Cursor />
+        <Grain />
         {!loaded && (
           <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 60); }} />
         )}
-        <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.6s ease" }}>
+        <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.7s ease" }}>
           <Nav />
           <main>
             <Hero />

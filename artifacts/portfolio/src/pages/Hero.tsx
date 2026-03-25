@@ -1,162 +1,246 @@
-import { useEffect, useRef, useState } from "react";
-import { useMouse3D } from "../components/Mouse3DContext";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Magnetic from "../components/Magnetic";
 
-function Char({ char, i, delay }: { char: string; i: number; delay: number }) {
-  const [on, setOn] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setOn(true), delay + i * 48); return () => clearTimeout(t); }, [i, delay]);
+gsap.registerPlugin(ScrollTrigger);
+
+function SplitWord({ word, delay = 0, color = "var(--carbon)" }: { word: string; delay?: number; color?: string }) {
   return (
-    <span style={{
-      display: "inline-block",
-      opacity: on ? 1 : 0,
-      transform: on ? "translateY(0) translateZ(0) rotateX(0)" : "translateY(90px) translateZ(-140px) rotateX(-60deg)",
-      transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1), transform 0.95s cubic-bezier(0.16,1,0.3,1)",
-      transitionDelay: `${(delay + i * 48) / 1000}s`,
-      transformOrigin: "50% 100%",
-    }}>{char === " " ? "\u00a0" : char}</span>
+    <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "bottom" }}>
+      <span className="split-word" style={{
+        display: "inline-block",
+        color,
+        animationDelay: `${delay}ms`,
+        animationFillMode: "both",
+      }}>
+        {word}
+      </span>
+    </span>
   );
 }
 
 export default function Hero() {
-  const mouse = useMouse3D();
+  const sectionRef = useRef<HTMLElement>(null);
+  const nameRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const [termLines, setTermLines] = useState(0);
+  const metaRef = useRef<HTMLDivElement>(null);
+  const scrollLineRef = useRef<HTMLDivElement>(null);
 
-  // Animate subtitle and cta in after name
   useEffect(() => {
-    [subRef, ctaRef].forEach((r, i) => {
-      const el = r.current; if (!el) return;
-      el.style.opacity = "0"; el.style.transform = "translateY(28px)";
-      setTimeout(() => {
-        if (!el) return;
-        el.style.transition = "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)";
-        el.style.opacity = "1"; el.style.transform = "translateY(0)";
-      }, 1300 + i * 160);
+    const el = sectionRef.current;
+    if (!el) return;
+
+    // Scroll-driven parallax: name halves split apart
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.2,
+      },
     });
-    // Terminal lines
-    let n = 0;
-    const t = setInterval(() => { n++; setTermLines(n); if (n >= 4) clearInterval(t); }, 420);
-    return () => clearInterval(t);
+
+    tl.to(leftRef.current, { x: "-14vw", ease: "none" }, 0)
+      .to(rightRef.current, { x: "14vw", ease: "none" }, 0)
+      .to(nameRef.current, { y: "-12vh", ease: "none" }, 0)
+      .to(subRef.current, { y: "-6vh", opacity: 0, ease: "none" }, 0)
+      .to(metaRef.current, { y: "-4vh", opacity: 0, ease: "none" }, 0);
+
+    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
   }, []);
 
-  const termData = [
-    { p: "→", text: "AI Engineer & Full-Stack Developer", c: "var(--fawn)" },
-    { p: "$", text: "stack = ['LLMs', 'MLOps', 'K8s', 'React']", c: "var(--carbon-60)" },
-    { p: "→", text: "Baraka Financial · Dubai", c: "var(--carbon-60)" },
-    { p: "#", text: "UOWD · Computer & Autonomous Systems Eng.", c: "var(--carbon-30)" },
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  const colors = [
+    { bg: "var(--fawn-20)", pos: "20% 15%" },
+    { bg: "var(--carbon-06)", pos: "75% 70%" },
   ];
 
-  const px = mouse.x * 9, py = -mouse.y * 9;
-  const px2 = mouse.x * 18, py2 = -mouse.y * 18;
-
   return (
-    <section id="about" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", background: "var(--bg)" }}>
-
-      {/* Subtle grid */}
+    <section ref={sectionRef} id="about" style={{
+      minHeight: "100vh", display: "flex", alignItems: "center",
+      justifyContent: "center", position: "relative", overflow: "hidden",
+      background: "var(--bg)",
+    }}>
+      {/* Fine grid background */}
       <div style={{
-        position: "absolute", inset: 0,
+        position: "absolute", inset: 0, pointerEvents: "none",
         backgroundImage: "linear-gradient(var(--carbon-06) 1px, transparent 1px), linear-gradient(90deg, var(--carbon-06) 1px, transparent 1px)",
-        backgroundSize: "80px 80px",
-        transform: `translate(${mouse.x * 4}px, ${-mouse.y * 4}px)`,
-        transition: "transform 0.15s linear",
-        pointerEvents: "none",
+        backgroundSize: "100px 100px",
       }} />
 
-      {/* Fawn accent — large ellipse */}
+      {/* Ambient glows */}
+      {colors.map((c, i) => (
+        <div key={i} style={{
+          position: "absolute", width: "55vw", height: "55vw", borderRadius: "50%",
+          background: `radial-gradient(ellipse, ${c.bg} 0%, transparent 70%)`,
+          left: c.pos.split(" ")[0], top: c.pos.split(" ")[1],
+          transform: "translate(-50%,-50%)", pointerEvents: "none",
+        }} />
+      ))}
+
+      {/* Floating meta — top right */}
       <div style={{
-        position: "absolute", top: "-30%", right: "-15%",
-        width: "70vw", height: "70vw",
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse, var(--fawn-20) 0%, transparent 65%)",
-        transform: `translate(${px2}px, ${py2}px)`,
-        transition: "transform 0.12s linear",
-        pointerEvents: "none",
-      }} />
-
-      {/* Floating status */}
-      <div style={{ position: "absolute", top: "14%", right: "6%", transform: `translate(${px2}px, ${py2}px)`, transition: "transform 0.1s linear", zIndex: 5 }}>
-        <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.5rem", letterSpacing: "0.18em", color: "var(--fawn)", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "0.45rem" }}>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--fawn)", animation: "blink 2s ease infinite", display: "inline-block" }} />
-          Open to Work
+        position: "absolute", top: "clamp(5rem, 10vw, 7rem)", right: "clamp(1.5rem, 4vw, 4rem)",
+        textAlign: "right", zIndex: 5,
+        animation: "fadeUp 1s 2.2s cubic-bezier(0.16,1,0.3,1) both",
+      }}>
+        <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.48rem", letterSpacing: "0.24em", color: "var(--fawn)", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "0.45rem", justifyContent: "flex-end" }}>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--fawn)", display: "inline-block", animation: "blink 2.2s ease infinite" }} />
+          Available for hire
+        </div>
+        <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.14em", color: "var(--carbon-30)", marginTop: "0.25rem" }}>
+          Dubai · UAE
         </div>
       </div>
 
-      {/* Coordinates */}
-      <div style={{ position: "absolute", bottom: "20%", left: "4%", transform: `translate(${px * 0.5}px, ${py * 0.5}px)`, transition: "transform 0.1s linear", zIndex: 5, fontFamily: "var(--app-font-mono)", fontSize: "0.48rem", letterSpacing: "0.14em", color: "var(--carbon-30)", lineHeight: 2 }}>
-        25.2°N 55.3°E<br />Dubai, UAE
-      </div>
-
-      {/* Main block */}
+      {/* Year — bottom left */}
       <div style={{
+        position: "absolute", bottom: "clamp(5rem, 10vw, 7rem)", left: "clamp(1.5rem, 4vw, 4rem)",
+        fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.22em",
+        color: "var(--carbon-30)", zIndex: 5,
+        animation: "fadeUp 1s 2.4s cubic-bezier(0.16,1,0.3,1) both",
+      }}>© 2025</div>
+
+      {/* Main name block */}
+      <div ref={nameRef} style={{
         position: "relative", zIndex: 10, textAlign: "center",
-        padding: "0 2rem", maxWidth: "900px", width: "100%",
-        perspective: "1000px",
-        transform: `rotateX(${mouse.y * 3}deg) rotateY(${mouse.x * 4}deg)`,
-        transition: "transform 0.1s linear",
+        padding: "0 clamp(1rem, 4vw, 3rem)", width: "100%",
       }}>
         {/* Label */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", marginBottom: "1.75rem", transform: `translate(${px * 0.2}px, ${py * 0.2}px)`, transition: "transform 0.1s linear" }}>
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: "1.2rem", marginBottom: "1.5rem",
+          animation: "fadeUp 0.9s 0.4s cubic-bezier(0.16,1,0.3,1) both",
+        }}>
           <div style={{ height: "1px", width: "40px", background: "var(--fawn-60)" }} />
-          <span className="sec-label">AI Engineer / Full-Stack</span>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.5rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--fawn)" }}>
+            AI Engineer · Full-Stack Developer
+          </span>
           <div style={{ height: "1px", width: "40px", background: "var(--fawn-60)" }} />
         </div>
 
-        {/* Giant name */}
+        {/* Giant split name with scroll parallax */}
         <h1 style={{
-          fontFamily: "var(--app-font-serif)", fontSize: "clamp(4.5rem, 13vw, 11rem)",
-          fontWeight: 400, lineHeight: 0.88, letterSpacing: "-0.045em", marginBottom: "2.25rem",
-          perspective: "700px",
-          transform: `translate(${px * 0.12}px, ${py * 0.12}px)`,
-          transition: "transform 0.1s linear",
+          fontFamily: "var(--app-font-serif)",
+          fontSize: "clamp(5rem, 15vw, 13rem)",
+          fontWeight: 400, lineHeight: 0.86, letterSpacing: "-0.045em",
+          marginBottom: "2.5rem", userSelect: "none",
         }}>
-          <div style={{ color: "var(--carbon)" }}>{"Sanjit".split("").map((c, i) => <Char key={i} char={c} i={i} delay={180} />)}</div>
-          <div style={{ color: "var(--fawn)" }}><em style={{ fontStyle: "italic" }}>{"Mathur".split("").map((c, i) => <Char key={i} char={c} i={i} delay={480} />)}</em></div>
+          <div ref={leftRef} style={{ display: "inline-block", willChange: "transform" }}>
+            <SplitWord word="Sanjit" delay={200} />
+          </div>
+          {" "}
+          <div ref={rightRef} style={{ display: "inline-block", willChange: "transform" }}>
+            <SplitWord word="Mathur" delay={380} color="var(--fawn)" />
+          </div>
         </h1>
 
-        {/* Terminal */}
-        <div ref={subRef} style={{ marginBottom: "2.5rem" }}>
-          <div style={{
-            fontFamily: "var(--app-font-mono)", fontSize: "clamp(0.6rem,1.2vw,0.7rem)",
-            lineHeight: 2.2, textAlign: "left", maxWidth: "480px", margin: "0 auto",
-            padding: "1.2rem 1.4rem",
-            border: "1px solid var(--carbon-12)",
-            borderTop: "2px solid var(--carbon)",
-            background: "rgba(248,242,225,0.6)", backdropFilter: "blur(6px)",
+        {/* Subtitle */}
+        <div ref={subRef} style={{ marginBottom: "3rem", willChange: "transform, opacity" }}>
+          <p style={{
+            fontFamily: "var(--app-font-sans)", fontWeight: 300,
+            fontSize: "clamp(0.85rem, 1.6vw, 1rem)",
+            color: "var(--carbon-60)", maxWidth: "500px", margin: "0 auto",
+            lineHeight: 1.9, letterSpacing: "0.02em",
+            animation: "fadeUp 1s 0.9s cubic-bezier(0.16,1,0.3,1) both",
           }}>
-            <div style={{ display: "flex", gap: "0.3rem", marginBottom: "0.8rem" }}>
-              {[0.15, 0.1, 0.08].map((o, i) => <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: `rgba(32,31,20,${o})` }} />)}
-            </div>
-            {termData.slice(0, termLines).map((l, i) => (
-              <div key={i} style={{ display: "flex", gap: "0.6rem", animation: "fadeInLine 0.3s ease" }}>
-                <span style={{ color: "var(--fawn)", opacity: 0.8 }}>{l.p}</span>
-                <span style={{ color: l.c }}>{l.text}</span>
-              </div>
-            ))}
-            {termLines < termData.length && <span style={{ color: "var(--fawn)", animation: "blink 1.1s step-end infinite" }}>▌</span>}
-          </div>
+            Building intelligent systems at the intersection of AI and human experience.
+            Currently at <em style={{ color: "var(--fawn)", fontStyle: "normal" }}>Baraka Financial</em>, Dubai.
+          </p>
         </div>
 
         {/* CTAs */}
-        <div ref={ctaRef} style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="#experience" className="btn-dark clickable" onClick={e => { e.preventDefault(); document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" }); }}>
-            <span>View Work</span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-          </a>
-          <a href="https://linkedin.com/in/sanjit-mathur-/" target="_blank" rel="noopener noreferrer" className="btn-outline clickable"><span>LinkedIn</span></a>
-          <a href="https://github.com/sanjitmathur" target="_blank" rel="noopener noreferrer" className="btn-outline clickable"><span>GitHub</span></a>
+        <div ref={metaRef} style={{
+          display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap",
+          animation: "fadeUp 1s 1.2s cubic-bezier(0.16,1,0.3,1) both",
+          willChange: "transform, opacity",
+        }}>
+          <Magnetic strength={0.3}>
+            <button
+              className="btn-dark clickable"
+              data-cursor="EXPLORE"
+              onClick={() => scrollTo("experience")}
+            >
+              <span>View Work</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+              </svg>
+            </button>
+          </Magnetic>
+          <Magnetic strength={0.3}>
+            <a href="https://linkedin.com/in/sanjit-mathur-/" target="_blank" rel="noopener noreferrer"
+              className="btn-outline clickable" data-cursor="OPEN">
+              <span>LinkedIn</span>
+            </a>
+          </Magnetic>
+          <Magnetic strength={0.3}>
+            <a href="https://github.com/sanjitmathur" target="_blank" rel="noopener noreferrer"
+              className="btn-outline clickable" data-cursor="OPEN">
+              <span>GitHub</span>
+            </a>
+          </Magnetic>
         </div>
       </div>
 
-      {/* Scroll */}
-      <div style={{ position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem", zIndex: 10 }}>
-        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.46rem", letterSpacing: "0.28em", color: "var(--carbon-30)", textTransform: "uppercase" }}>scroll</span>
-        <div style={{ width: "1px", height: "50px", background: "linear-gradient(to bottom, var(--carbon-30), transparent)", animation: "pulse 2.2s ease infinite" }} />
+      {/* Scroll indicator */}
+      <div ref={scrollLineRef} style={{
+        position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)",
+        display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem",
+        animation: "fadeUp 1s 2s cubic-bezier(0.16,1,0.3,1) both",
+        zIndex: 10,
+      }}>
+        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.42rem", letterSpacing: "0.32em", textTransform: "uppercase", color: "var(--carbon-30)" }}>
+          scroll
+        </span>
+        <div style={{ width: 1, height: 60, overflow: "hidden", position: "relative" }}>
+          <div style={{
+            width: "100%", height: "100%",
+            background: "linear-gradient(to bottom, var(--carbon-30), transparent)",
+            animation: "scrollLine 2s ease infinite",
+          }} />
+        </div>
+      </div>
+
+      {/* Marquee strip */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        borderTop: "1px solid var(--carbon-12)", overflow: "hidden",
+        padding: "0.6rem 0", background: "var(--bg)",
+        animation: "fadeUp 1s 2.5s cubic-bezier(0.16,1,0.3,1) both",
+      }}>
+        <div style={{ display: "flex", animation: "marquee 24s linear infinite", whiteSpace: "nowrap", width: "max-content" }}>
+          {Array(4).fill("AI Engineering · Full-Stack · Python · TypeScript · Kubernetes · LLMs · Computer Vision · React · Dubai ·\u00a0").map((t, i) => (
+            <span key={i} style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.48rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--carbon-30)", paddingRight: "2rem" }}>{t}</span>
+          ))}
+        </div>
       </div>
 
       <style>{`
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes pulse { 0%,100%{opacity:0.2} 50%{opacity:0.8} }
-        @keyframes fadeInLine { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        @keyframes scrollLine {
+          0%   { transform: translateY(-100%); }
+          100% { transform: translateY(200%); }
+        }
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .split-word {
+          animation: revealWord 1.1s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes revealWord {
+          from { transform: translateY(110%) skewY(6deg); opacity: 0; }
+          to   { transform: translateY(0) skewY(0deg); opacity: 1; }
+        }
       `}</style>
     </section>
   );
