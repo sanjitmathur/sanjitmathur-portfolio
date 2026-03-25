@@ -170,24 +170,15 @@ export default function Projects() {
         </div>
 
         {/* Bento Row 1: ExamForge (large) + Spotify (tall) */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "1.25rem",
-          marginBottom: "1.25rem",
-        }}>
-          <div style={{ height: 500 }}><ProjectCard proj={examForge} /></div>
-          <div style={{ height: 500 }}><ProjectCard proj={spotify} /></div>
+        <div className="bento-row-1">
+          <div className="bento-cell-large"><ProjectCard proj={examForge} /></div>
+          <div className="bento-cell-tall"><ProjectCard proj={spotify} /></div>
         </div>
 
         {/* Bento Row 2: F1 + Orvyn + MedAir (equal thirds) */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "1.25rem",
-        }}>
+        <div className="bento-row-2">
           {[f1, orvyn, medair].map(p => (
-            <div key={p.id} style={{ height: 440 }}><ProjectCard proj={p} /></div>
+            <div key={p.id} className="bento-cell-medium"><ProjectCard proj={p} /></div>
           ))}
         </div>
 

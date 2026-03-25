@@ -73,9 +73,27 @@ export default function F1Widget() {
             {/* Tyres - front */}
             <ellipse cx="24" cy="30" rx="7" ry="4" fill="#1f2937" stroke="#374151" strokeWidth="0.5" />
             <ellipse cx="66" cy="30" rx="7" ry="4" fill="#1f2937" stroke="#374151" strokeWidth="0.5" />
+            {/* Wheel spokes - front (animated) */}
+            <g className="f1-wheel" style={{ transformOrigin: "24px 30px" }}>
+              <line x1="24" y1="27" x2="24" y2="33" stroke="#6b7280" strokeWidth="0.8" />
+              <line x1="18" y1="30" x2="30" y2="30" stroke="#6b7280" strokeWidth="0.8" />
+            </g>
+            <g className="f1-wheel" style={{ transformOrigin: "66px 30px" }}>
+              <line x1="66" y1="27" x2="66" y2="33" stroke="#6b7280" strokeWidth="0.8" />
+              <line x1="60" y1="30" x2="72" y2="30" stroke="#6b7280" strokeWidth="0.8" />
+            </g>
             {/* Tyres - rear */}
             <ellipse cx="22" cy="92" rx="8" ry="5" fill="#1f2937" stroke="#374151" strokeWidth="0.5" />
             <ellipse cx="68" cy="92" rx="8" ry="5" fill="#1f2937" stroke="#374151" strokeWidth="0.5" />
+            {/* Wheel spokes - rear (animated) */}
+            <g className="f1-wheel" style={{ transformOrigin: "22px 92px" }}>
+              <line x1="22" y1="88" x2="22" y2="96" stroke="#6b7280" strokeWidth="0.8" />
+              <line x1="15" y1="92" x2="29" y2="92" stroke="#6b7280" strokeWidth="0.8" />
+            </g>
+            <g className="f1-wheel" style={{ transformOrigin: "68px 92px" }}>
+              <line x1="68" y1="88" x2="68" y2="96" stroke="#6b7280" strokeWidth="0.8" />
+              <line x1="61" y1="92" x2="75" y2="92" stroke="#6b7280" strokeWidth="0.8" />
+            </g>
             {/* Exhaust glow */}
             <ellipse cx="45" cy="108" rx="5" ry="3" fill="#f97316" opacity="0.7" />
             <ellipse cx="45" cy="112" rx="3" ry="2" fill="#ef4444" opacity="0.4" />

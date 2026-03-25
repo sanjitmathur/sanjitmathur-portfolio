@@ -67,7 +67,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
         boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px ${job.accent}22` : "none",
       }}>
         {/* Top: widget + header */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 200 }}>
+        <div className="exp-card-inner">
           {/* Left: job info */}
           <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid var(--border)" }}>
             <div>
