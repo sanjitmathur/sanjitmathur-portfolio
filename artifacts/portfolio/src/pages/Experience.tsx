@@ -7,7 +7,7 @@ import LabWidget from "../components/widgets/LabWidget";
 const jobs = [
   {
     n: "01", role: "AI Engineering Intern", co: "Baraka Financial Ltd.",
-    type: "FinTech · AI", period: "Feb 2026 – Present", loc: "Dubai, UAE",
+    type: "FinTech · AI", period: "Feb 2026 - Present", loc: "Dubai, UAE",
     bullets: [
       "Deployed containerized services to Kubernetes; built AI-powered internal tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
       "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
@@ -19,9 +19,9 @@ const jobs = [
   },
   {
     n: "02", role: "Digital Intern", co: "IndiGo — InterGlobe Aviation",
-    type: "Aviation · ML", period: "Aug – Sep 2025", loc: "Gurgaon, India",
+    type: "Aviation · ML", period: "Aug - Sep 2025", loc: "Gurgaon, India",
     bullets: [
-      "Built a Logistic Regression model to predict on-time arrival performance on the DEL–BOM sector using 1,000 flight records and 6 engineered features (block-hour overrun, departure delay, aircraft type, weather index, ATC congestion), achieving 88% accuracy with balanced precision/recall across both classes.",
+      "Built a Logistic Regression model to predict on-time arrival performance on the DEL-BOM sector using 1,000 flight records and 6 engineered features (block-hour overrun, departure delay, aircraft type, weather index, ATC congestion), achieving 88% accuracy with balanced precision/recall across both classes.",
       "Engineered features from raw operational data including one-hot encoding of 3 aircraft types (A320, A320neo, A321neo), computed block-hour overrun from scheduled vs. actual hours, and conducted correlation analysis across 10 numerical variables to inform feature selection for modeling.",
     ],
     tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
@@ -30,7 +30,7 @@ const jobs = [
   },
   {
     n: "03", role: "Software Engineering Intern", co: "Lab of Future",
-    type: "EdTech", period: "Jun – Aug 2025", loc: "Dubai, UAE",
+    type: "EdTech", period: "Jun - Aug 2025", loc: "Dubai, UAE",
     bullets: [
       "Built internal educational software used by 500+ students across 4 campuses.",
     ],
