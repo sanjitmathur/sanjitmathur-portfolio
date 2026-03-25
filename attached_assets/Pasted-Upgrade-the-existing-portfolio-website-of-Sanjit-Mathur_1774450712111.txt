@@ -1,0 +1,236 @@
+Upgrade the existing portfolio website of **Sanjit Mathur** into a **clean, modern, bold minimal developer portfolio**.
+
+Do NOT add flashy 3D scenes, particle systems, or heavy animations.
+
+The goal is to create a **modern product-style website similar to Linear, Vercel, and Stripe**.
+
+Focus on **simplicity, strong typography, spacing, and subtle interactions**.
+
+---
+
+DESIGN STYLE
+
+The design should feel:
+
+• modern
+• minimal
+• bold
+• professional
+• product-engineer style
+
+Avoid gradients everywhere or flashy visual effects.
+
+The site should look **clean and intentional**.
+
+---
+
+COLOR PALETTE
+
+Use this palette consistently.
+
+Background
+#0B0B0C
+
+Card / surface
+#111113
+
+Primary accent
+#6366F1
+
+Text
+#F5F5F7
+
+Muted text
+#9CA3AF
+
+Borders
+rgba(255,255,255,0.08)
+
+Use the accent color **sparingly** for links, buttons, and highlights.
+
+---
+
+TYPOGRAPHY
+
+Use **Inter** or **Satoshi**.
+
+Heading styles:
+
+Hero title
+font-size: 64px
+font-weight: 700
+letter-spacing: -0.02em
+
+Section headings
+font-size: 36px
+font-weight: 600
+
+Body text
+font-size: 16px
+line-height: 1.6
+
+Muted text should use the muted color.
+
+---
+
+LAYOUT PRINCIPLES
+
+Use large spacing to create a premium feel.
+
+Section spacing
+padding-top: 120px
+padding-bottom: 120px
+
+Card padding
+32px
+
+Use max content width
+1200px
+
+Center the layout.
+
+---
+
+HERO SECTION
+
+Create a bold minimal hero section.
+
+Left aligned layout.
+
+Content:
+
+Name
+Sanjit Mathur
+
+Subtitle
+AI & Software Engineer
+
+Description
+Building intelligent systems, modern web applications, and developer tools.
+
+Include two buttons:
+
+View Projects
+Contact Me
+
+Add a subtle accent underline or highlight on the name.
+
+---
+
+ABOUT SECTION
+
+Keep it minimal and readable.
+
+Use a clean text layout.
+
+Short story about Sanjit including:
+
+• engineering focus
+• interest in AI and software systems
+• building real products
+
+Avoid long paragraphs.
+
+---
+
+PROJECTS SECTION
+
+Projects are the most important section.
+
+Use **modern project cards**.
+
+Each project card should include:
+
+Project title
+Short description
+Tech stack
+GitHub link
+
+Card style:
+
+background: #111113
+border: 1px solid rgba(255,255,255,0.08)
+border-radius: 16px
+
+Hover effect:
+
+• slight lift (translateY -4px)
+• subtle shadow
+• accent border highlight
+
+Use a grid layout.
+
+---
+
+SKILLS SECTION
+
+Display technologies in a **clean grid or tag layout**.
+
+Examples:
+
+Python
+React
+Machine Learning
+Node.js
+TensorFlow
+APIs
+
+Each skill should be a pill-shaped element with a subtle border.
+
+---
+
+CONTACT SECTION
+
+Create a minimal contact area.
+
+Include:
+
+Email
+GitHub
+LinkedIn
+
+Add a clean call-to-action button.
+
+---
+
+INTERACTIONS
+
+Keep interactions subtle and elegant.
+
+Allowed interactions:
+
+• card hover lift
+• button hover color change
+• smooth scrolling
+• link underline animation
+• subtle fade-in for sections
+
+Do NOT add:
+
+particle effects
+heavy 3D
+complex animations
+
+---
+
+PERFORMANCE
+
+Ensure the site:
+
+• loads fast
+• is responsive
+• works well on mobile
+• keeps animations lightweight
+
+---
+
+GOAL
+
+The final result should feel like a **modern software engineer portfolio used by developers working at companies like Vercel, Stripe, or Linear**.
+
+The design must look:
+
+clean
+confident
+minimal
+professional

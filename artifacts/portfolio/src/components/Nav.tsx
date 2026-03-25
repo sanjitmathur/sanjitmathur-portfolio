@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 
 const sections = ["about", "experience", "projects", "skills", "contact"];
+const labels: Record<string, string> = {
+  about: "About", experience: "Experience", projects: "Projects",
+  skills: "Skills", contact: "Contact",
+};
 
 export default function Nav() {
+  const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("about");
-  const [vis, setVis] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      setVis(window.scrollY > 80);
+      setScrolled(window.scrollY > 60);
       const mid = window.scrollY + window.innerHeight / 2;
       for (const id of sections) {
         const el = document.getElementById(id);
@@ -25,45 +29,39 @@ export default function Nav() {
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <>
-      {/* Top nav */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "1.4rem clamp(1.5rem,4vw,3rem)",
-        background: vis ? "rgba(20,18,9,0.88)" : "transparent",
-        backdropFilter: vis ? "blur(20px)" : "none",
-        borderBottom: vis ? "1px solid rgba(248,242,225,0.06)" : "none",
-        transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
-      }}>
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
-          style={{ background: "none", border: "none", cursor: "none", fontFamily: "var(--app-font-serif)", fontSize: "1.05rem", fontWeight: 400, color: vis ? "var(--fawn)" : "transparent", transition: "color 0.4s", letterSpacing: "0.04em" }}>
-          SM
-        </button>
-
-        <div style={{ display: vis ? "flex" : "none", gap: "2.5rem" }}>
-          {sections.map(s => (
-            <button key={s} onClick={() => go(s)} className="clickable"
-              style={{ background: "none", border: "none", cursor: "none", fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.22em", textTransform: "uppercase", color: active === s ? "var(--fawn)" : "var(--text-30)", fontWeight: active === s ? 700 : 400, transition: "color 0.3s" }}>
-              {s}
-            </button>
-          ))}
+    <nav style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      padding: "0 var(--section-px)", height: "60px",
+      background: scrolled ? "rgba(11,11,12,0.88)" : "transparent",
+      backdropFilter: scrolled ? "blur(16px)" : "none",
+      borderBottom: scrolled ? "1px solid var(--border)" : "none",
+      transition: "background 0.4s ease, border-color 0.4s ease",
+    }}>
+      {/* Logo */}
+      <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
+        style={{ background: "none", border: "none", cursor: "none", display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <div style={{ width: 28, height: 28, borderRadius: "7px", background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em" }}>SM</span>
         </div>
+        <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text)", opacity: scrolled ? 1 : 0, transition: "opacity 0.4s" }}>Sanjit Mathur</span>
+      </button>
 
-        <a href="mailto:sanjitmathur08@gmail.com" className="clickable"
-          style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--fawn)", textDecoration: "none", opacity: vis ? 1 : 0, transition: "opacity 0.4s" }}>
-          Hire Me ↗
-        </a>
-      </nav>
-
-      {/* Side dots */}
-      <div style={{ position: "fixed", right: "1.8rem", top: "50%", transform: "translateY(-50%)", zIndex: 50, display: "flex", flexDirection: "column", gap: "0.6rem", opacity: vis ? 1 : 0, transition: "opacity 0.5s" }}>
+      {/* Center links */}
+      <div style={{ display: "flex", gap: "0.25rem", background: scrolled ? "rgba(255,255,255,0.04)" : "transparent", padding: scrolled ? "0.3rem" : "0", borderRadius: "10px", border: scrolled ? "1px solid var(--border)" : "none", transition: "all 0.4s" }}>
         {sections.map(s => (
-          <button key={s} onClick={() => go(s)} className="clickable" title={s} style={{ background: "none", border: "none", cursor: "none", padding: "4px" }}>
-            <div className={`nav-dot ${active === s ? "active" : ""}`} />
+          <button key={s} onClick={() => go(s)} className="clickable"
+            style={{ background: active === s ? "rgba(99,102,241,0.15)" : "transparent", border: "none", cursor: "none", padding: "0.35rem 0.85rem", borderRadius: "7px", fontSize: "0.82rem", fontWeight: active === s ? 600 : 400, color: active === s ? "var(--text)" : "var(--muted)", transition: "all 0.2s" }}>
+            {labels[s]}
           </button>
         ))}
       </div>
-    </>
+
+      {/* Right CTA */}
+      <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable"
+        style={{ fontSize: "0.78rem", padding: "0.5rem 1.1rem", opacity: scrolled ? 1 : 0, transition: "opacity 0.4s", pointerEvents: scrolled ? "auto" : "none" }}>
+        Hire Me
+      </a>
+    </nav>
   );
 }
