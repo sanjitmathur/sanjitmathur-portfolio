@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Lenis from "lenis";
 import Loader from "./components/Loader";
 import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
@@ -14,15 +15,28 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [show, setShow] = useState(false);
 
+  /* Lenis smooth scroll — initialised after content mounts */
+  useEffect(() => {
+    if (!show) return;
+    const lenis = new Lenis({
+      duration: 1.3,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    const raf = (time: number) => { lenis.raf(time); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, [show]);
+
   return (
     <Mouse3DProvider>
       <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
         <Cursor />
         <Grain />
         {!loaded && (
-          <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 60); }} />
+          <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 80); }} />
         )}
-        <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.7s ease" }}>
+        <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.8s ease" }}>
           <Nav />
           <main>
             <Hero />

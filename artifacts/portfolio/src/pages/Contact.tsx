@@ -1,93 +1,101 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import Magnetic from "../components/Magnetic";
 
 const links = [
-  { label: "Email", handle: "sanjitmathur08@gmail.com", href: "mailto:sanjitmathur08@gmail.com", cursor: "WRITE" },
-  { label: "LinkedIn", handle: "/in/sanjit-mathur-/", href: "https://linkedin.com/in/sanjit-mathur-/", cursor: "OPEN" },
-  { label: "GitHub", handle: "github.com/sanjitmathur", href: "https://github.com/sanjitmathur", cursor: "OPEN" },
+  { label: "Email",    href: "mailto:sanjitmathur08@gmail.com", icon: "✉", handle: "sanjitmathur08@gmail.com" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/sanjit-mathur-/", icon: "in", handle: "/sanjit-mathur-" },
+  { label: "GitHub",   href: "https://github.com/sanjitmathur", icon: "gh", handle: "sanjitmathur" },
 ];
 
 export default function Contact() {
-  const ref = useRevealChildren(0.05);
-  const headRef = useRef<HTMLHeadingElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
+  useRevealChildren(sectionRef, ".r3d");
 
   return (
-    <section id="contact" style={{ padding: "9rem 0 7rem", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
-      {/* Fawn ambient at bottom */}
-      <div style={{
-        position: "absolute", bottom: "-20%", left: "50%", transform: "translateX(-50%)",
-        width: "90vw", height: "60vh", borderRadius: "50%",
-        background: "radial-gradient(ellipse, var(--fawn-20) 0%, transparent 65%)",
-        pointerEvents: "none",
-      }} />
+    <section id="contact" ref={sectionRef} style={{
+      padding: "clamp(6rem,12vw,9rem) clamp(1.5rem,6vw,5rem) clamp(4rem,8vw,6rem)",
+      background: "var(--bg)", position: "relative", overflow: "hidden", minHeight: "70vh",
+      display: "flex", alignItems: "center",
+    }}>
+      {/* Background ambient glow */}
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: "60vw", height: "60vw", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(213,181,114,0.05) 0%, transparent 65%)", pointerEvents: "none" }} />
 
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(1.5rem, 4vw, 3rem)" }}>
-        <div ref={ref} style={{ perspective: "1400px" }}>
+      <div style={{ maxWidth: "1140px", margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "4rem" }}>
+          <span className="r3d" style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--fawn)" }}>05 / Contact</span>
+          <div style={{ flex: 1, height: "1px", background: "var(--text-06)" }} />
+        </div>
 
-          {/* Heading */}
-          <div className="r3d" style={{ marginBottom: "4rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "var(--fawn)" }}>05 / Contact</span>
-              <div style={{ flex: 1, height: "1px", background: "var(--carbon-12)" }} />
-            </div>
-            <h2 ref={headRef} style={{
-              fontFamily: "var(--app-font-serif)",
-              fontSize: "clamp(3rem, 8vw, 6.5rem)",
-              fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.04em", lineHeight: 1.0,
-            }}>
-              Let's Build<br />
-              <em style={{ color: "var(--fawn)", fontStyle: "italic" }}>Something</em><br />
-              <em style={{ color: "var(--fawn)", fontStyle: "italic" }}>Together</em>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "center" }}>
+          {/* Left */}
+          <div>
+            <h2 className="r3d" style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.8rem,7vw,5.5rem)", fontWeight: 400, color: "var(--text)", lineHeight: 0.92, letterSpacing: "-0.045em", marginBottom: "2.2rem" }}>
+              Let's Build<br /><em style={{ color: "var(--fawn)" }}>Something<br />Together</em>
             </h2>
-            <p style={{ marginTop: "1.5rem", fontFamily: "var(--app-font-sans)", fontSize: "0.88rem", color: "var(--carbon-60)", fontWeight: 300, lineHeight: 1.85, maxWidth: "380px" }}>
-              Open to internships, part-time roles, and interesting collaborations. Always up for a conversation.
+            <p className="r3d" style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.85rem", lineHeight: 1.9, color: "var(--text-60)", maxWidth: "400px", marginBottom: "2.8rem" }}>
+              Open to internships, collaborations, and ambitious projects. Based in Dubai — available globally.
             </p>
+            <div className="r3d">
+              <Magnetic strength={0.35}>
+                <a href="mailto:sanjitmathur08@gmail.com" className="btn-dark clickable" data-cursor="WRITE" style={{ display: "inline-flex" }}>
+                  <span>Say Hello</span>
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M6.5 1.5l5 5-5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </a>
+              </Magnetic>
+            </div>
           </div>
 
-          {/* Magnetic CTA */}
-          <div className="r3d" style={{ marginBottom: "5rem" }}>
-            <Magnetic strength={0.22}>
-              <a href="mailto:sanjitmathur08@gmail.com" className="btn-dark clickable" data-cursor="SEND"
-                style={{ display: "inline-flex", alignItems: "center", gap: "0.7rem" }}>
-                <span>Send a Message</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          {/* Right: glass link cards */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+            {links.map((link, i) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.label !== "Email" ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className={`r3d clickable ${hovered === i ? "glass-gold" : "glass"}`}
+                data-cursor="OPEN"
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  textDecoration: "none", padding: "1.4rem 1.8rem",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  transitionDelay: `${i * 0.1}s`,
+                  transition: "background 0.3s, border-color 0.3s, transform 0.35s cubic-bezier(0.16,1,0.3,1)",
+                  transform: hovered === i ? "translateX(6px)" : "translateX(0)",
+                  borderRadius: "2px", cursor: "none",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: "6px",
+                    background: hovered === i ? "rgba(213,181,114,0.15)" : "rgba(248,242,225,0.05)",
+                    border: `1px solid ${hovered === i ? "rgba(213,181,114,0.4)" : "rgba(248,242,225,0.1)"}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "var(--app-font-mono)", fontSize: "0.55rem",
+                    color: hovered === i ? "var(--fawn)" : "var(--text-30)",
+                    transition: "all 0.3s", fontWeight: 700,
+                  }}>{link.icon}</div>
+                  <div>
+                    <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-30)", marginBottom: "0.2rem" }}>{link.label}</div>
+                    <div style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.78rem", color: hovered === i ? "var(--fawn)" : "var(--text-60)", transition: "color 0.3s" }}>{link.handle}</div>
+                  </div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: hovered === i ? 1 : 0.2, transition: "opacity 0.3s", color: "var(--fawn)" }}>
+                  <path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                 </svg>
               </a>
-            </Magnetic>
-          </div>
-
-          {/* Links */}
-          <div style={{ borderTop: "1px solid var(--carbon-12)" }}>
-            {links.map((l, i) => (
-              <div key={i} className="r3d" style={{ borderBottom: "1px solid var(--carbon-12)", transitionDelay: `${i * 0.08}s` }}>
-                <a
-                  href={l.href}
-                  target={l.href.startsWith("mailto") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  className="clickable"
-                  data-cursor={l.cursor}
-                  style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.8rem 0", transition: "opacity 0.25s" }}
-                  onMouseEnter={e => { e.currentTarget.style.opacity = "0.55"; }}
-                  onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-                >
-                  <div>
-                    <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.48rem", letterSpacing: "0.26em", color: "var(--fawn)", textTransform: "uppercase", marginBottom: "0.35rem" }}>{l.label}</div>
-                    <div style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(1rem, 2.2vw, 1.6rem)", fontWeight: 400, letterSpacing: "-0.015em", color: "var(--carbon)" }}>{l.handle}</div>
-                  </div>
-                  <span style={{ fontFamily: "var(--app-font-serif)", fontSize: "1.2rem", color: "var(--fawn)", transition: "transform 0.3s ease" }}>↗</span>
-                </a>
-              </div>
             ))}
           </div>
+        </div>
 
-          {/* Footer */}
-          <div className="r3d" style={{ marginTop: "5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-            <span style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 400, color: "var(--carbon-30)", letterSpacing: "-0.02em" }}>Sanjit Mathur</span>
-            <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.48rem", letterSpacing: "0.2em", color: "var(--carbon-30)" }}>© 2025 · UOWD · Dubai</span>
-          </div>
-
+        {/* Footer bar */}
+        <div className="r3d" style={{ marginTop: "6rem", paddingTop: "2rem", borderTop: "1px solid var(--text-06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+          <span style={{ fontFamily: "var(--app-font-serif)", fontSize: "0.9rem", fontStyle: "italic", color: "var(--text-30)" }}>Sanjit Mathur — Dubai, UAE</span>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.42rem", letterSpacing: "0.2em", color: "var(--text-30)", textTransform: "uppercase" }}>© 2025 · All rights reserved</span>
         </div>
       </div>
     </section>

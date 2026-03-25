@@ -1,0 +1,333 @@
+You are a **senior Awwwards-winning creative developer** and **WebGL engineer**.
+
+Your task is to design and build a **cinematic 3D portfolio experience for Sanjit Mathur** that is worthy of **Awwwards Site of the Day**.
+
+This is NOT a normal portfolio website.
+
+It must feel like a **premium interactive digital experience**, similar to the best Awwwards sites.
+
+The site should feel like **exploring a futuristic digital lab where projects live in a spatial environment**.
+
+Avoid generic template animations.
+
+The experience must focus on **intentional 3D interaction design, depth, lighting, and immersive storytelling**.
+
+---
+
+CORE EXPERIENCE PHILOSOPHY
+
+The user should feel like they are **moving through a digital world**, not scrolling a webpage.
+
+Scrolling should control **camera progression through a 3D environment**.
+
+The environment should feel **alive and responsive** to the user's cursor and motion.
+
+---
+
+TECH STACK (MANDATORY)
+
+Use modern creative-development tools:
+
+React + Vite
+Three.js / React Three Fiber
+GSAP for timeline control
+Lenis smooth scroll
+Framer Motion for UI micro-interactions
+TailwindCSS for layout
+Custom GLSL shaders for lighting effects
+
+Structure the code professionally.
+
+---
+
+VISUAL STYLE
+
+Design language:
+
+• cinematic
+• dark futuristic interface
+• subtle neon accents
+• glassmorphism panels
+• depth layers
+• volumetric lighting
+• glowing particles
+• high-end typography
+
+Typography inspiration:
+
+Inter
+Satoshi
+Neue Haas Grotesk
+
+Everything must feel **premium and polished**.
+
+---
+
+3D WORLD STRUCTURE
+
+The website exists inside a **3D spatial environment**.
+
+Create a subtle environment with:
+
+• floating geometric structures
+• particle systems
+• volumetric light rays
+• reflective grid floor
+• soft fog for depth
+
+The camera slowly travels through the world as the user scrolls.
+
+---
+
+INTERACTION SYSTEMS (VERY IMPORTANT)
+
+Use these interaction systems intentionally.
+
+1. PARALLAX DEPTH SYSTEM
+
+Create multiple depth layers.
+
+Foreground objects move faster than background objects.
+
+Mouse movement slightly rotates the camera.
+
+The environment must feel dimensional.
+
+---
+
+2. PHYSICS-BASED HOVER EFFECTS
+
+Interactive elements should react with realistic motion.
+
+Examples:
+
+• project cards tilt in 3D
+• lighting changes based on cursor position
+• depth shadow changes dynamically
+
+Use spring-based easing instead of linear animation.
+
+---
+
+3. CURSOR-DRIVEN INTERACTION
+
+The cursor should influence the environment.
+
+Examples:
+
+• light source follows cursor slightly
+• nearby elements shift subtly
+• particles react to cursor proximity
+• UI panels tilt slightly toward cursor
+
+Cursor interactions must feel subtle and elegant.
+
+---
+
+4. ENTRANCE REVEALS
+
+Elements should emerge from depth rather than appear suddenly.
+
+Examples:
+
+• text slides forward in Z-space
+• panels reveal through masked motion
+• staggered element reveals
+
+Motion should feel cinematic.
+
+---
+
+5. MICRO INTERACTIONS
+
+Every clickable element must give feedback.
+
+Examples:
+
+• buttons compress slightly when clicked
+• links animate underline
+• icons glow softly on hover
+• panels shift depth slightly
+
+These details create a premium feel.
+
+---
+
+3D COMPONENTS (MANDATORY)
+
+Build the following major components.
+
+---
+
+1. HERO 3D SCENE
+
+Create a cinematic hero environment.
+
+Features:
+
+• floating particles
+• abstract geometry
+• volumetric light beams
+• subtle camera drift
+
+Title text should appear with depth:
+
+Sanjit Mathur
+AI & Software Engineer
+
+Subtitle:
+
+Building intelligent systems, modern web applications, and developer tools.
+
+The hero scene should immediately feel immersive.
+
+---
+
+2. PROJECT GALLERY (3D SHOWCASE)
+
+Projects must appear as **floating cards in 3D space**.
+
+Cards should:
+
+• tilt in perspective on hover
+• glow subtly
+• cast dynamic shadows
+• expand when clicked
+
+Projects to display:
+
+AI Trading Analyzer
+Real-time Market Dashboard
+AI Developer Assistant
+3D Portfolio Generator
+
+Clicking a project should trigger:
+
+• camera zoom toward the card
+• card expanding into fullscreen panel
+• background depth blur
+
+---
+
+3. SKILL ORBIT SYSTEM
+
+Create a central glowing sphere.
+
+Technology icons orbit around it in 3D.
+
+Technologies include:
+
+Python
+React
+Machine Learning
+Node.js
+TensorFlow
+APIs
+
+The orbit should respond slightly to mouse movement.
+
+---
+
+4. INTERACTIVE GLASS PANELS
+
+About and Contact sections should appear as **floating glass panels**.
+
+Panels should:
+
+• have frosted glass blur
+• cast soft depth shadows
+• move slightly with cursor motion
+
+---
+
+5. PARTICLE FIELD SYSTEM
+
+Create a lightweight particle field.
+
+Particles should:
+
+• slowly drift in space
+• react to cursor proximity
+• glow subtly
+
+---
+
+CAMERA STORYTELLING
+
+Scrolling should control camera movement.
+
+Suggested structure:
+
+Scene 1 — Hero environment
+Scene 2 — About panel emerges
+Scene 3 — Project gallery appears
+Scene 4 — Skill orbit system
+Scene 5 — Contact scene
+
+Transitions must feel seamless.
+
+---
+
+PERFORMANCE REQUIREMENTS
+
+Maintain smooth performance.
+
+Target:
+
+• 60fps rendering
+• optimized shaders
+• lazy loading heavy assets
+• compressed textures
+• minimal draw calls
+
+---
+
+CODE ARCHITECTURE
+
+Create modular components.
+
+Example structure:
+
+/components
+HeroScene
+ProjectGallery3D
+SkillOrbitSystem
+GlassPanel
+ParticleSystem
+ContactScene
+
+Keep code readable and scalable.
+
+---
+
+MOBILE EXPERIENCE
+
+Mobile should load a simplified environment.
+
+Reduce heavy 3D but keep:
+
+• smooth motion
+• hover alternatives
+• interactive components
+
+---
+
+FINAL GOAL
+
+The result should feel like:
+
+• an immersive digital experience
+• a cinematic WebGL portfolio
+• a high-end creative developer website
+
+The user should remember the site.
+
+It should feel worthy of **Awwwards Site of the Day**.
+
+Focus on:
+
+depth
+lighting
+interaction design
+smoothness
+polish

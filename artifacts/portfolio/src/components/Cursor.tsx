@@ -1,99 +1,100 @@
 import { useEffect, useRef } from "react";
 
 export default function Cursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
+  const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
+  const pos  = useRef({ x: -200, y: -200 });
+  const ring = useRef({ x: -200, y: -200 });
+  const raf  = useRef(0);
 
   useEffect(() => {
-    const dot = dotRef.current;
-    const ring = ringRef.current;
-    const label = labelRef.current;
-    if (!dot || !ring || !label) return;
-
-    let mx = 0, my = 0, rx = 0, ry = 0, raf: number;
-    let isHovering = false;
-
     const onMove = (e: MouseEvent) => {
-      mx = e.clientX;
-      my = e.clientY;
-      dot.style.left = mx + "px";
-      dot.style.top = my + "px";
-    };
-
-    const loop = () => {
-      // snappier lerp: 0.22 vs old 0.1
-      rx += (mx - rx) * 0.22;
-      ry += (my - ry) * 0.22;
-      ring.style.left = rx + "px";
-      ring.style.top = ry + "px";
-      label.style.left = rx + "px";
-      label.style.top = ry + "px";
-      raf = requestAnimationFrame(loop);
-    };
-
-    const onOver = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest("a, button, [role=button], .clickable, .magnetic");
-      if (t) {
-        isHovering = true;
-        dot.style.opacity = "0";
-        ring.style.width = "64px";
-        ring.style.height = "64px";
-        ring.style.background = "var(--carbon)";
-        ring.style.borderColor = "var(--carbon)";
-        ring.style.mixBlendMode = "difference";
-        const txt = (t as HTMLElement).dataset.cursor || "";
-        label.textContent = txt;
-        label.style.opacity = txt ? "1" : "0";
-      } else {
-        isHovering = false;
-        dot.style.opacity = "1";
-        ring.style.width = "28px";
-        ring.style.height = "28px";
-        ring.style.background = "transparent";
-        ring.style.borderColor = "rgba(32,31,20,0.35)";
-        ring.style.mixBlendMode = "normal";
-        label.style.opacity = "0";
-        label.textContent = "";
+      pos.current = { x: e.clientX, y: e.clientY };
+      if (dotRef.current) {
+        dotRef.current.style.left = `${e.clientX}px`;
+        dotRef.current.style.top  = `${e.clientY}px`;
+      }
+      /* cursor label from data-cursor attribute */
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      const label = (target as HTMLElement)?.closest("[data-cursor]")?.getAttribute("data-cursor") || "";
+      if (labelRef.current) {
+        labelRef.current.textContent = label;
+        labelRef.current.style.opacity = label ? "1" : "0";
       }
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mouseover", onOver, { passive: true });
-    raf = requestAnimationFrame(loop);
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const tick = () => {
+      ring.current.x = lerp(ring.current.x, pos.current.x, 0.12);
+      ring.current.y = lerp(ring.current.y, pos.current.y, 0.12);
+      if (ringRef.current) {
+        ringRef.current.style.left = `${ring.current.x}px`;
+        ringRef.current.style.top  = `${ring.current.y}px`;
+      }
+      raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+
+    const onEnter = (e: MouseEvent) => {
+      const el = (e.target as HTMLElement);
+      const isClick = el.closest(".clickable") || el.closest("a") || el.closest("button");
+      if (isClick) {
+        if (dotRef.current)  { dotRef.current.style.transform  = "translate(-50%,-50%) scale(3)"; dotRef.current.style.opacity = "0.3"; }
+        if (ringRef.current) { ringRef.current.style.width = "60px"; ringRef.current.style.height = "60px"; ringRef.current.style.borderColor = "var(--fawn)"; ringRef.current.style.boxShadow = "0 0 20px rgba(213,181,114,0.3)"; }
+      }
+    };
+    const onLeave = () => {
+      if (dotRef.current)  { dotRef.current.style.transform  = "translate(-50%,-50%) scale(1)"; dotRef.current.style.opacity = "1"; }
+      if (ringRef.current) { ringRef.current.style.width = "32px"; ringRef.current.style.height = "32px"; ringRef.current.style.borderColor = "rgba(248,242,225,0.35)"; ringRef.current.style.boxShadow = "none"; }
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseover",  onEnter);
+    document.addEventListener("mouseout",   onLeave);
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onOver);
-      cancelAnimationFrame(raf);
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover",  onEnter);
+      document.removeEventListener("mouseout",   onLeave);
+      cancelAnimationFrame(raf.current);
     };
   }, []);
 
   return (
     <>
+      {/* Dot */}
       <div ref={dotRef} style={{
         position: "fixed", zIndex: 99999, pointerEvents: "none",
-        width: 5, height: 5, background: "var(--carbon)", borderRadius: "50%",
+        width: 5, height: 5, borderRadius: "50%",
+        background: "var(--fawn)",
         transform: "translate(-50%,-50%)",
-        transition: "opacity 0.2s ease, transform 0.2s ease",
-        willChange: "left, top",
+        transition: "transform 0.25s cubic-bezier(0.16,1,0.3,1), opacity 0.25s",
+        boxShadow: "0 0 10px rgba(213,181,114,0.6)",
+        mixBlendMode: "normal",
       }} />
+
+      {/* Ring */}
       <div ref={ringRef} style={{
         position: "fixed", zIndex: 99998, pointerEvents: "none",
-        width: 28, height: 28, border: "1px solid rgba(32,31,20,0.35)", borderRadius: "50%",
+        width: 32, height: 32, borderRadius: "50%",
+        border: "1px solid rgba(248,242,225,0.35)",
         transform: "translate(-50%,-50%)",
-        transition: "width 0.35s cubic-bezier(0.16,1,0.3,1), height 0.35s cubic-bezier(0.16,1,0.3,1), background 0.35s ease, border-color 0.35s ease",
-        willChange: "left, top",
+        transition: "width 0.4s cubic-bezier(0.16,1,0.3,1), height 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s",
         display: "flex", alignItems: "center", justifyContent: "center",
-      }} />
-      <div ref={labelRef} style={{
-        position: "fixed", zIndex: 99997, pointerEvents: "none",
-        transform: "translate(-50%,-50%)",
-        fontFamily: "var(--app-font-mono)", fontSize: "0.38rem",
-        letterSpacing: "0.2em", textTransform: "uppercase",
-        color: "var(--bg)", opacity: 0,
-        transition: "opacity 0.2s ease",
-        whiteSpace: "nowrap",
-      }} />
+      }}>
+        {/* Label inside ring */}
+        <div ref={labelRef} style={{
+          fontFamily: "var(--app-font-mono)",
+          fontSize: "0.36rem",
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "var(--fawn)",
+          opacity: 0,
+          transition: "opacity 0.2s",
+          whiteSpace: "nowrap",
+          userSelect: "none",
+        }} />
+      </div>
     </>
   );
 }

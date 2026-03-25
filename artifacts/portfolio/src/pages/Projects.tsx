@@ -1,161 +1,161 @@
 import { useState, useRef } from "react";
 import { useRevealChildren } from "../components/useReveal";
 
-const COLORS = [
-  { bg: "#d5b572", text: "#201f14" },
-  { bg: "#201f14", text: "#f8f2e1" },
-  { bg: "#f2ead5", text: "#201f14" },
-  { bg: "#2a3a2e", text: "#f8f2e1" },
-  { bg: "#3a2a1e", text: "#f8f2e1" },
-];
-
 const projects = [
-  { n: "01", name: "ExamForge", type: "AI · SaaS", year: "2025", desc: "Full-stack SaaS that ingests syllabus PDFs and generates exam papers with worked solutions via LLMs. Schema mapping, retry logic, streaming UI.", tags: ["Next.js", "OpenAI", "PostgreSQL", "TypeScript"], href: "https://github.com/sanjitmathur" },
-  { n: "02", name: "F1 Sim Dashboard", type: "Data · Telemetry", year: "2025", desc: "Real-time Formula 1 telemetry dashboard. Streams lap-by-lap data, tyre strategy models, DRS windows with animated track maps.", tags: ["React", "Python", "FastF1", "D3.js"], href: "https://github.com/sanjitmathur" },
-  { n: "03", name: "Orvyn ExoArm", type: "BCI · Robotics", year: "2024", desc: "EMG-driven robotic arm translating muscle signals into joint actuation. CNN classifier achieving 94% accuracy on 8-class gestures.", tags: ["TensorFlow", "Raspberry Pi", "Arduino", "BLE"], href: "https://github.com/sanjitmathur" },
-  { n: "04", name: "MedAir", type: "Autonomous · Award", year: "2024", desc: "Autonomous drone for last-mile medical delivery. Computer vision landing, route optimisation, real-time telemedicine interface. Platinum & Gold.", tags: ["Python", "OpenCV", "ArduPilot", "ROS"], href: "https://github.com/sanjitmathur" },
-  { n: "05", name: "Spotify Analyzer", type: "ML · Analytics", year: "2024", desc: "Analyses Spotify history for mood patterns, genre drift, and listening trends via NLP sentiment and audio feature importance.", tags: ["Python", "Spotify API", "scikit-learn"], href: "https://github.com/sanjitmathur" },
+  {
+    id: "examforge",
+    num: "01",
+    title: "ExamForge",
+    category: "AI · EdTech",
+    description: "AI-powered exam generator that creates adaptive quizzes from any uploaded content. Built with GPT-4 for question synthesis and dynamic difficulty calibration.",
+    tags: ["Python", "OpenAI API", "React", "FastAPI"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#d5b572",
+    year: "2025",
+  },
+  {
+    id: "f1-dashboard",
+    num: "02",
+    title: "F1 Sim Dashboard",
+    category: "Data Viz · Racing",
+    description: "Live Formula 1 telemetry dashboard pulling real-time race data via the Ergast API. Features animated lap-time comparisons, sector maps and driver-standings heat-maps.",
+    tags: ["React", "D3.js", "WebSocket", "TypeScript"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#c0a055",
+    year: "2025",
+  },
+  {
+    id: "orvyn",
+    num: "03",
+    title: "Orvyn ExoArm",
+    category: "Robotics · CV",
+    description: "EMG-controlled robotic exoskeleton arm prototype. Custom signal processing pipeline filters muscle electrical signals into precise motor commands via Arduino.",
+    tags: ["Arduino", "C++", "Signal Processing", "3D Printing"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#b09048",
+    year: "2024",
+  },
+  {
+    id: "medair",
+    num: "04",
+    title: "MedAir",
+    category: "Health · IoT",
+    description: "Smart air-quality monitor with ML-based risk prediction. Correlates PM2.5 and NO₂ readings with respiratory health indicators. Awarded Platinum + Gold at Science Fair.",
+    tags: ["Python", "IoT", "ML", "Raspberry Pi"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#a08040",
+    year: "2024",
+  },
+  {
+    id: "spotify",
+    num: "05",
+    title: "Spotify Analyzer",
+    category: "Data · Music",
+    description: "Personal music taste profiler using the Spotify Web API. Visualises listening patterns, genre clusters, audio-feature distributions and BPM preferences over time.",
+    tags: ["Python", "Spotify API", "Pandas", "Plotly"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#908038",
+    year: "2024",
+  },
 ];
 
-function Row({ p, idx }: { p: typeof projects[0]; idx: number }) {
+function ProjectCard({ proj, i }: { proj: typeof projects[0]; i: number }) {
   const [hovered, setHovered] = useState(false);
-  const rowRef = useRef<HTMLDivElement>(null);
-  const c = COLORS[idx % COLORS.length];
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
+    if (cardRef.current) {
+      cardRef.current.style.transform = `perspective(1200px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateZ(14px)`;
+    }
+  };
+
+  const resetTransform = () => {
+    if (cardRef.current) cardRef.current.style.transform = "perspective(1200px) rotateY(0) rotateX(0) translateZ(0)";
+    setHovered(false);
+  };
 
   return (
     <div
-      ref={rowRef}
-      className="r3d"
-      style={{ borderTop: "1px solid var(--carbon-12)", position: "relative", transitionDelay: `${idx * 0.08}s` }}
+      ref={cardRef}
+      className={`r3d ${hovered ? "glass-gold glow-box" : "glass"}`}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetTransform}
+      style={{
+        padding: "clamp(1.5rem,2.5vw,2.2rem)", borderRadius: "2px",
+        transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s, background 0.4s",
+        transitionDelay: `${(i % 3) * 0.08}s`, transformStyle: "preserve-3d",
+        willChange: "transform", cursor: "none", position: "relative", overflow: "hidden",
+        display: "flex", flexDirection: "column",
+      }}
     >
-      {/* Color fill reveal from right */}
+      {/* Glow blob */}
       <div style={{
-        position: "absolute", inset: 0, right: 0,
-        background: c.bg,
-        transformOrigin: "right",
-        transform: hovered ? "scaleX(1)" : "scaleX(0)",
-        transition: "transform 0.65s cubic-bezier(0.16,1,0.3,1)",
-        zIndex: 0,
+        position: "absolute", bottom: "-30%", right: "-15%", width: "180px", height: "180px", borderRadius: "50%",
+        background: `radial-gradient(ellipse, ${proj.accent}20 0%, transparent 70%)`,
+        pointerEvents: "none", opacity: hovered ? 1 : 0.3, transition: "opacity 0.5s",
       }} />
 
-      <a
-        href={p.href}
-        target="_blank" rel="noopener noreferrer"
-        className="clickable"
-        data-cursor="VIEW"
-        style={{ textDecoration: "none", display: "block", padding: "1.8rem 0", position: "relative", zIndex: 1 }}
-      >
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "4rem 1fr auto",
-          alignItems: "center", gap: "1.5rem",
-        }}>
-          {/* Number */}
-          <span style={{
-            fontFamily: "var(--app-font-mono)", fontSize: "0.58rem",
-            letterSpacing: "0.2em",
-            color: hovered ? c.text + "99" : "var(--fawn)",
-            transition: "color 0.4s ease",
-          }}>{p.n}</span>
-
-          {/* Content */}
-          <div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", flexWrap: "wrap", marginBottom: "0.3rem" }}>
-              <h3 style={{
-                fontFamily: "var(--app-font-serif)",
-                fontSize: "clamp(1.4rem, 2.8vw, 2rem)",
-                fontWeight: 400, letterSpacing: "-0.025em",
-                color: hovered ? c.text : "var(--carbon)",
-                transition: "color 0.4s ease",
-              }}>{p.name}</h3>
-              <span style={{
-                fontFamily: "var(--app-font-mono)", fontSize: "0.5rem",
-                letterSpacing: "0.12em", textTransform: "uppercase",
-                color: hovered ? c.text + "88" : "var(--fawn)",
-                transition: "color 0.4s ease",
-              }}>{p.type}</span>
-            </div>
-
-            {/* Tags + desc on hover */}
-            <div style={{
-              overflow: "hidden",
-              maxHeight: hovered ? "120px" : "0",
-              opacity: hovered ? 1 : 0,
-              transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease",
-            }}>
-              <p style={{
-                fontFamily: "var(--app-font-sans)", fontSize: "0.78rem",
-                color: hovered ? c.text + "bb" : "var(--carbon-60)",
-                lineHeight: 1.7, fontWeight: 300, maxWidth: "540px",
-                marginBottom: "0.6rem", marginTop: "0.3rem",
-                transition: "color 0.4s ease",
-              }}>{p.desc}</p>
-              <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap" }}>
-                {p.tags.map(t => (
-                  <span key={t} style={{
-                    fontFamily: "var(--app-font-mono)", fontSize: "0.5rem",
-                    letterSpacing: "0.08em", padding: "0.15rem 0.5rem",
-                    border: `1px solid ${hovered ? c.text + "33" : "var(--carbon-12)"}`,
-                    color: hovered ? c.text + "99" : "var(--carbon-60)",
-                    borderRadius: "100px",
-                    transition: "all 0.4s ease",
-                  }}>{t}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Year + arrow */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem", flexShrink: 0 }}>
-            <span style={{
-              fontFamily: "var(--app-font-mono)", fontSize: "0.5rem",
-              letterSpacing: "0.12em", color: hovered ? c.text + "66" : "var(--carbon-30)",
-              transition: "color 0.4s ease",
-            }}>{p.year}</span>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%",
-              border: `1px solid ${hovered ? c.text + "33" : "var(--carbon-12)"}`,
+      {/* Top row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.6rem" }}>
+        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.5rem", letterSpacing: "0.2em", color: "var(--fawn)", opacity: 0.7 }}>{proj.num}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.1em", color: "var(--text-30)" }}>{proj.year}</span>
+          <a href={proj.link} target="_blank" rel="noopener noreferrer" className="clickable" data-cursor="OPEN"
+            style={{
+              width: 32, height: 32, borderRadius: "50%",
+              border: `1px solid ${hovered ? proj.accent + "60" : "rgba(248,242,225,0.12)"}`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              background: hovered ? c.text + "11" : "transparent",
-              transform: hovered ? "rotate(-45deg) scale(1.1)" : "rotate(0deg) scale(1)",
-              transition: "all 0.45s cubic-bezier(0.16,1,0.3,1)",
+              color: hovered ? proj.accent : "var(--text-30)", textDecoration: "none",
+              transition: "all 0.3s", flexShrink: 0,
             }}>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 11L11 1M11 1H4M11 1V8" stroke={hovered ? c.text : "var(--carbon)"} strokeWidth="1.2" strokeLinecap="round" />
-              </svg>
-            </div>
-          </div>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /></svg>
+          </a>
         </div>
-      </a>
+      </div>
+
+      {/* Category */}
+      <div style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.42rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--fawn)", marginBottom: "0.6rem", opacity: 0.8 }}>{proj.category}</div>
+
+      {/* Title */}
+      <h3 style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(1.2rem,2.5vw,1.6rem)", fontWeight: 400, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "1rem" }}>{proj.title}</h3>
+
+      {/* Description */}
+      <p style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.78rem", lineHeight: 1.9, color: "var(--text-60)", flex: 1, marginBottom: "1.5rem" }}>{proj.description}</p>
+
+      {/* Tags */}
+      <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+        {proj.tags.map(t => <span key={t} className="tag">{t}</span>)}
+      </div>
     </div>
   );
 }
 
 export default function Projects() {
-  const ref = useRevealChildren(0.05);
+  const sectionRef = useRef<HTMLElement>(null);
+  useRevealChildren(sectionRef, ".r3d");
 
   return (
-    <section id="projects" style={{ padding: "9rem 0", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(1.5rem, 4vw, 3rem)" }}>
-        <div ref={ref} style={{ perspective: "1400px" }}>
-          <div className="r3d" style={{ marginBottom: "4.5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.52rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "var(--fawn)" }}>03 / Projects</span>
-              <div style={{ flex: 1, height: "1px", background: "var(--carbon-12)" }} />
-            </div>
-            <h2 style={{
-              fontFamily: "var(--app-font-serif)",
-              fontSize: "clamp(2.5rem, 6.5vw, 5rem)",
-              fontWeight: 400, color: "var(--carbon)", letterSpacing: "-0.035em", lineHeight: 1.05,
-            }}>
-              Things I've<br /><em style={{ color: "var(--fawn)", fontStyle: "italic" }}>Built</em>
-            </h2>
-          </div>
+    <section id="projects" ref={sectionRef} style={{ padding: "clamp(6rem,12vw,9rem) clamp(1.5rem,6vw,5rem)", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
+      {/* Ambient glow */}
+      <div style={{ position: "absolute", top: "30%", left: "-10%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(213,181,114,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-          {projects.map((p, i) => <Row key={p.n} p={p} idx={i} />)}
-          <div style={{ borderTop: "1px solid var(--carbon-12)" }} />
+      <div style={{ maxWidth: "1140px", margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "4rem" }}>
+          <span className="r3d" style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--fawn)" }}>03 / Projects</span>
+          <div style={{ flex: 1, height: "1px", background: "var(--text-06)" }} />
+        </div>
+
+        <h2 className="r3d" style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.5rem,6vw,4.5rem)", fontWeight: 400, color: "var(--text)", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "3.5rem" }}>
+          Things I've<br /><em style={{ color: "var(--fawn)" }}>Built</em>
+        </h2>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,300px),1fr))", gap: "1rem" }}>
+          {projects.map((proj, i) => <ProjectCard key={proj.id} proj={proj} i={i} />)}
         </div>
       </div>
     </section>

@@ -10,35 +10,47 @@
 }
 
 /* ============================================================
-   EXACT PALETTE
-   Soft Fawn    #d5b572
-   Carbon Black #201f14
-   Ivory Mist   #f8f2e1
+   DARK FUTURISTIC PALETTE
+   Bg           #141209  (near-black warm)
+   Carbon       #201f14  (section bg / elevated surfaces)
+   Ivory Mist   #f8f2e1  (primary text)
+   Soft Fawn    #d5b572  (golden accent / "neon")
    ============================================================ */
 :root {
-  --bg:        #f8f2e1;
-  --bg-alt:    #f2ead5;
-  --carbon:    #201f14;
-  --carbon-60: rgba(32,31,20,0.6);
-  --carbon-30: rgba(32,31,20,0.3);
-  --carbon-12: rgba(32,31,20,0.12);
-  --carbon-06: rgba(32,31,20,0.06);
-  --fawn:      #d5b572;
-  --fawn-60:   rgba(213,181,114,0.6);
-  --fawn-20:   rgba(213,181,114,0.2);
+  --bg:          #141209;
+  --bg-2:        #201f14;
+  --bg-3:        #2a2918;
+  --text:        #f8f2e1;
+  --text-60:     rgba(248,242,225,0.60);
+  --text-30:     rgba(248,242,225,0.30);
+  --text-12:     rgba(248,242,225,0.12);
+  --text-06:     rgba(248,242,225,0.06);
+  --fawn:        #d5b572;
+  --fawn-60:     rgba(213,181,114,0.60);
+  --fawn-20:     rgba(213,181,114,0.20);
+  --fawn-08:     rgba(213,181,114,0.08);
+  --glow:        0 0 40px rgba(213,181,114,0.15);
 
-  --app-font-sans: 'Space Grotesk', sans-serif;
+  /* legacy aliases so old components don't break */
+  --carbon:      #f8f2e1;
+  --carbon-60:   rgba(248,242,225,0.60);
+  --carbon-30:   rgba(248,242,225,0.30);
+  --carbon-12:   rgba(248,242,225,0.12);
+  --carbon-06:   rgba(248,242,225,0.06);
+  --bg-alt:      #201f14;
+
+  --app-font-sans:  'Space Grotesk', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
-  --app-font-mono: 'Space Mono', monospace;
+  --app-font-mono:  'Space Mono', monospace;
 }
 
 /* === RESET === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; } /* Lenis handles scroll */
 
 body {
   background: var(--bg);
-  color: var(--carbon);
+  color: var(--text);
   font-family: var(--app-font-sans);
   overflow-x: hidden;
   cursor: none;
@@ -46,13 +58,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (max-width: 768px) {
-  body { cursor: auto; }
-}
+@media (max-width: 768px) { body { cursor: auto; } }
 
 ::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--carbon-30); }
+::-webkit-scrollbar-thumb { background: rgba(213,181,114,0.3); }
+
+/* ============================================================
+   GLASSMORPHISM
+   ============================================================ */
+.glass {
+  background: rgba(248,242,225,0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(248,242,225,0.08);
+}
+.glass-gold {
+  background: rgba(213,181,114,0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(213,181,114,0.15);
+}
 
 /* ============================================================
    LOADER
@@ -65,21 +91,21 @@ body {
   font-family: var(--app-font-serif);
   font-size: clamp(2.2rem, 6vw, 4.5rem);
   font-weight: 400; letter-spacing: -0.035em;
-  color: var(--carbon);
+  color: var(--text);
 }
 .loader-bar-track {
   width: min(300px, 75vw); height: 1px;
-  background: var(--carbon-12); position: relative; overflow: hidden;
+  background: rgba(248,242,225,0.08); position: relative; overflow: hidden;
 }
 .loader-bar-fill {
   height: 100%;
-  background: linear-gradient(to right, var(--fawn), var(--carbon));
+  background: linear-gradient(to right, var(--fawn), var(--text));
   transform-origin: left; transform: scaleX(0);
 }
 .loader-pct {
   font-family: var(--app-font-mono);
   font-size: 0.6rem; letter-spacing: 0.3em;
-  color: var(--carbon-30);
+  color: var(--text-30);
 }
 
 /* ============================================================
@@ -87,17 +113,17 @@ body {
    ============================================================ */
 .nav-dot {
   width: 4px; height: 4px; border-radius: 50%;
-  background: var(--carbon-30);
+  background: var(--text-30);
   transition: all 0.3s;
 }
-.nav-dot.active { background: var(--carbon); transform: scale(2); }
+.nav-dot.active { background: var(--fawn); transform: scale(2); }
 
 /* ============================================================
    3D REVEAL
    ============================================================ */
 .r3d {
   opacity: 0;
-  transform: perspective(1000px) translateY(65px) translateZ(-120px) rotateX(-20deg);
+  transform: perspective(1000px) translateY(60px) translateZ(-100px) rotateX(-18deg);
   transition: opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.1s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d.in { opacity: 1; transform: perspective(1000px) translateY(0) translateZ(0) rotateX(0); }
@@ -117,8 +143,7 @@ body {
 .r3d-right.in { opacity: 1; transform: perspective(1000px) translateX(0) translateZ(0) rotateY(0); }
 
 .r3d-up {
-  opacity: 0;
-  transform: translateY(40px);
+  opacity: 0; transform: translateY(40px);
   transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
 }
 .r3d-up.in { opacity: 1; transform: translateY(0); }
@@ -129,32 +154,32 @@ body {
 .btn-dark {
   display: inline-flex; align-items: center; gap: 0.6rem;
   padding: 1rem 2.4rem;
-  background: var(--carbon); color: var(--bg);
-  font-family: var(--app-font-sans); font-weight: 600;
+  background: var(--fawn); color: var(--bg);
+  font-family: var(--app-font-sans); font-weight: 700;
   font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
   text-decoration: none; border: none; cursor: none; position: relative; overflow: hidden;
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 .btn-dark::before {
   content: ''; position: absolute; inset: 0;
-  background: var(--fawn);
+  background: var(--text);
   transform: translateX(-101%);
   transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .btn-dark:hover::before { transform: translateX(0); }
-.btn-dark:hover { transform: translateY(-2px); box-shadow: 0 14px 40px var(--carbon-12); color: var(--carbon); }
+.btn-dark:hover { box-shadow: 0 0 40px rgba(213,181,114,0.35); transform: translateY(-2px); }
 .btn-dark span, .btn-dark svg { position: relative; z-index: 1; }
 
 .btn-outline {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.95rem 1.9rem;
-  background: transparent; color: var(--carbon);
+  background: transparent; color: var(--text);
   font-family: var(--app-font-sans); font-weight: 500;
   font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-  text-decoration: none; border: 1px solid var(--carbon-30); cursor: none;
+  text-decoration: none; border: 1px solid var(--text-30); cursor: none;
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-.btn-outline:hover { background: var(--carbon); color: var(--bg); border-color: var(--carbon); transform: translateY(-2px); }
+.btn-outline:hover { background: var(--text-06); border-color: var(--fawn); color: var(--fawn); transform: translateY(-2px); }
 
 /* ============================================================
    TAG
@@ -162,16 +187,51 @@ body {
 .tag {
   display: inline-flex; align-items: center;
   padding: 0.2rem 0.65rem;
-  border: 1px solid var(--carbon-12); border-radius: 100px;
+  border: 1px solid var(--text-12); border-radius: 100px;
   font-size: 0.58rem; font-family: var(--app-font-mono);
-  letter-spacing: 0.05em; color: var(--carbon-60);
+  letter-spacing: 0.05em; color: var(--text-60);
   transition: all 0.25s ease;
 }
+.tag:hover { background: var(--fawn-08); border-color: var(--fawn-60); color: var(--fawn); }
 
 /* ============================================================
-   MARQUEE — used in Skills and Hero
+   GLOW EFFECTS
+   ============================================================ */
+.glow-fawn { text-shadow: 0 0 30px rgba(213,181,114,0.5); }
+.glow-box   { box-shadow: 0 0 60px rgba(213,181,114,0.12), inset 0 0 60px rgba(213,181,114,0.03); }
+
+/* ============================================================
+   MARQUEE
    ============================================================ */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+/* ============================================================
+   WORD REVEAL (mask from bottom)
+   ============================================================ */
+.reveal-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.reveal-word {
+  display: inline-block;
+  animation: revealWord 1.1s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes revealWord {
+  from { transform: translateY(110%) skewY(5deg); opacity: 0; }
+  to   { transform: translateY(0)    skewY(0);    opacity: 1; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+@keyframes scrollLine {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
