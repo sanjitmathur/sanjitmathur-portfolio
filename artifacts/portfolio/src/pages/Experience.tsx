@@ -63,7 +63,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
         borderRadius: 20, overflow: "hidden",
         transform: `perspective(1200px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: tilt.x === 0 ? "transform 0.6s ease, box-shadow 0.3s" : "transform 0.05s linear",
-        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 16px 48px rgba(15,13,10,0.1), 0 0 0 1px ${job.accent}18` : "0 1px 4px rgba(15,13,10,0.04)",
+        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px ${job.accent}22` : "none",
       }}>
         {/* Top: widget + header */}
         <div className="exp-card-inner">

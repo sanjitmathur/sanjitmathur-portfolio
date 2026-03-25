@@ -92,8 +92,8 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
           ? "transform 0.55s ease, box-shadow 0.3s, border-color 0.3s"
           : "transform 0.06s linear, border-color 0.3s",
         boxShadow: hovered
-          ? `0 16px 48px rgba(15,13,10,0.1), 0 0 0 1px ${proj.accent}18`
-          : "0 1px 4px rgba(15,13,10,0.04)",
+          ? `0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px ${proj.accent}22`
+          : "none",
         cursor: "none",
       }}>
         {/* Widget panel */}
