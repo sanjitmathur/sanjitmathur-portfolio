@@ -15,7 +15,6 @@ export default function Cursor() {
         dotRef.current.style.left = `${e.clientX}px`;
         dotRef.current.style.top  = `${e.clientY}px`;
       }
-      /* cursor label from data-cursor attribute */
       const target = document.elementFromPoint(e.clientX, e.clientY);
       const label = (target as HTMLElement)?.closest("[data-cursor]")?.getAttribute("data-cursor") || "";
       if (labelRef.current) {
@@ -37,16 +36,16 @@ export default function Cursor() {
     raf.current = requestAnimationFrame(tick);
 
     const onEnter = (e: MouseEvent) => {
-      const el = (e.target as HTMLElement);
+      const el = e.target as HTMLElement;
       const isClick = el.closest(".clickable") || el.closest("a") || el.closest("button");
       if (isClick) {
-        if (dotRef.current)  { dotRef.current.style.transform  = "translate(-50%,-50%) scale(3)"; dotRef.current.style.opacity = "0.3"; }
-        if (ringRef.current) { ringRef.current.style.width = "60px"; ringRef.current.style.height = "60px"; ringRef.current.style.borderColor = "var(--fawn)"; ringRef.current.style.boxShadow = "0 0 20px rgba(213,181,114,0.3)"; }
+        if (dotRef.current)  { dotRef.current.style.transform = "translate(-50%,-50%) scale(3)"; dotRef.current.style.opacity = "0.3"; }
+        if (ringRef.current) { ringRef.current.style.width = "60px"; ringRef.current.style.height = "60px"; ringRef.current.style.borderColor = "var(--accent)"; ringRef.current.style.boxShadow = "0 0 20px rgba(99,102,241,0.35)"; }
       }
     };
     const onLeave = () => {
-      if (dotRef.current)  { dotRef.current.style.transform  = "translate(-50%,-50%) scale(1)"; dotRef.current.style.opacity = "1"; }
-      if (ringRef.current) { ringRef.current.style.width = "32px"; ringRef.current.style.height = "32px"; ringRef.current.style.borderColor = "rgba(248,242,225,0.35)"; ringRef.current.style.boxShadow = "none"; }
+      if (dotRef.current)  { dotRef.current.style.transform = "translate(-50%,-50%) scale(1)"; dotRef.current.style.opacity = "1"; }
+      if (ringRef.current) { ringRef.current.style.width = "32px"; ringRef.current.style.height = "32px"; ringRef.current.style.borderColor = "rgba(245,245,247,0.25)"; ringRef.current.style.boxShadow = "none"; }
     };
 
     document.addEventListener("mousemove", onMove);
@@ -62,37 +61,25 @@ export default function Cursor() {
 
   return (
     <>
-      {/* Dot */}
       <div ref={dotRef} style={{
         position: "fixed", zIndex: 99999, pointerEvents: "none",
         width: 5, height: 5, borderRadius: "50%",
-        background: "var(--fawn)",
+        background: "var(--accent)",
         transform: "translate(-50%,-50%)",
         transition: "transform 0.25s cubic-bezier(0.16,1,0.3,1), opacity 0.25s",
-        boxShadow: "0 0 10px rgba(213,181,114,0.6)",
-        mixBlendMode: "normal",
+        boxShadow: "0 0 10px rgba(99,102,241,0.7)",
       }} />
-
-      {/* Ring */}
       <div ref={ringRef} style={{
         position: "fixed", zIndex: 99998, pointerEvents: "none",
         width: 32, height: 32, borderRadius: "50%",
-        border: "1px solid rgba(248,242,225,0.35)",
+        border: "1px solid rgba(245,245,247,0.25)",
         transform: "translate(-50%,-50%)",
         transition: "width 0.4s cubic-bezier(0.16,1,0.3,1), height 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s",
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
-        {/* Label inside ring */}
         <div ref={labelRef} style={{
-          fontFamily: "var(--app-font-mono)",
-          fontSize: "0.36rem",
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "var(--fawn)",
-          opacity: 0,
-          transition: "opacity 0.2s",
-          whiteSpace: "nowrap",
-          userSelect: "none",
+          fontSize: "0.38rem", letterSpacing: "0.18em", textTransform: "uppercase",
+          color: "var(--accent)", opacity: 0, transition: "opacity 0.2s", whiteSpace: "nowrap", userSelect: "none",
         }} />
       </div>
     </>

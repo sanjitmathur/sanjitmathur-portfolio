@@ -1,110 +1,113 @@
 import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
+import BarakaWidget from "../components/widgets/BarakaWidget";
+import IndiGoWidget from "../components/widgets/IndiGoWidget";
+import LabWidget from "../components/widgets/LabWidget";
 
 const jobs = [
   {
-    n: "01",
-    role: "AI Engineering Intern",
-    co: "Baraka Financial Ltd.",
-    type: "FinTech · AI",
-    period: "Feb 2026 – Present",
-    loc: "Dubai, UAE",
+    n: "01", role: "AI Engineering Intern", co: "Baraka Financial Ltd.",
+    type: "FinTech · AI", period: "Feb 2026 – Present", loc: "Dubai, UAE",
     bullets: [
-      "Deployed containerised services to Kubernetes; built AI tooling automating error classification and log analysis — eliminating manual triage across support workflows.",
+      "Deployed containerised services to Kubernetes; built AI tooling automating error classification and log analysis.",
       "Built Position Search and Trading Account Monitor integrating OMS, Instruments, and Wallet microservices.",
       "Unified inconsistent data schemas across distributed services into a single portfolio state model.",
     ],
     tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
     accent: "#6366F1",
+    Widget: BarakaWidget,
   },
   {
-    n: "02",
-    role: "Digital Intern",
-    co: "IndiGo — InterGlobe Aviation",
-    type: "Aviation · ML",
-    period: "Aug – Sep 2025",
-    loc: "Gurgaon, India",
+    n: "02", role: "Digital Intern", co: "IndiGo — InterGlobe Aviation",
+    type: "Aviation · ML", period: "Aug – Sep 2025", loc: "Gurgaon, India",
     bullets: [
-      "Built Logistic Regression model predicting on-time arrival (DEL–BOM) using 1,000 flight records — 88% accuracy.",
+      "Built Logistic Regression model predicting on-time arrival (DEL–BOM) with 88% accuracy on 1,000 flight records.",
       "Engineered features from raw operational data: one-hot encoding of aircraft types, block-hour overrun computation.",
     ],
     tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
     accent: "#8B5CF6",
+    Widget: IndiGoWidget,
   },
   {
-    n: "03",
-    role: "Software Engineering Intern",
-    co: "Lab of Future",
-    type: "EdTech",
-    period: "Jun – Aug 2025",
-    loc: "Dubai, UAE",
+    n: "03", role: "Software Engineering Intern", co: "Lab of Future",
+    type: "EdTech", period: "Jun – Aug 2025", loc: "Dubai, UAE",
     bullets: [
       "Built internal educational software used by 500+ students across 4 campuses.",
       "Reduced lesson-preparation time by 30% through component-driven architecture.",
     ],
     tags: ["React", "Node.js", "Full-Stack"],
     accent: "#A78BFA",
+    Widget: LabWidget,
   },
 ];
 
-function JobRow({ job, idx }: { job: typeof jobs[0]; idx: number }) {
+function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [open, setOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientY - rect.top) / rect.height - 0.5;
+    const y = (e.clientX - rect.left) / rect.width - 0.5;
+    setTilt({ x: x * 4, y: y * 4 });
+  };
 
   return (
-    <div className="fade-up" style={{ borderBottom: "1px solid var(--border)", transitionDelay: `${idx * 0.08}s` }}>
-      <div
-        onClick={() => setOpen(!open)}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          display: "grid", gridTemplateColumns: "auto 1fr auto auto", gap: "1.5rem", alignItems: "center",
-          padding: "1.75rem 0", cursor: "none",
-        }}
-      >
-        {/* Accent dot */}
-        <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, flexShrink: 0, boxShadow: hovered ? `0 0 10px ${job.accent}80` : "none", transition: "box-shadow 0.3s" }} />
-
-        {/* Info */}
-        <div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", flexWrap: "wrap", marginBottom: "0.3rem" }}>
-            <span style={{ fontSize: "clamp(1rem,2vw,1.15rem)", fontWeight: 600, color: hovered ? "var(--text)" : "var(--text)", letterSpacing: "-0.02em" }}>{job.co}</span>
-            <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>{job.role}</span>
+    <div
+      className="fade-up"
+      style={{ transitionDelay: `${idx * 0.12}s` }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+    >
+      <div style={{
+        background: "var(--surface)", border: "1px solid var(--border)",
+        borderRadius: 20, overflow: "hidden",
+        transform: `perspective(1200px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transition: tilt.x === 0 ? "transform 0.6s ease, box-shadow 0.3s" : "transform 0.05s linear",
+        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px ${job.accent}22` : "none",
+      }}>
+        {/* Top: widget + header */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 200 }}>
+          {/* Left: job info */}
+          <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid var(--border)" }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, boxShadow: `0 0 10px ${job.accent}80` }} />
+                <span style={{ fontSize: "0.65rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{job.type}</span>
+              </div>
+              <div style={{ fontSize: "clamp(1.1rem,2vw,1.3rem)", fontWeight: 700, letterSpacing: "-0.025em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
+              <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{job.role}</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--muted)", opacity: 0.6 }}>{job.period} · {job.loc}</div>
+            </div>
+            <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: 16 }}>
+              {job.tags.map(t => <span key={t} className="skill-pill" style={{ fontSize: "0.65rem" }}>{t}</span>)}
+            </div>
           </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <span style={{ fontSize: "0.72rem", fontWeight: 600, color: job.accent, letterSpacing: "0.06em", textTransform: "uppercase" }}>{job.type}</span>
-            <span style={{ fontSize: "0.72rem", color: "var(--muted)" }}>{job.period} · {job.loc}</span>
+
+          {/* Right: interactive widget */}
+          <div style={{ padding: 16, background: "rgba(0,0,0,0.3)" }}>
+            <job.Widget />
           </div>
         </div>
 
-        {/* Year */}
-        <span style={{ fontSize: "0.78rem", color: "var(--muted)", whiteSpace: "nowrap" }}>{job.n}</span>
-
-        {/* Toggle */}
-        <div style={{
-          width: 28, height: 28, borderRadius: "50%", border: "1px solid var(--border)",
-          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-          transition: "transform 0.3s ease, border-color 0.3s",
-          transform: open ? "rotate(45deg)" : "rotate(0)",
-          borderColor: open ? "rgba(99,102,241,0.5)" : undefined,
-        }}>
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke={open ? "var(--accent)" : "var(--muted)"} strokeWidth="1.2" strokeLinecap="round" /></svg>
-        </div>
-      </div>
-
-      {/* Expanded */}
-      <div style={{ overflow: "hidden", maxHeight: open ? "350px" : "0", transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1)", paddingLeft: "2rem" }}>
-        <div style={{ paddingBottom: "1.75rem" }}>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.2rem" }}>
-            {job.bullets.map((b, i) => (
-              <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                <span style={{ color: job.accent, marginTop: "0.5em", flexShrink: 0, fontSize: "0.5rem" }}>▶</span>
-                <span style={{ fontSize: "0.875rem", lineHeight: 1.7, color: "var(--muted)" }}>{b}</span>
-              </li>
-            ))}
-          </ul>
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-            {job.tags.map(t => <span key={t} className="skill-pill" style={{ fontSize: "0.72rem" }}>{t}</span>)}
+        {/* Expandable bullets */}
+        <div style={{ borderTop: "1px solid var(--border)" }}>
+          <button
+            onClick={() => setOpen(o => !o)}
+            style={{ width: "100%", background: "none", border: "none", cursor: "none", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--muted)", fontSize: "0.78rem" }}
+          >
+            <span>Key contributions</span>
+            <span style={{ transition: "transform 0.3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>↓</span>
+          </button>
+          <div style={{ overflow: "hidden", maxHeight: open ? "300px" : "0", transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1)" }}>
+            <ul style={{ listStyle: "none", padding: "0 32px 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              {job.bullets.map((b, i) => (
+                <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                  <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>▶</span>
+                  <span style={{ fontSize: "0.82rem", lineHeight: 1.7, color: "var(--muted)" }}>{b}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
@@ -123,8 +126,8 @@ export default function Experience() {
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Experience</p>
           <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--text)" }}>Where I've made an impact</h2>
         </div>
-        <div style={{ borderTop: "1px solid var(--border)" }}>
-          {jobs.map((j, i) => <JobRow key={j.n} job={j} idx={i} />)}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          {jobs.map((j, i) => <JobCard key={j.n} job={j} idx={i} />)}
         </div>
       </div>
     </section>

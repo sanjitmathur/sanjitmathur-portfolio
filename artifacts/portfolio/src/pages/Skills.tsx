@@ -2,49 +2,58 @@ import { useEffect, useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 
 const stack = [
-  { name: "Python",       pct: 95, cat: "Language" },
-  { name: "TypeScript",   pct: 88, cat: "Language" },
-  { name: "React",        pct: 90, cat: "Frontend" },
-  { name: "FastAPI",      pct: 82, cat: "Backend" },
-  { name: "TensorFlow",   pct: 78, cat: "ML / AI" },
-  { name: "OpenCV",       pct: 75, cat: "ML / AI" },
-  { name: "Kubernetes",   pct: 72, cat: "DevOps" },
-  { name: "Docker",       pct: 85, cat: "DevOps" },
-  { name: "LLM APIs",     pct: 88, cat: "AI" },
-  { name: "PostgreSQL",   pct: 80, cat: "Database" },
-  { name: "Node.js",      pct: 80, cat: "Backend" },
-  { name: "Next.js",      pct: 76, cat: "Frontend" },
+  { name: "Python",       pct: 95, cat: "Language", color: "#3b82f6" },
+  { name: "TypeScript",   pct: 88, cat: "Language", color: "#6366f1" },
+  { name: "React",        pct: 90, cat: "Frontend", color: "#61dafb" },
+  { name: "FastAPI",      pct: 82, cat: "Backend",  color: "#22c55e" },
+  { name: "TensorFlow",   pct: 78, cat: "ML / AI",  color: "#f59e0b" },
+  { name: "LLM APIs",     pct: 88, cat: "AI",       color: "#a78bfa" },
+  { name: "Kubernetes",   pct: 72, cat: "DevOps",   color: "#3b82f6" },
+  { name: "Docker",       pct: 85, cat: "DevOps",   color: "#0ea5e9" },
 ];
 
-const marqueeItems = ["Python", "React", "TypeScript", "TensorFlow", "Kubernetes", "Docker", "LLM APIs", "FastAPI", "OpenCV", "PostgreSQL", "Node.js", "Next.js", "scikit-learn", "Pandas", "NumPy", "Arduino", "AWS", "GCP"];
+const pills = [
+  "Python", "React", "TypeScript", "TensorFlow", "Kubernetes", "Docker",
+  "LLM APIs", "FastAPI", "OpenCV", "PostgreSQL", "Node.js", "Next.js",
+  "scikit-learn", "Pandas", "NumPy", "Arduino", "AWS", "C++", "D3.js", "Plotly",
+];
 
-function Bar({ skill, i }: { skill: typeof stack[0]; i: number }) {
+const domains = [
+  { area: "AI / ML", detail: "TensorFlow, PyTorch, OpenCV, LLMs, scikit-learn", color: "#a78bfa" },
+  { area: "Full-Stack", detail: "React, FastAPI, Node.js, PostgreSQL, Next.js", color: "#6366f1" },
+  { area: "DevOps", detail: "Kubernetes, Docker, AWS, GCP", color: "#3b82f6" },
+  { area: "Languages", detail: "Python, TypeScript, C++, SQL", color: "#22c55e" },
+];
+
+function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {
   const [animated, setAnimated] = useState(false);
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setAnimated(true); ob.disconnect(); } }, { threshold: 0.4 });
+    const ob = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setAnimated(true); ob.disconnect(); }
+    }, { threshold: 0.3 });
     if (ref.current) ob.observe(ref.current);
     return () => ob.disconnect();
   }, []);
 
   return (
     <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ cursor: "none" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.55rem" }}>
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "baseline" }}>
-          <span style={{ fontFamily: "var(--app-font-sans)", fontWeight: 500, fontSize: "0.82rem", color: hovered ? "var(--fawn)" : "var(--text)", transition: "color 0.25s" }}>{skill.name}</span>
-          <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.4rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-30)" }}>{skill.cat}</span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+        <div style={{ display: "flex", gap: "0.7rem", alignItems: "baseline" }}>
+          <span style={{ fontWeight: 500, fontSize: "0.82rem", color: hovered ? skill.color : "var(--text)", transition: "color 0.25s" }}>{skill.name}</span>
+          <span style={{ fontSize: "0.58rem", color: "var(--muted)", opacity: 0.6, textTransform: "uppercase", letterSpacing: "0.08em" }}>{skill.cat}</span>
         </div>
-        <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.6rem", color: hovered ? "var(--fawn)" : "var(--text-30)", transition: "color 0.25s" }}>{skill.pct}%</span>
+        <span style={{ fontSize: "0.65rem", color: hovered ? skill.color : "var(--muted)", transition: "color 0.25s", fontVariantNumeric: "tabular-nums" }}>{skill.pct}%</span>
       </div>
-      <div style={{ height: "1px", background: "var(--text-06)", position: "relative" }}>
+      <div style={{ height: "2px", background: "var(--border)", borderRadius: 1, overflow: "hidden" }}>
         <div style={{
-          position: "absolute", left: 0, top: 0, height: "1px",
+          height: "100%", borderRadius: 1,
           width: animated ? `${skill.pct}%` : "0%",
-          background: hovered ? "var(--fawn)" : "rgba(248,242,225,0.3)",
-          transition: `width ${0.9 + i * 0.03}s cubic-bezier(0.16,1,0.3,1) ${i * 0.04}s, background 0.25s`,
-          boxShadow: hovered ? "0 0 6px rgba(213,181,114,0.6)" : "none",
+          background: skill.color,
+          transition: `width ${0.8 + i * 0.03}s cubic-bezier(0.16,1,0.3,1) ${i * 0.05 + 0.1}s`,
+          boxShadow: hovered ? `0 0 8px ${skill.color}60` : "none",
         }} />
       </div>
     </div>
@@ -53,53 +62,54 @@ function Bar({ skill, i }: { skill: typeof stack[0]; i: number }) {
 
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
-  useRevealChildren(sectionRef, ".r3d");
+  useRevealChildren(sectionRef, ".fade-up");
 
   return (
-    <section id="skills" ref={sectionRef} style={{ background: "var(--bg-2)" }}>
-      <div style={{ padding: "clamp(6rem,12vw,9rem) clamp(1.5rem,6vw,5rem)", paddingBottom: "4rem", maxWidth: "1100px", margin: "0 auto" }}>
-
-        <div style={{ display: "flex", alignItems: "baseline", gap: "1.5rem", marginBottom: "5rem" }}>
-          <span className="r3d" style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.44rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--fawn)" }}>04 / Skills</span>
-          <div style={{ flex: 1, height: "1px", background: "var(--text-06)" }} />
+    <section id="skills" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--surface)" }}>
+      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
+        <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
+          <p className="section-label" style={{ marginBottom: "0.75rem" }}>Skills</p>
+          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--text)" }}>Technical Stack</h2>
+          <p style={{ fontSize: "0.88rem", color: "var(--muted)", marginTop: "0.75rem", maxWidth: "500px", lineHeight: 1.7 }}>
+            From embedded systems to cloud-native AI pipelines — across the full stack with a focus on intelligent, production-grade software.
+          </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "start" }}>
-          {/* Left */}
-          <div>
-            <h2 className="r3d" style={{ fontFamily: "var(--app-font-serif)", fontSize: "clamp(2.8rem,5.5vw,4.5rem)", fontWeight: 400, lineHeight: 0.92, letterSpacing: "-0.04em", color: "var(--text)", marginBottom: "2rem" }}>
-              Technical<br /><em style={{ color: "var(--fawn)" }}>Stack</em>
-            </h2>
-            <p className="r3d" style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.85rem", lineHeight: 1.9, color: "var(--text-60)", maxWidth: "360px" }}>
-              From embedded systems to cloud-native AI pipelines — across the full stack with a focus on intelligent, production-grade software.
-            </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "start" }}>
+          {/* Left: skill bars */}
+          <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+            {stack.map((s, i) => <SkillBar key={s.name} skill={s} i={i} />)}
+          </div>
 
-            {/* Big domain labels */}
-            <div className="r3d" style={{ marginTop: "3.5rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              {[["AI / ML", "TensorFlow, PyTorch, OpenCV, LLMs"], ["Full-Stack", "React, FastAPI, Node.js, PostgreSQL"], ["DevOps", "Kubernetes, Docker, AWS, GCP"], ["Languages", "Python, TypeScript, C++, SQL"]].map(([area, detail]) => (
-                <div key={area} style={{ display: "flex", gap: "1.5rem", alignItems: "baseline", paddingBottom: "0.6rem", borderBottom: "1px solid var(--text-06)" }}>
-                  <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.5rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--fawn)", minWidth: "70px" }}>{area}</span>
-                  <span style={{ fontFamily: "var(--app-font-sans)", fontSize: "0.76rem", color: "var(--text-60)" }}>{detail}</span>
+          {/* Right: domains + pills */}
+          <div>
+            <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: 0, marginBottom: "2.5rem" }}>
+              {domains.map(d => (
+                <div key={d.area} style={{ display: "flex", gap: "1.25rem", alignItems: "flex-start", padding: "1rem 0", borderBottom: "1px solid var(--border)" }}>
+                  <div style={{ width: 3, height: 36, borderRadius: 2, background: d.color, flexShrink: 0, marginTop: 4 }} />
+                  <div>
+                    <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text)", marginBottom: "0.3rem" }}>{d.area}</div>
+                    <div style={{ fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.6 }}>{d.detail}</div>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Right — bars */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
-            {stack.map((s, i) => <Bar key={s.name} skill={s} i={i} />)}
+            <div className="fade-up">
+              <div style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>Also comfortable with</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                {pills.map(p => <span key={p} className="skill-pill">{p}</span>)}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Marquee */}
-      <div style={{ borderTop: "1px solid var(--text-06)", padding: "1.1rem 0", overflow: "hidden", background: "rgba(20,18,9,0.5)" }}>
-        <div style={{ display: "flex", animation: "marquee 22s linear infinite", whiteSpace: "nowrap", width: "max-content" }}>
-          {[...marqueeItems, ...marqueeItems].map((item, i) => (
-            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "1.2rem", paddingRight: "1.8rem" }}>
-              <span style={{ fontFamily: "var(--app-font-mono)", fontSize: "0.46rem", letterSpacing: "0.22em", textTransform: "uppercase", color: i % 3 === 0 ? "var(--fawn)" : "var(--text-30)" }}>{item}</span>
-              <span style={{ color: "var(--text-12)", fontSize: "0.4rem" }}>◆</span>
-            </span>
+      {/* Scrolling marquee */}
+      <div style={{ marginTop: "5rem", overflow: "hidden", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>
+        <div style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
+          {[...pills, ...pills].map((p, i) => (
+            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "rgba(255,255,255,0.15)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{p}</span>
           ))}
         </div>
       </div>
