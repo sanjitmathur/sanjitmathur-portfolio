@@ -47,7 +47,7 @@ function F1Model() {
   );
 }
 
-useGLTF.preload(F1_MODEL_URL);
+try { useGLTF.preload(F1_MODEL_URL); } catch {}
 
 function F1FallbackSVG() {
   return (
@@ -83,7 +83,8 @@ function Sparkline({ data, color, w = 60, h = 16 }: { data: number[]; color: str
 export default function F1Widget() {
   const { ref: containerRef, inView } = useInView("200px 0px");
   const [hovered, setHovered] = useState(false);
-  const [webgl] = useState(() => checkWebGL());
+  const [isTouch] = useState(() => typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
+  const [webgl] = useState(() => !isTouch && checkWebGL());
   const [speed, setSpeed] = useState(0);
   const [rpm, setRpm] = useState(0);
   const [gear, setGear] = useState(1);
