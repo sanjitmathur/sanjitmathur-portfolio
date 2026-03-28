@@ -50,7 +50,6 @@ body {
   font-family: var(--font);
   font-weight: 400;
   overflow-x: hidden;
-  cursor: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.65;
@@ -58,9 +57,13 @@ body {
   transition: background 0.35s ease, color 0.35s ease;
 }
 
+/* Custom cursor only on devices with a fine pointer (mouse) */
+@media (pointer: fine) {
+  body, .btn-primary, .btn-secondary, .skill-pill, .project-card, .theme-toggle { cursor: none; }
+}
+
 @media (max-width: 768px) {
-  body { cursor: auto; }
-  .btn-primary, .btn-secondary, .clickable, a, button { cursor: auto !important; }
+  body, .btn-primary, .btn-secondary, .clickable, a, button, .skill-pill, .project-card, .theme-toggle { cursor: auto !important; }
 }
 
 ::-webkit-scrollbar { width: 2px; }
@@ -114,7 +117,7 @@ nav,
   padding: 0.65rem 1.4rem;
   background: var(--text); color: var(--bg);
   font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
-  border: none; border-radius: 6px; cursor: none;
+  border: none; border-radius: 6px;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.2s ease, background 0.35s, color 0.35s;
 }
@@ -126,7 +129,7 @@ nav,
   padding: 0.65rem 1.4rem;
   background: transparent; color: var(--text);
   font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
-  border: 1px solid var(--border); border-radius: 6px; cursor: none;
+  border: 1px solid var(--border); border-radius: 6px;
   text-decoration: none;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, color 0.35s;
 }
@@ -149,7 +152,7 @@ nav,
   background: var(--surface-2); border: 1px solid var(--border);
   border-radius: 100px; font-size: 0.75rem; font-weight: 400; color: var(--muted);
   transition: border-color 0.2s, color 0.2s, background 0.2s;
-  cursor: none; letter-spacing: 0.02em;
+  letter-spacing: 0.02em;
 }
 .skill-pill:hover { border-color: var(--border-hover); color: var(--text); }
 
@@ -240,7 +243,6 @@ nav,
   border-radius: 14px;
   padding: 28px;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.35s;
-  cursor: none;
   display: flex; flex-direction: column; gap: 0.9rem;
   position: relative; overflow: hidden;
 }
@@ -265,7 +267,6 @@ nav,
   border: 1px solid var(--border-hover);
   border-radius: 100px;
   position: relative;
-  cursor: none;
   transition: background 0.3s, border-color 0.3s;
   flex-shrink: 0;
 }

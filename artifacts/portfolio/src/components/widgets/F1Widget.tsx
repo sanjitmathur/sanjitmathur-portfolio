@@ -168,7 +168,7 @@ export default function F1Widget() {
   return (
     <div
       ref={containerRef}
-      style={{ width: "100%", height: "100%", background: "#0a0706", borderRadius: 10, overflow: "hidden", cursor: "none", display: "flex", flexDirection: "column" }}
+      style={{ width: "100%", height: "100%", background: "#0a0706", borderRadius: 10, overflow: "hidden", display: "flex", flexDirection: "column" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -244,7 +244,7 @@ export default function F1Widget() {
               <Suspense fallback={null}>
                 <F1Model />
               </Suspense>
-              <OrbitControls enableZoom={true} minDistance={1.4} maxDistance={6} enablePan={false} minPolarAngle={Math.PI / 5} maxPolarAngle={Math.PI / 1.7} dampingFactor={0.09} enableDamping />
+              <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={Math.PI / 5} maxPolarAngle={Math.PI / 1.7} dampingFactor={0.09} enableDamping />
             </Canvas>
           ) : (
             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: 12 }}>

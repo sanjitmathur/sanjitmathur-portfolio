@@ -118,20 +118,19 @@ export default function SpotifyWidget() {
 
       {/* Controls */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16 }}>
-        <button style={{ background: "none", border: "none", cursor: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏮</button>
+        <button style={{ background: "none", border: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏮</button>
         <button
           onClick={() => setPlaying(p => !p)}
           style={{
             width: 32, height: 32, borderRadius: "50%", background: "#1db954",
-            border: "none", cursor: "none",
-            display: "flex", alignItems: "center", justifyContent: "center",
+            border: "none",             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: playing ? "0 0 18px rgba(29,185,84,0.55)" : "none",
             transition: "box-shadow 0.3s", fontSize: "0.75rem",
           }}
         >
           {playing ? "⏸" : "▶"}
         </button>
-        <button style={{ background: "none", border: "none", cursor: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏭</button>
+        <button style={{ background: "none", border: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏭</button>
       </div>
     </div>
   );

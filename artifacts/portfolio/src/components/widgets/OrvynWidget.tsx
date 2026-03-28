@@ -41,11 +41,13 @@ export default function OrvynWidget() {
       style={{
         width: "100%", height: "100%",
         background: "#0b0d10", borderRadius: 10,
-        overflow: "hidden", cursor: "none",
+        overflow: "hidden",
         display: "flex", flexDirection: "column",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onTouchStart={() => setHovered(true)}
+      onTouchEnd={() => setHovered(false)}
     >
       {/* Header area (replaces 3D model) */}
       <div style={{ flex: 1, position: "relative", minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>

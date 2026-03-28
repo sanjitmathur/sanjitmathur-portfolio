@@ -53,8 +53,7 @@ export default function Contact() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "1.6rem 0", borderBottom: "1px solid var(--border)",
-                  textDecoration: "none", transition: "all 0.2s", cursor: "none",
-                }}
+                  textDecoration: "none", transition: "all 0.2s",                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   <div style={{

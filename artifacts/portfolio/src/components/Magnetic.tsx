@@ -1,4 +1,4 @@
-import { useRef, ReactNode } from "react";
+import { useRef, ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children: ReactNode;
@@ -8,8 +8,14 @@ interface Props {
 
 export default function Magnetic({ children, strength = 0.38, style }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   const onMove = (e: React.MouseEvent) => {
+    if (isTouch) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();

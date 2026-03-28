@@ -78,7 +78,7 @@ export default function Nav() {
       }}>
         {/* Logo */}
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
-          style={{ background: "none", border: "none", cursor: "none", display: "flex", alignItems: "center", gap: "0.55rem" }}>
+          style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <div style={{ width: 26, height: 26, borderRadius: "6px", background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.35s" }}>
             <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
           </div>
@@ -92,8 +92,7 @@ export default function Nav() {
           {sections.map(s => (
             <button key={s} onClick={() => go(s)} className="clickable"
               style={{
-                background: "none", border: "none", cursor: "none",
-                padding: "0.38rem 0.75rem", borderRadius: "5px",
+                background: "none", border: "none",                 padding: "0.38rem 0.75rem", borderRadius: "5px",
                 fontSize: "0.75rem", fontWeight: active === s ? 700 : 400,
                 letterSpacing: "0.04em", textTransform: "uppercase",
                 color: active === s ? "var(--text)" : "var(--muted)",
@@ -116,7 +115,7 @@ export default function Nav() {
               display: "flex", alignItems: "center", gap: "0.4rem",
               background: "var(--surface-2)", border: "1px solid var(--border)",
               borderRadius: "100px", padding: "0.32rem 0.7rem",
-              cursor: "none", color: "var(--muted)",
+              color: "var(--muted)",
               fontSize: "0.72rem", fontWeight: 400, letterSpacing: "0.04em",
               transition: "all 0.3s",
             }}>

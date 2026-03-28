@@ -121,13 +121,13 @@ export default function Hero() {
         {/* CTAs */}
         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "4rem", animation: "slideUp 0.7s 0.35s ease both" }}>
           <Magnetic strength={0.22}>
-            <button className="btn-primary clickable" data-cursor="VIEW" onClick={() => go("projects")} style={{ cursor: "none" }}>
+            <button className="btn-primary clickable" data-cursor="VIEW" onClick={() => go("projects")} style={{  }}>
               View Projects
               <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
             </button>
           </Magnetic>
           <Magnetic strength={0.22}>
-            <button className="btn-secondary clickable" data-cursor="MAIL" onClick={() => go("contact")} style={{ cursor: "none" }}>
+            <button className="btn-secondary clickable" data-cursor="MAIL" onClick={() => go("contact")} style={{  }}>
               Contact Me
             </button>
           </Magnetic>

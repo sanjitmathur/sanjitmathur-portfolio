@@ -94,8 +94,7 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
         boxShadow: hovered
           ? `0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px ${proj.accent}22`
           : "none",
-        cursor: "none",
-      }}>
+              }}>
         {/* Widget panel */}
         <div style={{
           height: "clamp(170px, 30vw, " + (isLarge ? "230px" : isTall ? "240px" : "210px") + ")",

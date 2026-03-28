@@ -39,7 +39,7 @@ function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {
   }, []);
 
   return (
-    <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ cursor: "none" }}>
+    <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{  }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
         <div style={{ display: "flex", gap: "0.7rem", alignItems: "baseline" }}>
           <span style={{ fontWeight: 500, fontSize: "0.82rem", color: hovered ? skill.color : "var(--text)", transition: "color 0.25s" }}>{skill.name}</span>
