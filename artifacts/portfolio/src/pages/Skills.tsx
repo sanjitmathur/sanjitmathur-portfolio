@@ -95,12 +95,6 @@ export default function Skills() {
               ))}
             </div>
 
-            <div className="fade-up">
-              <div style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "1rem" }}>Also comfortable with</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                {pills.map(p => <span key={p} className="skill-pill">{p}</span>)}
-              </div>
-            </div>
           </div>
         </div>
       </div>
