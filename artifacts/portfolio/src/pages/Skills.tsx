@@ -69,7 +69,7 @@ export default function Skills() {
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Skills</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Technical Stack</h2>
+          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Technical Stack</h2>
           <p style={{ fontSize: "0.88rem", color: "var(--muted)", marginTop: "0.75rem", maxWidth: "500px", lineHeight: 1.7 }}>
             From embedded systems to cloud-native AI pipelines — across the full stack with a focus on intelligent, production-grade software.
           </p>

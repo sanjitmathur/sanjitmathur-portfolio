@@ -5,34 +5,51 @@ const FULL_NAME = "Sanjit Mathur";
 
 function TypewriterName() {
   const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
+  const [visible, setVisible] = useState(false);
   const idx = useRef(0);
+  const containerRef = useRef<HTMLSpanElement>(null);
 
+  // Observe when the element enters/leaves the viewport
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.3 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // Replay typewriter each time visible becomes true
+  useEffect(() => {
+    if (!visible) {
+      // Reset when scrolled away
+      idx.current = 0;
+      setDisplayed("");
+      return;
+    }
     const delay = setTimeout(() => {
       const id = setInterval(() => {
         idx.current += 1;
         setDisplayed(FULL_NAME.slice(0, idx.current));
         if (idx.current >= FULL_NAME.length) {
           clearInterval(id);
-          setTimeout(() => setDone(true), 800);
         }
       }, 90);
       return () => clearInterval(id);
-    }, 600);
+    }, 300);
     return () => clearTimeout(delay);
-  }, []);
+  }, [visible]);
 
   return (
-    <span style={{ color: "var(--text)", position: "relative" }}>
+    <span ref={containerRef} style={{ color: "var(--text)", position: "relative" }}>
       {displayed}
-      {!done && (
-        <span style={{
-          display: "inline-block", width: "2px", height: "0.85em",
-          background: "var(--text)", marginLeft: "2px", verticalAlign: "middle",
-          animation: "blink 0.7s step-end infinite",
-        }} />
-      )}
+      <span style={{
+        display: "inline-block", width: "2px", height: "0.85em",
+        background: "var(--text)", marginLeft: "2px", verticalAlign: "middle",
+        animation: "blink 1s step-end infinite",
+      }} />
     </span>
   );
 }
@@ -72,7 +89,7 @@ export default function Hero() {
         {/* Heading */}
         <h1 style={{
           fontSize: "clamp(2.8rem, 7.5vw, 5.5rem)",
-          fontWeight: 400,
+          fontWeight: 700,
           fontFamily: "var(--font-display)",
           letterSpacing: "0.01em",
           lineHeight: 1.1,
@@ -89,7 +106,7 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p style={{
-          fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)", fontWeight: 300,
+          fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)", fontWeight: 400,
           color: "var(--muted)", maxWidth: "500px", lineHeight: 1.75,
           marginBottom: "2.75rem",
           animation: "slideUp 0.7s 0.25s ease both",

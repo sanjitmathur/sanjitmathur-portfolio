@@ -22,7 +22,7 @@ export default function Contact() {
           {/* Left */}
           <div className="fade-up">
             <p className="section-label" style={{ marginBottom: "0.75rem" }}>Contact</p>
-            <h2 style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", lineHeight: 1.1, color: "var(--text)", marginBottom: "1.5rem" }}>
+            <h2 style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", lineHeight: 1.1, color: "var(--text)", marginBottom: "1.5rem" }}>
               Let's build<br />
               <span style={{ color: "var(--accent)" }}>something</span><br />
               together.

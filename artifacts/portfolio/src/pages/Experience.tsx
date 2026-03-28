@@ -42,7 +42,6 @@ const jobs = [
 
 function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [open, setOpen] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -74,7 +73,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, boxShadow: `0 0 10px ${job.accent}80` }} />
                 <span style={{ fontSize: "0.65rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{job.type}</span>
               </div>
-              <div style={{ fontSize: "clamp(1.05rem,2vw,1.25rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
+              <div style={{ fontSize: "clamp(1.05rem,2vw,1.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
               <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{job.role}</div>
               <div style={{ fontSize: "0.7rem", color: "var(--muted)", opacity: 0.6 }}>{job.period} · {job.loc}</div>
             </div>
@@ -89,25 +88,19 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
           </div>
         </div>
 
-        {/* Expandable bullets */}
+        {/* Key contributions — always visible */}
         <div style={{ borderTop: "1px solid var(--border)" }}>
-          <button
-            onClick={() => setOpen(o => !o)}
-            style={{ width: "100%", background: "none", border: "none", cursor: "none", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--muted)", fontSize: "0.78rem" }}
-          >
-            <span>Key contributions</span>
-            <span style={{ transition: "transform 0.3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>↓</span>
-          </button>
-          <div style={{ overflow: "hidden", maxHeight: open ? "400px" : "0", transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1)" }}>
-            <ul style={{ listStyle: "none", padding: "0 32px 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              {job.bullets.map((b, i) => (
-                <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                  <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>▶</span>
-                  <span style={{ fontSize: "0.82rem", lineHeight: 1.7, color: "var(--muted)" }}>{b}</span>
-                </li>
-              ))}
-            </ul>
+          <div style={{ padding: "14px 32px", color: "var(--muted)", fontSize: "0.78rem" }}>
+            Key contributions
           </div>
+          <ul style={{ listStyle: "none", padding: "0 32px 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            {job.bullets.map((b, i) => (
+              <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>▶</span>
+                <span style={{ fontSize: "0.82rem", lineHeight: 1.7, color: "var(--muted)" }}>{b}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
@@ -123,7 +116,7 @@ export default function Experience() {
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Experience</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Where I've made an impact</h2>
+          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Where I've made an impact</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {jobs.map((j, i) => <JobCard key={j.n} job={j} idx={i} />)}

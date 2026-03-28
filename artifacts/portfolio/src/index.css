@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Agdasima:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
@@ -17,8 +17,8 @@
   --border:        rgba(255,255,255,0.07);
   --border-hover:  rgba(255,255,255,0.14);
   --shadow:        rgba(0,0,0,0.55);
-  --font:          'Lato', system-ui, -apple-system, sans-serif;
-  --font-display:  'Agdasima', 'Lato', system-ui, sans-serif;
+  --font:          'Inter', system-ui, -apple-system, sans-serif;
+  --font-display:  'Space Grotesk', system-ui, sans-serif;
   --max-w:         1200px;
   --section-px:    clamp(1.5rem, 5vw, 3.5rem);
   --section-py:    clamp(5rem, 10vw, 7.5rem);
@@ -49,7 +49,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-weight: 300;
+  font-weight: 400;
   overflow-x: hidden;
   cursor: none;
   -webkit-font-smoothing: antialiased;
@@ -101,7 +101,7 @@ button { font-family: inherit; }
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.65rem 1.4rem;
   background: var(--text); color: var(--bg);
-  font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
   border: none; border-radius: 6px; cursor: none;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.2s ease, background 0.35s, color 0.35s;
@@ -113,7 +113,7 @@ button { font-family: inherit; }
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.65rem 1.4rem;
   background: transparent; color: var(--text);
-  font-size: 0.82rem; font-weight: 400; letter-spacing: 0.03em; text-transform: uppercase;
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
   border: 1px solid var(--border); border-radius: 6px; cursor: none;
   text-decoration: none;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, color 0.35s;

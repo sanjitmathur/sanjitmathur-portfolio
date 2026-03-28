@@ -160,7 +160,7 @@ export default function Projects() {
         <div className="fade-up" style={{ marginBottom: "3rem" }}>
           <p className="section-label" style={{ marginBottom: "0.75rem" }}>Projects</p>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-            <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 400, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Things I've built</h2>
+            <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Things I've built</h2>
             <a href="https://github.com/sanjitmathur" target="_blank" rel="noopener noreferrer"
               className="btn-secondary clickable" style={{ fontSize: "0.8rem" }}>
               All on GitHub →
