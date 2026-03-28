@@ -18,7 +18,7 @@ export default function Contact() {
       background: "var(--bg)", minHeight: "65vh", display: "flex", alignItems: "center",
     }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "start" }}>
+        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(2.5rem, 6vw, 5rem)", alignItems: "start" }}>
           {/* Left */}
           <div className="fade-up">
             <p className="section-label" style={{ marginBottom: "0.75rem" }}>Contact</p>

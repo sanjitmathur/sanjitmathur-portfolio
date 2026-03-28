@@ -67,7 +67,7 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
         {/* Top: widget + header */}
         <div className="exp-card-inner">
           {/* Left: job info */}
-          <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid var(--border)" }}>
+          <div style={{ padding: "clamp(16px, 4vw, 28px) clamp(16px, 4vw, 32px)", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid var(--border)" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, boxShadow: `0 0 10px ${job.accent}80` }} />
@@ -90,10 +90,10 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
 
         {/* Key contributions — always visible */}
         <div style={{ borderTop: "1px solid var(--border)" }}>
-          <div style={{ padding: "14px 32px", color: "var(--muted)", fontSize: "0.78rem" }}>
+          <div style={{ padding: "14px clamp(16px, 4vw, 32px)", color: "var(--muted)", fontSize: "0.78rem" }}>
             Key contributions
           </div>
-          <ul style={{ listStyle: "none", padding: "0 32px 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <ul style={{ listStyle: "none", padding: "0 clamp(16px, 4vw, 32px) 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
             {job.bullets.map((b, i) => (
               <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
                 <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>▶</span>

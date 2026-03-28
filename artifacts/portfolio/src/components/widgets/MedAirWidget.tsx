@@ -12,6 +12,16 @@ const MODE_COLOR: Record<Mode, string> = {
   RTH:      "#ef4444",
 };
 
+// Altitude profile for the glowing dot (0=ground, 1=top)
+const MODE_ALT_PCT: Record<Mode, number> = {
+  STANDBY: 0.05,
+  TAKEOFF: 0.45,
+  CRUISE:  0.85,
+  APPROACH: 0.55,
+  DELIVER: 0.1,
+  RTH:     0.4,
+};
+
 export default function MedAirWidget() {
   const [modeIdx, setModeIdx] = useState(0);
   const [alt, setAlt]   = useState(0);
@@ -42,8 +52,10 @@ export default function MedAirWidget() {
   }, []);
 
   const missionPct = ((modeIdx + 1) / MODES.length) * 100;
-  const batPct = bat;
   const batColor = bat > 70 ? "#22c55e" : bat > 40 ? "#f59e0b" : "#ef4444";
+  const dotY = MODE_ALT_PCT[mode];
+  // Horizontal sway based on tick
+  const dotX = 0.5 + Math.sin(tick * 0.04) * 0.2;
 
   return (
     <div style={{ width: "100%", height: "100%", background: "#080c10", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
@@ -56,9 +68,7 @@ export default function MedAirWidget() {
           </svg>
           <span style={{ fontSize: "0.58rem", fontWeight: 700, color: "#e5e7eb", letterSpacing: "0.06em" }}>MEDAIR VTOL</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ fontSize: "0.42rem", color: "#f59e0b", fontWeight: 600 }}>🏆 Platinum · Gold — DUIF</span>
-        </div>
+        <span style={{ fontSize: "0.42rem", color: "#f59e0b", fontWeight: 600 }}>🏆 Platinum · Gold — DUIF</span>
       </div>
 
       {/* Mode strip */}
@@ -75,36 +85,43 @@ export default function MedAirWidget() {
       </div>
 
       {/* Main */}
-      <div style={{ flex: 1, display: "flex", gap: 0 }}>
-        {/* Left: aircraft + metrics */}
-        <div style={{ width: "44%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 6px", borderRight: "1px solid rgba(255,255,255,0.06)", gap: 6 }}>
-          {/* VTOL top-down view */}
-          <svg width="88" height="56" viewBox="0 0 88 56" fill="none">
-            <rect x="17" y="24" width="54" height="8" rx="4" fill={mColor} opacity="0.88"/>
-            <path d="M71 24 Q82 28 71 32 Z" fill={mColor} opacity="0.7"/>
-            <path d="M17 24 L9 20 L13 28 L9 36 L17 32 Z" fill={mColor} opacity="0.5"/>
-            <rect x="28" y="15" width="32" height="6" rx="3" fill={mColor} opacity="0.5"/>
-            <rect x="28" y="35" width="32" height="6" rx="3" fill={mColor} opacity="0.5"/>
-            {([20,36,52,68] as number[]).map(x => (
-              <g key={`t${x}`}>
-                <circle cx={x} cy="11" r="3.5" fill="rgba(255,255,255,0.08)" stroke={mColor} strokeWidth="0.8"/>
-                <line x1={x-6} y1="11" x2={x+6} y2="11" stroke={mColor} strokeWidth="1.5" strokeLinecap="round"
-                  style={{ transformOrigin: `${x}px 11px`, animation: mode !== "STANDBY" ? "spin 0.22s linear infinite" : "none" }}/>
-              </g>
-            ))}
-            {([20,36,52,68] as number[]).map(x => (
-              <g key={`b${x}`}>
-                <circle cx={x} cy="45" r="3.5" fill="rgba(255,255,255,0.08)" stroke={mColor} strokeWidth="0.8"/>
-                <line x1={x-6} y1="45" x2={x+6} y2="45" stroke={mColor} strokeWidth="1.5" strokeLinecap="round"
-                  style={{ transformOrigin: `${x}px 45px`, animation: mode !== "STANDBY" ? "spin 0.22s linear infinite" : "none" }}/>
-              </g>
-            ))}
-            {/* Medical cross */}
-            <rect x="41" y="25.5" width="6" height="5" rx="0.5" fill="#fff" opacity="0.9"/>
-            <rect x="43" y="23.5" width="2" height="9" rx="0.5" fill="#fff" opacity="0.9"/>
-          </svg>
+      <div style={{ flex: 1, display: "flex", gap: 0, minHeight: 0 }}>
+        {/* Left: altitude viz with glowing dot */}
+        <div style={{ width: "44%", display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
+            <svg width="100%" height="100%" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet" style={{ position: "absolute", inset: 0 }}>
+              {/* Ground line */}
+              <line x1="5" y1="45" x2="45" y2="45" stroke="rgba(255,255,255,0.1)" strokeWidth="0.4" />
+              <text x="25" y="49" textAnchor="middle" fontSize="3" fill="#4b5563" letterSpacing="0.05em">GND</text>
 
-          <div style={{ display: "flex", gap: 12 }}>
+              {/* Altitude scale lines */}
+              {[0.25, 0.5, 0.75].map(p => (
+                <line key={p} x1="5" y1={45 - p * 38} x2="45" y2={45 - p * 38} stroke="rgba(255,255,255,0.04)" strokeWidth="0.25" strokeDasharray="1.5 1.5" />
+              ))}
+
+              {/* Dashed altitude line from dot to ground */}
+              <line
+                x1={dotX * 36 + 7} y1={45 - dotY * 38}
+                x2={dotX * 36 + 7} y2={45}
+                stroke={mColor} strokeWidth="0.4" strokeDasharray="1 1" opacity="0.35"
+              />
+
+              {/* Glow rings */}
+              <circle cx={dotX * 36 + 7} cy={45 - dotY * 38} r="7" fill={mColor} opacity="0.07" style={{ transition: "cx 0.3s, cy 0.8s ease" }} />
+              <circle cx={dotX * 36 + 7} cy={45 - dotY * 38} r="4.5" fill={mColor} opacity="0.15" style={{ transition: "cx 0.3s, cy 0.8s ease" }} />
+              <circle cx={dotX * 36 + 7} cy={45 - dotY * 38} r="2.5" fill={mColor} opacity="0.4" style={{ transition: "cx 0.3s, cy 0.8s ease" }} />
+              <circle cx={dotX * 36 + 7} cy={45 - dotY * 38} r="1.5" fill="#fff" style={{ transition: "cx 0.3s, cy 0.8s ease", filter: `drop-shadow(0 0 3px ${mColor})` }} />
+
+              {/* Mode label above dot */}
+              <text x={dotX * 36 + 7} y={45 - dotY * 38 - 5} textAnchor="middle" fontSize="3.5" fontWeight="700" fill={mColor} style={{ transition: "x 0.3s, y 0.8s ease" }}>{mode}</text>
+
+              {/* Alt readout below dot */}
+              <text x={dotX * 36 + 7} y={45 - dotY * 38 + 5.5} textAnchor="middle" fontSize="2.8" fill="#9ca3af" fontFamily="monospace" style={{ transition: "x 0.3s, y 0.8s ease" }}>{alt}m</text>
+            </svg>
+          </div>
+
+          {/* Metrics row */}
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", padding: "6px 6px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#f1f5f9", letterSpacing: "-0.03em", lineHeight: 1 }}>{alt}</div>
               <div style={{ fontSize: "0.38rem", color: "#6b7280", letterSpacing: "0.06em", marginTop: 1 }}>ALT m</div>
@@ -127,10 +144,10 @@ export default function MedAirWidget() {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
               <span style={{ fontSize: "0.45rem", color: "#6b7280" }}>BATTERY</span>
-              <span style={{ fontSize: "0.5rem", color: batColor, fontWeight: 600 }}>{Math.round(batPct)}%</span>
+              <span style={{ fontSize: "0.5rem", color: batColor, fontWeight: 600 }}>{Math.round(bat)}%</span>
             </div>
             <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${batPct}%`, background: batColor, borderRadius: 2, transition: "width 0.5s, background 0.5s" }} />
+              <div style={{ height: "100%", width: `${bat}%`, background: batColor, borderRadius: 2, transition: "width 0.5s, background 0.5s" }} />
             </div>
           </div>
 

@@ -73,7 +73,7 @@ export default function Hero() {
         maskImage: "radial-gradient(ellipse 75% 75% at 50% 50%, black 10%, transparent 100%)",
       }} />
 
-      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", paddingTop: "6rem" }}>
+      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", paddingTop: "clamp(3rem, 8vw, 6rem)" }}>
 
         {/* Eyebrow label */}
         <div style={{
@@ -134,8 +134,8 @@ export default function Hero() {
         </div>
 
         {/* Stats row */}
-        <div style={{
-          display: "flex", gap: "3rem", flexWrap: "wrap",
+        <div className="stats-row" style={{
+          display: "flex", gap: "clamp(1.25rem, 4vw, 3rem)", flexWrap: "wrap",
           paddingTop: "2rem", borderTop: "1px solid var(--border)",
           animation: "slideUp 0.7s 0.45s ease both",
         }}>

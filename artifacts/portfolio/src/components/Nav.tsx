@@ -34,6 +34,7 @@ function MoonIcon() {
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("about");
+  const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
 
   useEffect(() => {
@@ -53,7 +54,10 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const go = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
+  };
 
   const navBg = scrolled
     ? theme === "dark"
@@ -62,75 +66,121 @@ export default function Nav() {
     : "transparent";
 
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 var(--section-px)", height: "58px",
-      background: navBg,
-      backdropFilter: scrolled ? "blur(16px)" : "none",
-      borderBottom: scrolled ? "1px solid var(--border)" : "none",
-      transition: "background 0.4s ease, border-color 0.4s ease",
-    }}>
-      {/* Logo */}
-      <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
-        style={{ background: "none", border: "none", cursor: "none", display: "flex", alignItems: "center", gap: "0.55rem" }}>
-        <div style={{ width: 26, height: 26, borderRadius: "6px", background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.35s" }}>
-          <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
-        </div>
-        <span style={{ fontSize: "0.82rem", fontWeight: 400, letterSpacing: "0.05em", color: "var(--text)", opacity: scrolled ? 1 : 0, transition: "opacity 0.4s, color 0.35s", textTransform: "uppercase" }}>
-          Sanjit Mathur
-        </span>
-      </button>
-
-      {/* Nav links */}
-      <div style={{ display: "flex", gap: "0.15rem" }}>
-        {sections.map(s => (
-          <button key={s} onClick={() => go(s)} className="clickable"
-            style={{
-              background: "none", border: "none", cursor: "none",
-              padding: "0.38rem 0.75rem", borderRadius: "5px",
-              fontSize: "0.75rem", fontWeight: active === s ? 700 : 400,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-              color: active === s ? "var(--text)" : "var(--muted)",
-              transition: "all 0.2s, color 0.35s",
-              borderBottom: active === s ? "1px solid var(--text)" : "1px solid transparent",
-            }}>
-            {labels[s]}
-          </button>
-        ))}
-      </div>
-
-      {/* Right controls */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        {/* Theme toggle */}
-        <button
-          onClick={toggle}
-          className="clickable"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          style={{
-            display: "flex", alignItems: "center", gap: "0.4rem",
-            background: "var(--surface-2)", border: "1px solid var(--border)",
-            borderRadius: "100px", padding: "0.32rem 0.7rem",
-            cursor: "none", color: "var(--muted)",
-            fontSize: "0.72rem", fontWeight: 400, letterSpacing: "0.04em",
-            transition: "all 0.3s",
-          }}>
-          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          <span style={{ opacity: scrolled ? 1 : 0, transition: "opacity 0.4s" }}>
-            {theme === "dark" ? "Light" : "Dark"}
+    <>
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 var(--section-px)", height: "58px",
+        background: navBg,
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        borderBottom: scrolled ? "1px solid var(--border)" : "none",
+        transition: "background 0.4s ease, border-color 0.4s ease",
+      }}>
+        {/* Logo */}
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
+          style={{ background: "none", border: "none", cursor: "none", display: "flex", alignItems: "center", gap: "0.55rem" }}>
+          <div style={{ width: 26, height: 26, borderRadius: "6px", background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.35s" }}>
+            <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
+          </div>
+          <span className="nav-name-text" style={{ fontSize: "0.82rem", fontWeight: 400, letterSpacing: "0.05em", color: "var(--text)", opacity: scrolled ? 1 : 0, transition: "opacity 0.4s, color 0.35s", textTransform: "uppercase" }}>
+            Sanjit Mathur
           </span>
         </button>
 
-        {/* Hire Me */}
-        <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable"
-          style={{
-            fontSize: "0.72rem", padding: "0.45rem 1rem",
-            opacity: scrolled ? 1 : 0, transition: "opacity 0.4s",
-            pointerEvents: scrolled ? "auto" : "none",
-          }}>
-          Hire Me
-        </a>
-      </div>
-    </nav>
+        {/* Nav links — desktop only */}
+        <div className="nav-links" style={{ display: "flex", gap: "0.15rem" }}>
+          {sections.map(s => (
+            <button key={s} onClick={() => go(s)} className="clickable"
+              style={{
+                background: "none", border: "none", cursor: "none",
+                padding: "0.38rem 0.75rem", borderRadius: "5px",
+                fontSize: "0.75rem", fontWeight: active === s ? 700 : 400,
+                letterSpacing: "0.04em", textTransform: "uppercase",
+                color: active === s ? "var(--text)" : "var(--muted)",
+                transition: "all 0.2s, color 0.35s",
+                borderBottom: active === s ? "1px solid var(--text)" : "1px solid transparent",
+              }}>
+              {labels[s]}
+            </button>
+          ))}
+        </div>
+
+        {/* Right controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            className="clickable"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.4rem",
+              background: "var(--surface-2)", border: "1px solid var(--border)",
+              borderRadius: "100px", padding: "0.32rem 0.7rem",
+              cursor: "none", color: "var(--muted)",
+              fontSize: "0.72rem", fontWeight: 400, letterSpacing: "0.04em",
+              transition: "all 0.3s",
+            }}>
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            <span style={{ opacity: scrolled ? 1 : 0, transition: "opacity 0.4s" }}>
+              {theme === "dark" ? "Light" : "Dark"}
+            </span>
+          </button>
+
+          {/* Hire Me — desktop */}
+          <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable nav-hire"
+            style={{
+              fontSize: "0.72rem", padding: "0.45rem 1rem",
+              opacity: scrolled ? 1 : 0, transition: "opacity 0.4s",
+              pointerEvents: scrolled ? "auto" : "none",
+            }}>
+            Hire Me
+          </a>
+
+          {/* Hamburger — mobile only */}
+          <button
+            className="nav-hamburger"
+            onClick={() => setMenuOpen(o => !o)}
+            style={{
+              display: "none", background: "none", border: "none",
+              cursor: "pointer", padding: 4, color: "var(--text)",
+            }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {menuOpen
+                ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+                : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
+              }
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu overlay */}
+      {menuOpen && (
+        <div style={{
+          position: "fixed", top: 58, left: 0, right: 0, bottom: 0, zIndex: 999,
+          background: theme === "dark" ? "rgba(13,13,13,0.97)" : "rgba(247,244,239,0.97)",
+          backdropFilter: "blur(20px)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1.5rem",
+          animation: "fadeIn 0.25s ease",
+        }}>
+          {sections.map(s => (
+            <button key={s} onClick={() => go(s)}
+              style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: "1.1rem", fontWeight: active === s ? 700 : 400,
+                letterSpacing: "0.08em", textTransform: "uppercase",
+                color: active === s ? "var(--text)" : "var(--muted)",
+                padding: "0.6rem 1.5rem",
+              }}>
+              {labels[s]}
+            </button>
+          ))}
+          <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary"
+            style={{ marginTop: "1rem", fontSize: "0.85rem", cursor: "pointer" }}>
+            Hire Me
+          </a>
+        </div>
+      )}
+    </>
   );
 }

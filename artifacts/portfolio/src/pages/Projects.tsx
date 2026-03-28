@@ -98,17 +98,17 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
       }}>
         {/* Widget panel */}
         <div style={{
-          height: isLarge ? 230 : isTall ? 240 : 210,
+          height: "clamp(170px, 30vw, " + (isLarge ? "230px" : isTall ? "240px" : "210px") + ")",
           background: "rgba(0,0,0,0.35)",
           borderBottom: "1px solid var(--border)",
           flexShrink: 0,
-          padding: 14,
+          padding: "clamp(8px, 2vw, 14px)",
         }}>
           <proj.Widget />
         </div>
 
         {/* Info panel */}
-        <div style={{ padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ padding: "clamp(14px, 3vw, 20px) clamp(14px, 3vw, 24px)", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>

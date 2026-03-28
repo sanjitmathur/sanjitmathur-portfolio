@@ -75,7 +75,7 @@ export default function Skills() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "start" }}>
+        <div className="skills-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(2rem, 5vw, 4rem)", alignItems: "start" }}>
           {/* Left: skill bars */}
           <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             {stack.map((s, i) => <SkillBar key={s.name} skill={s} i={i} />)}

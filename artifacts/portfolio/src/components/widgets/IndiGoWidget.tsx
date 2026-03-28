@@ -28,8 +28,17 @@ export default function IndiGoWidget() {
   }
 
   const planePos = bezier(progress);
-  const planeNext = bezier(Math.min(1, progress + 0.02));
-  const angle = Math.atan2(planeNext.y - planePos.y, planeNext.x - planePos.x) * (180 / Math.PI);
+
+  // ATC data synced with flight progress
+  const altitude = Math.round(progress < 0.3 ? progress / 0.3 * 36000 : progress > 0.75 ? (1 - progress) / 0.25 * 36000 : 36000);
+  const altStr = altitude >= 1000 ? `FL${Math.round(altitude / 100)}` : `${altitude}ft`;
+  const speed = Math.round(progress < 0.2 ? 180 + progress / 0.2 * 300 : progress > 0.8 ? 480 - (progress - 0.8) / 0.2 * 300 : 480);
+  const freqs = ["119.10", "124.35", "127.90", "121.50"];
+  const freqIdx = Math.min(3, Math.floor(progress * 4));
+  const waypoints = ["AGREV", "BUBNA", "OSPAK", "ILS 27"];
+  const wpIdx = Math.min(3, Math.floor(progress * 4));
+  const squawks = ["2476", "3412", "5074", "1200"];
+  const sqkIdx = Math.min(3, Math.floor(progress * 4));
 
   const r = 28, cx = 210, cy = 80;
   const circ = 2 * Math.PI * r;
@@ -38,7 +47,7 @@ export default function IndiGoWidget() {
   return (
     <div style={{ width: "100%", height: "100%", background: "#0a0b08", borderRadius: 12, padding: "14px 16px", fontFamily: "var(--font)", overflow: "hidden", position: "relative" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 2 }}>
         <div>
           <div style={{ fontSize: "0.6rem", color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase" }}>FLIGHT PATH</div>
           <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#f5f5f7" }}>DEL → BOM</div>
@@ -46,6 +55,22 @@ export default function IndiGoWidget() {
         <div style={{ fontSize: "0.5rem", color: "#d5b572", background: "rgba(213,181,114,0.1)", padding: "2px 7px", borderRadius: 100, border: "1px solid rgba(213,181,114,0.25)" }}>
           Logistic Regression
         </div>
+      </div>
+
+      {/* ATC Strip */}
+      <div style={{ display: "flex", gap: 10, padding: "4px 0 5px", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 2 }}>
+        {[
+          { label: "FREQ", value: freqs[freqIdx], color: "#22c55e" },
+          { label: "ALT", value: altStr, color: "#22c55e" },
+          { label: "GS", value: `${speed}kt`, color: "#9ca3af" },
+          { label: "NEXT", value: waypoints[wpIdx], color: "#22c55e" },
+          { label: "SQK", value: squawks[sqkIdx], color: "#9ca3af" },
+        ].map(d => (
+          <div key={d.label} style={{ flex: 1 }}>
+            <div style={{ fontSize: "0.5rem", color: "#4b5563", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1 }}>{d.label}</div>
+            <div style={{ fontSize: "0.7rem", fontWeight: 600, color: d.color, fontFamily: "monospace", lineHeight: 1.5 }}>{d.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* SVG Map + donut */}
@@ -82,10 +107,10 @@ export default function IndiGoWidget() {
         <circle cx={BOM.x} cy={BOM.y} r={7} fill="none" stroke="rgba(245,158,11,0.4)" strokeWidth="1" />
         <text x={BOM.x - 24} y={BOM.y + 4} fontSize="7" fill="#9ca3af">BOM</text>
 
-        {/* Plane icon */}
-        <g transform={`translate(${planePos.x},${planePos.y}) rotate(${angle})`}>
-          <path d="M0,-6 L4,4 L0,2 L-4,4 Z" fill="#ffffff" opacity="0.9" />
-        </g>
+        {/* Plane dot */}
+        <circle cx={planePos.x} cy={planePos.y} r={7} fill="rgba(213,181,114,0.12)" />
+        <circle cx={planePos.x} cy={planePos.y} r={3.5} fill="rgba(213,181,114,0.25)" />
+        <circle cx={planePos.x} cy={planePos.y} r={2} fill="#fff" style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.8))" }} />
 
         {/* Accuracy donut */}
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="5" />
