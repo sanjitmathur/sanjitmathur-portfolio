@@ -1,6 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Cursor() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(isTouch);
+  }, []);
+
+  if (isTouchDevice) return null;
   const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
