@@ -21,8 +21,8 @@ const projects = [
   {
     id: "forecast",
     title: "Multi-Domain Demand Forecaster", category: "ML · Forecasting", year: "2025",
-    description: "Built demand forecasting engine using XGBoost + LightGBM stacking ensemble with Ridge meta-learner. Implemented quantile regression for uncertainty quantification and deployed via FastAPI + Streamlit dashboard.",
-    tags: ["Python", "XGBoost", "LightGBM", "FastAPI"],
+    description: "Built demand forecasting engine using XGBoost + LightGBM stacking ensemble with Ridge meta-learner. Implemented Quantile Regression for 10th/90th percentile confidence intervals and engineered cyclical sine/cosine temporal encodings with domain-specific rolling statistics. Deployed via RESTful FastAPI service and interactive Streamlit dashboard.",
+    tags: ["Python", "XGBoost", "LightGBM", "FastAPI", "Streamlit"],
     link: "https://github.com/sanjitmathur/multi-domain-demand-forecasting",
     accent: "#6366f1",
     span: "col-medium-tall",
