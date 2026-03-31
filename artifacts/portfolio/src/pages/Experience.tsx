@@ -7,10 +7,10 @@ import LabWidget from "../components/widgets/LabWidget";
 const jobs = [
   {
     n: "01", role: "AI Engineering Intern", co: "Baraka Financial Ltd.",
-    type: "FinTech · AI", period: "Feb 2026 - Present", loc: "Dubai, UAE",
+    type: "FinTech · AI", period: "Jan 2026 - Apr 2026", loc: "Dubai, UAE",
     bullets: [
       "Deployed containerized services to Kubernetes; built AI-powered internal tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
-      "Built Position Search and Trading Account Monitor modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
+      "Built Position Search, Trading Account Monitor, CRA, EOD History, Slack Automation and other modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
       "Unified inconsistent data schemas across distributed services into a single portfolio state model, eliminating data discrepancies in cross-market account views.",
     ],
     tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
@@ -33,6 +33,7 @@ const jobs = [
     type: "EdTech", period: "Jun - Aug 2025", loc: "Dubai, UAE",
     bullets: [
       "Built internal educational software used by 500+ students across 4 campuses.",
+      "Designed backend APIs for course content delivery and student progress tracking.",
     ],
     tags: ["React", "Node.js", "Full-Stack"],
     accent: "#b8895a",

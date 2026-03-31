@@ -297,12 +297,18 @@ nav,
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1.25rem;
 }
+.bento-row-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
 .bento-cell-large  { min-height: 500px; }
 .bento-cell-medium { min-height: 440px; }
 .bento-cell-tall   { min-height: 500px; }
 
 @media (max-width: 900px) {
-  .bento-row-1, .bento-row-2 { grid-template-columns: 1fr; }
+  .bento-row-1, .bento-row-2, .bento-row-3 { grid-template-columns: 1fr; }
   .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 380px; }
 }
 @media (max-width: 480px) {

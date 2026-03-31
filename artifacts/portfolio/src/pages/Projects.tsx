@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import ExamForgeWidget from "../components/widgets/ExamForgeWidget";
+import ForecastWidget from "../components/widgets/ForecastWidget";
 import F1Widget from "../components/widgets/F1Widget";
 import OrvynWidget from "../components/widgets/OrvynWidget";
-import MedAirWidget from "../components/widgets/MedAirWidget";
 import SpotifyWidget from "../components/widgets/SpotifyWidget";
+import MedAirWidget from "../components/widgets/MedAirWidget";
 
 const projects = [
   {
@@ -18,14 +19,14 @@ const projects = [
     Widget: ExamForgeWidget,
   },
   {
-    id: "spotify",
-    title: "Spotify Song Analyzer", category: "Data · Music", year: "2024",
-    description: "Built a Spotify data analysis pipeline to extract and analyze audio features (tempo, energy, danceability) using Python. Identified key correlations in music attributes through exploratory analysis and feature engineering.",
-    tags: ["Python", "Spotify API", "Pandas", "Plotly"],
-    link: "https://github.com/sanjitmathur",
-    accent: "#1db954",
+    id: "forecast",
+    title: "Multi-Domain Demand Forecaster", category: "ML · Forecasting", year: "2025",
+    description: "Built demand forecasting engine using XGBoost + LightGBM stacking ensemble with Ridge meta-learner. Implemented quantile regression for uncertainty quantification and deployed via FastAPI + Streamlit dashboard.",
+    tags: ["Python", "XGBoost", "LightGBM", "FastAPI"],
+    link: "https://github.com/sanjitmathur/multi-domain-demand-forecasting",
+    accent: "#6366f1",
     span: "col-medium-tall",
-    Widget: SpotifyWidget,
+    Widget: ForecastWidget,
   },
   {
     id: "f1",
@@ -46,6 +47,16 @@ const projects = [
     accent: "#d5b572",
     span: "col-medium",
     Widget: OrvynWidget,
+  },
+  {
+    id: "spotify",
+    title: "Spotify Song Analyzer", category: "Data · Music", year: "2024",
+    description: "Built a Spotify data analysis pipeline to extract and analyze audio features (tempo, energy, danceability) using Python. Identified key correlations in music attributes through exploratory analysis and feature engineering.",
+    tags: ["Python", "Spotify API", "Pandas", "Plotly"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#1db954",
+    span: "col-medium",
+    Widget: SpotifyWidget,
   },
   {
     id: "medair",
@@ -149,7 +160,7 @@ export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
 
-  const [examForge, spotify, f1, orvyn, medair] = projects;
+  const [examForge, forecast, f1, orvyn, spotify, medair] = projects;
 
   return (
     <section id="projects" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--bg)" }}>
@@ -167,17 +178,22 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Bento Row 1: ExamForge (large) + Spotify (tall) */}
+        {/* Bento Row 1: ExamForge (large) + Forecast (tall) */}
         <div className="bento-row-1">
           <div className="bento-cell-large"><ProjectCard proj={examForge} /></div>
-          <div className="bento-cell-tall"><ProjectCard proj={spotify} /></div>
+          <div className="bento-cell-tall"><ProjectCard proj={forecast} /></div>
         </div>
 
-        {/* Bento Row 2: F1 + Orvyn + MedAir (equal thirds) */}
+        {/* Bento Row 2: F1 + Orvyn + Spotify (equal thirds) */}
         <div className="bento-row-2">
-          {[f1, orvyn, medair].map(p => (
+          {[f1, orvyn, spotify].map(p => (
             <div key={p.id} className="bento-cell-medium"><ProjectCard proj={p} /></div>
           ))}
+        </div>
+
+        {/* Bento Row 3: MedAir (full-width) */}
+        <div className="bento-row-3">
+          <div className="bento-cell-medium"><ProjectCard proj={medair} /></div>
         </div>
 
       </div>

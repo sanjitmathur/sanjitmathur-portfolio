@@ -6,23 +6,23 @@ const stack = [
   { name: "TypeScript",   pct: 88, cat: "Language", color: "#d5b572" },
   { name: "React",        pct: 90, cat: "Frontend", color: "#61dafb" },
   { name: "FastAPI",      pct: 82, cat: "Backend",  color: "#22c55e" },
-  { name: "TensorFlow",   pct: 78, cat: "ML / AI",  color: "#f59e0b" },
+  { name: "scikit-learn", pct: 85, cat: "ML / AI",  color: "#f59e0b" },
   { name: "LLM APIs",     pct: 88, cat: "AI",       color: "#c4934a" },
   { name: "Kubernetes",   pct: 72, cat: "DevOps",   color: "#3b82f6" },
   { name: "Docker",       pct: 85, cat: "DevOps",   color: "#0ea5e9" },
 ];
 
 const pills = [
-  "Python", "React", "TypeScript", "TensorFlow", "Kubernetes", "Docker",
+  "Python", "React", "TypeScript", "scikit-learn", "Kubernetes", "Docker",
   "LLM APIs", "FastAPI", "OpenCV", "PostgreSQL", "Node.js", "Next.js",
-  "scikit-learn", "Pandas", "NumPy", "Arduino", "AWS", "C++", "D3.js", "Plotly",
+  "Pandas", "NumPy", "Matplotlib", "Streamlit", "Plotly", "MATLAB", "SQL", "Pydantic",
 ];
 
 const domains = [
-  { area: "AI / ML", detail: "TensorFlow, PyTorch, OpenCV, LLMs, scikit-learn", color: "#d5b572" },
-  { area: "Full-Stack", detail: "React, FastAPI, Node.js, PostgreSQL, Next.js", color: "#c4934a" },
-  { area: "DevOps", detail: "Kubernetes, Docker, AWS, GCP", color: "#3b82f6" },
-  { area: "Languages", detail: "Python, TypeScript, C++, SQL", color: "#22c55e" },
+  { area: "AI / ML", detail: "LLM APIs, OpenCV, scikit-learn, Stacking Ensembles, Quantile Regression", color: "#d5b572" },
+  { area: "Full-Stack", detail: "React, Next.js, Node.js, Express.js, FastAPI, Pydantic", color: "#c4934a" },
+  { area: "Infrastructure", detail: "Docker, Kubernetes, PostgreSQL, Streamlit, Plotly, Joblib", color: "#3b82f6" },
+  { area: "Languages", detail: "Python, TypeScript, C, SQL, MATLAB", color: "#22c55e" },
 ];
 
 function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {

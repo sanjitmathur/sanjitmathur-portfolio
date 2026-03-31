@@ -113,7 +113,7 @@ export default function Hero() {
           transition: "color 0.35s",
         }}>
           Building intelligent systems, modern web applications, and developer tools.
-          Currently at{" "}
+          Previously at{" "}
           <span style={{ color: "var(--text)", fontWeight: 400, transition: "color 0.35s" }}>Baraka Financial</span>
           {" "}— open to new opportunities.
         </p>
