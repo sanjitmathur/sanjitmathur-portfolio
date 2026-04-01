@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type MouseEvent } from "react";
+import { useRef, useState, useEffect, type ReactNode, type MouseEvent } from "react";
 
 interface Props {
   children: ReactNode;
@@ -13,8 +13,14 @@ interface Props {
 export default function Tilt3DCard({ children, className = "", style = {}, intensity = 12, glare = true, onMouseEnter, onMouseLeave }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (isTouch) return;
     const el = ref.current; if (!el) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
@@ -29,23 +35,17 @@ export default function Tilt3DCard({ children, className = "", style = {}, inten
   };
 
   const onLeave = (e: MouseEvent<HTMLDivElement>) => {
+    if (isTouch) return;
     const el = ref.current; if (!el) return;
     el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateZ(0) scale(1)";
     if (glareRef.current) glareRef.current.style.opacity = "0";
     onMouseLeave?.(e);
   };
 
-  const onTouchEnd = () => {
-    const el = ref.current; if (!el) return;
-    el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateZ(0) scale(1)";
-    if (glareRef.current) glareRef.current.style.opacity = "0";
-  };
-
   return (
     <div
       ref={ref} className={className}
       onMouseMove={onMove} onMouseLeave={onLeave} onMouseEnter={onMouseEnter}
-      onTouchEnd={onTouchEnd} onTouchCancel={onTouchEnd}
       style={{ ...style, transition: "transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)", transformStyle: "preserve-3d", position: "relative", overflow: "hidden", willChange: "transform" }}
     >
       {children}
