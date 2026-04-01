@@ -70,16 +70,13 @@ const projects = [
   },
 ];
 
-function isTouchDevice() {
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
-}
-
 function ProjectCard({ proj }: { proj: typeof projects[0] }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouchDevice()) return;
+    if (isTouch) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientY - rect.top) / rect.height - 0.5;
     const y = (e.clientX - rect.left) / rect.width - 0.5;
@@ -92,8 +89,9 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
   return (
     <div
       className="fade-up"
+      onTouchStart={() => { if (!isTouch) setIsTouch(true); }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => { if (!isTouchDevice()) setHovered(true); }}
+      onMouseEnter={() => { if (!isTouch) setHovered(true); }}
       onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setHovered(false); }}
       style={{ height: "100%" }}
     >
@@ -103,7 +101,7 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
         border: `1px solid ${hovered ? `${proj.accent}33` : "var(--border)"}`,
         borderRadius: 20, overflow: "hidden",
         display: "flex", flexDirection: "column",
-        transform: `perspective(1100px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg) translateY(${hovered ? -4 : 0}px)`,
+        transform: isTouch ? "none" : `perspective(1100px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg) translateY(${hovered ? -4 : 0}px)`,
         transition: tilt.x === 0 && !hovered
           ? "transform 0.55s ease, box-shadow 0.3s, border-color 0.3s"
           : "transform 0.06s linear, border-color 0.3s",
