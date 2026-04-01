@@ -70,11 +70,16 @@ const projects = [
   },
 ];
 
+function isTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+}
+
 function ProjectCard({ proj }: { proj: typeof projects[0] }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice()) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientY - rect.top) / rect.height - 0.5;
     const y = (e.clientX - rect.left) / rect.width - 0.5;
@@ -88,7 +93,7 @@ function ProjectCard({ proj }: { proj: typeof projects[0] }) {
     <div
       className="fade-up"
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => { if (!isTouchDevice()) setHovered(true); }}
       onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setHovered(false); }}
       style={{ height: "100%" }}
     >
