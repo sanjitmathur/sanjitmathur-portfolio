@@ -62,9 +62,8 @@ export default function SpotifyWidget() {
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  const toggle = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+  const toggle = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
     setPlaying(p => !p);
   }, []);
 
@@ -138,7 +137,8 @@ export default function SpotifyWidget() {
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16 }}>
         <button style={{ background: "none", border: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏮</button>
         <button
-          onPointerDown={toggle}
+          onClick={toggle}
+          onTouchEnd={(e) => { e.stopPropagation(); }}
           style={{
             width: 32, height: 32, borderRadius: "50%", background: "#1db954",
             border: "none", display: "flex", alignItems: "center", justifyContent: "center",
