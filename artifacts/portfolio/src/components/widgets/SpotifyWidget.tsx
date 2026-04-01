@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 const TRACKS = [
   { title: "Blinding Lights", artist: "The Weeknd", bpm: 171, genre: "Pop" },
@@ -11,43 +11,64 @@ const BAR_COUNT = 20;
 export default function SpotifyWidget() {
   const [playing, setPlaying] = useState(false);
   const [track] = useState(0);
-  const [bars, setBars] = useState(() => Array.from({ length: BAR_COUNT }, (_, i) => 0.1 + 0.06 * Math.abs(Math.sin(i * 0.8))));
-  const [progress, setProgress] = useState(0);
+  const barsContainerRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const timeRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number>(0);
   const playingRef = useRef(false);
   const frameRef = useRef(0);
+  const progressVal = useRef(0);
 
   useEffect(() => { playingRef.current = playing; }, [playing]);
 
   useEffect(() => {
+    const barEls: HTMLDivElement[] = [];
+    if (barsContainerRef.current) {
+      barsContainerRef.current.querySelectorAll<HTMLDivElement>("[data-bar]").forEach(el => barEls.push(el));
+    }
+
     const animate = () => {
       frameRef.current++;
       const f = frameRef.current;
       const isPlaying = playingRef.current;
 
-      setBars(Array.from({ length: BAR_COUNT }, (_, i) => {
+      for (let i = 0; i < barEls.length; i++) {
         const phase = i * 0.45;
         const slow = Math.abs(Math.sin(f * 0.022 + phase));
         const mid  = Math.abs(Math.sin(f * 0.07  + phase * 1.3));
         const fast = Math.abs(Math.sin(f * 0.18  + phase * 0.7));
+        const h = isPlaying
+          ? 0.1 + slow * 0.25 + mid * 0.35 + fast * 0.30
+          : 0.04 + slow * 0.12 + mid * 0.08;
+        const hue = 141 + i * 2;
+        const lightness = isPlaying ? 35 + h * 35 : 28 + h * 20;
+        barEls[i].style.height = `${Math.max(6, h * 100)}%`;
+        barEls[i].style.background = `hsl(${hue},72%,${lightness}%)`;
+      }
 
-        if (isPlaying) {
-          return 0.1 + slow * 0.25 + mid * 0.35 + fast * 0.30;
-        } else {
-          return 0.04 + slow * 0.12 + mid * 0.08;
+      if (isPlaying) {
+        progressVal.current = (progressVal.current + 0.00065) % 1;
+        if (progressRef.current) progressRef.current.style.width = `${progressVal.current * 100}%`;
+        if (timeRef.current) {
+          const elapsed = Math.floor(progressVal.current * 213);
+          const mm = Math.floor(elapsed / 60), ss = elapsed % 60;
+          timeRef.current.textContent = `${mm}:${String(ss).padStart(2, "0")}`;
         }
-      }));
+      }
 
-      if (isPlaying) setProgress(p => (p + 0.00065) % 1);
       rafRef.current = requestAnimationFrame(animate);
     };
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
+  const toggle = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setPlaying(p => !p);
+  }, []);
+
   const t = TRACKS[track];
-  const elapsed = Math.floor(progress * 213);
-  const mm = Math.floor(elapsed / 60), ss = elapsed % 60;
 
   return (
     <div style={{ width: "100%", height: "100%", background: "#0f1a0d", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, fontFamily: "var(--font)", overflow: "hidden" }}>
@@ -88,44 +109,43 @@ export default function SpotifyWidget() {
 
       {/* Progress bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: "0.5rem", color: "#4b5563", fontVariantNumeric: "tabular-nums" }}>{mm}:{String(ss).padStart(2, "0")}</span>
+        <span ref={timeRef} style={{ fontSize: "0.5rem", color: "#4b5563", fontVariantNumeric: "tabular-nums" }}>0:00</span>
         <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${progress * 100}%`, background: "#1db954", borderRadius: 2, transition: "width 0.1s linear" }} />
+          <div ref={progressRef} style={{ height: "100%", width: "0%", background: "#1db954", borderRadius: 2 }} />
         </div>
         <span style={{ fontSize: "0.5rem", color: "#4b5563" }}>3:33</span>
       </div>
 
-      {/* Frequency bars — always animated */}
-      <div style={{ display: "flex", gap: 2, alignItems: "flex-end", height: 52, flex: 1 }}>
-        {bars.map((h, i) => {
-          const hue = 141 + i * 2;
-          const lightness = playing ? 35 + h * 35 : 28 + h * 20;
-          return (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                borderRadius: "2px 2px 1px 1px",
-                background: `hsl(${hue},72%,${lightness}%)`,
-                height: `${Math.max(6, h * 100)}%`,
-                transition: "height 0.07s ease-out",
-                transformOrigin: "bottom",
-              }}
-            />
-          );
-        })}
+      {/* Frequency bars — DOM-driven animation, no React re-renders */}
+      <div ref={barsContainerRef} style={{ display: "flex", gap: 2, alignItems: "flex-end", height: 52, flex: 1 }}>
+        {Array.from({ length: BAR_COUNT }, (_, i) => (
+          <div
+            key={i}
+            data-bar
+            style={{
+              flex: 1,
+              borderRadius: "2px 2px 1px 1px",
+              height: "6%",
+              background: `hsl(${141 + i * 2},72%,28%)`,
+              transformOrigin: "bottom",
+              willChange: "height",
+            }}
+          />
+        ))}
       </div>
 
       {/* Controls */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16 }}>
         <button style={{ background: "none", border: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏮</button>
         <button
-          onClick={() => setPlaying(p => !p)}
+          onPointerDown={toggle}
           style={{
             width: 32, height: 32, borderRadius: "50%", background: "#1db954",
-            border: "none",             display: "flex", alignItems: "center", justifyContent: "center",
+            border: "none", display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: playing ? "0 0 18px rgba(29,185,84,0.55)" : "none",
             transition: "box-shadow 0.3s", fontSize: "0.75rem",
+            cursor: "pointer", touchAction: "manipulation",
+            WebkitTapHighlightColor: "transparent",
           }}
         >
           {playing ? "⏸" : "▶"}

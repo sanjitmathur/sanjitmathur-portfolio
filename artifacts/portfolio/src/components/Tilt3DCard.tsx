@@ -35,10 +35,17 @@ export default function Tilt3DCard({ children, className = "", style = {}, inten
     onMouseLeave?.(e);
   };
 
+  const onTouchEnd = () => {
+    const el = ref.current; if (!el) return;
+    el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateZ(0) scale(1)";
+    if (glareRef.current) glareRef.current.style.opacity = "0";
+  };
+
   return (
     <div
       ref={ref} className={className}
       onMouseMove={onMove} onMouseLeave={onLeave} onMouseEnter={onMouseEnter}
+      onTouchEnd={onTouchEnd} onTouchCancel={onTouchEnd}
       style={{ ...style, transition: "transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)", transformStyle: "preserve-3d", position: "relative", overflow: "hidden", willChange: "transform" }}
     >
       {children}
