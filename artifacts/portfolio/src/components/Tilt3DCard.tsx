@@ -1,4 +1,8 @@
-import { useRef, useState, useEffect, type ReactNode, type MouseEvent } from "react";
+import { useRef, type ReactNode, type MouseEvent } from "react";
+
+function isTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+}
 
 interface Props {
   children: ReactNode;
@@ -13,14 +17,9 @@ interface Props {
 export default function Tilt3DCard({ children, className = "", style = {}, intensity = 12, glare = true, onMouseEnter, onMouseLeave }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches);
-  }, []);
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (isTouch) return;
+    if (isTouchDevice()) return;
     const el = ref.current; if (!el) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
@@ -35,7 +34,7 @@ export default function Tilt3DCard({ children, className = "", style = {}, inten
   };
 
   const onLeave = (e: MouseEvent<HTMLDivElement>) => {
-    if (isTouch) return;
+    if (isTouchDevice()) return;
     const el = ref.current; if (!el) return;
     el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateZ(0) scale(1)";
     if (glareRef.current) glareRef.current.style.opacity = "0";
