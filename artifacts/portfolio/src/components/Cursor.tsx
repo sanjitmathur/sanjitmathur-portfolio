@@ -2,13 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Cursor() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  useEffect(() => {
-    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
-    setIsTouchDevice(isTouch);
-  }, []);
-
-  if (isTouchDevice) return null;
   const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
@@ -17,6 +10,12 @@ export default function Cursor() {
   const raf  = useRef(0);
 
   useEffect(() => {
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(isTouch);
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
     const onMove = (e: MouseEvent) => {
       pos.current = { x: e.clientX, y: e.clientY };
       if (dotRef.current) {
@@ -65,7 +64,9 @@ export default function Cursor() {
       document.removeEventListener("mouseout",   onLeave);
       cancelAnimationFrame(raf.current);
     };
-  }, []);
+  }, [isTouchDevice]);
+
+  if (isTouchDevice) return null;
 
   return (
     <>
