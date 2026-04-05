@@ -1,22 +1,23 @@
 import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
-import ExamForgeWidget from "../components/widgets/ExamForgeWidget";
+import FraudWidget from "../components/widgets/FraudWidget";
 import ForecastWidget from "../components/widgets/ForecastWidget";
-import F1Widget from "../components/widgets/F1Widget";
+import ExamForgeWidget from "../components/widgets/ExamForgeWidget";
 import OrvynWidget from "../components/widgets/OrvynWidget";
+import F1Widget from "../components/widgets/F1Widget";
 import SpotifyWidget from "../components/widgets/SpotifyWidget";
 import MedAirWidget from "../components/widgets/MedAirWidget";
 
 const projects = [
   {
-    id: "examforge",
-    title: "ExamForge", category: "AI · EdTech", year: "2025",
-    description: "Built a full-stack AI-powered exam generation platform using LLM APIs for dynamic multi-format question creation. Designed interactive workflows allowing students to generate, attempt, and review customized assessments.",
-    tags: ["Python", "OpenAI API", "React", "FastAPI"],
-    link: "https://github.com/sanjitmathur",
-    accent: "#d5b572",
+    id: "fraud",
+    title: "Distributed Fraud Detection", category: "ML · Security", year: "2025",
+    description: "Built an end-to-end fraud detection system analyzing credit card transactions using unsupervised anomaly detection models (Isolation Forest, LOF, One-Class SVM, Autoencoder). Engineered domain features and trained models using normal-only data pipelines with automated threshold optimization. Developed an interactive Streamlit dashboard with SHAP explainability for real-time anomaly investigation.",
+    tags: ["Python", "Scikit-learn", "Streamlit", "SHAP"],
+    link: "https://github.com/sanjitmathur/distributed-anomaly-rca",
+    accent: "#f59e0b",
     span: "col-large",
-    Widget: ExamForgeWidget,
+    Widget: FraudWidget,
   },
   {
     id: "forecast",
@@ -29,14 +30,14 @@ const projects = [
     Widget: ForecastWidget,
   },
   {
-    id: "f1",
-    title: "F1 Simulation Dashboard", category: "Data Viz · Racing", year: "2025",
-    description: "Built a full-stack race simulation engine modeling tire degradation, pit strategy, safety cars, weather, and overtaking across all 24 2026 GPs using Monte Carlo probability methods. Implemented dual-mode interface: season-wide predictions and fully configurable custom race simulations.",
-    tags: ["React", "Monte Carlo", "TypeScript", "FastAPI"],
+    id: "examforge",
+    title: "ExamForge", category: "AI · EdTech", year: "2025",
+    description: "Built a full-stack AI-powered exam generation platform using LLM APIs for dynamic multi-format question creation. Designed interactive workflows allowing students to generate, attempt, and review customized assessments.",
+    tags: ["Python", "OpenAI API", "React", "FastAPI"],
     link: "https://github.com/sanjitmathur",
-    accent: "#ef4444",
+    accent: "#d5b572",
     span: "col-medium",
-    Widget: F1Widget,
+    Widget: ExamForgeWidget,
   },
   {
     id: "orvyn",
@@ -47,6 +48,16 @@ const projects = [
     accent: "#d5b572",
     span: "col-medium",
     Widget: OrvynWidget,
+  },
+  {
+    id: "f1",
+    title: "F1 Simulation Dashboard", category: "Data Viz · Racing", year: "2025",
+    description: "Built a full-stack race simulation engine modeling tire degradation, pit strategy, safety cars, weather, and overtaking across all 24 2026 GPs using Monte Carlo probability methods. Implemented dual-mode interface: season-wide predictions and fully configurable custom race simulations.",
+    tags: ["React", "Monte Carlo", "TypeScript", "FastAPI"],
+    link: "https://github.com/sanjitmathur",
+    accent: "#ef4444",
+    span: "col-medium",
+    Widget: F1Widget,
   },
   {
     id: "spotify",
@@ -163,7 +174,7 @@ export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
 
-  const [examForge, forecast, f1, orvyn, spotify, medair] = projects;
+  const [fraud, forecast, examforge, orvyn, f1, spotify, medair] = projects;
 
   return (
     <section id="projects" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--bg)" }}>
@@ -181,21 +192,22 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Bento Row 1: ExamForge (large) + Forecast (tall) */}
+        {/* Bento Row 1: Fraud Detection (large) + Forecast (tall) */}
         <div className="bento-row-1">
-          <div className="bento-cell-large"><ProjectCard proj={examForge} /></div>
+          <div className="bento-cell-large"><ProjectCard proj={fraud} /></div>
           <div className="bento-cell-tall"><ProjectCard proj={forecast} /></div>
         </div>
 
-        {/* Bento Row 2: F1 + Orvyn + Spotify (equal thirds) */}
+        {/* Bento Row 2: ExamForge + Orvyn + F1 (equal thirds) */}
         <div className="bento-row-2">
-          {[f1, orvyn, spotify].map(p => (
+          {[examforge, orvyn, f1].map(p => (
             <div key={p.id} className="bento-cell-medium"><ProjectCard proj={p} /></div>
           ))}
         </div>
 
-        {/* Bento Row 3: MedAir (full-width) */}
+        {/* Bento Row 3: Spotify + MedAir (equal halves) */}
         <div className="bento-row-3">
+          <div className="bento-cell-medium"><ProjectCard proj={spotify} /></div>
           <div className="bento-cell-medium"><ProjectCard proj={medair} /></div>
         </div>
 

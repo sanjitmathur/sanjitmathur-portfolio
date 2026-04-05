@@ -288,7 +288,7 @@ nav,
    ============================================================ */
 .bento-row-1 {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   margin-bottom: 1.25rem;
 }
@@ -299,7 +299,7 @@ nav,
 }
 .bento-row-3 {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   margin-top: 1.25rem;
 }

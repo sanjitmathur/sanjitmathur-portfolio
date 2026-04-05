@@ -38,12 +38,12 @@ function AppInner() {
       <Cursor />
       <Grain />
       {!loaded && (
-        <Loader onComplete={() => { setLoaded(true); setTimeout(() => setShow(true), 80); }} />
+        <Loader onComplete={() => { setLoaded(true); document.fonts.ready.then(() => setTimeout(() => setShow(true), 80)); }} />
       )}
       <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.8s ease" }}>
         <Nav />
         <main>
-          <Hero />
+          {show && <Hero />}
           <Experience />
           <Projects />
           <Skills />
