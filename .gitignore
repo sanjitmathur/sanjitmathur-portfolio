@@ -47,3 +47,22 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Claude Code
+.claude/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Stackdumps
+*.stackdump
+
+# Root-level screenshots
+/check-experience.png
+/full-page-check.png
+/localhost-fixed.png
+/prod-hero.png
+/projects-row2.png
+/projects-row3.png
+/projects-row3-medair.png
+/projects-section.png
