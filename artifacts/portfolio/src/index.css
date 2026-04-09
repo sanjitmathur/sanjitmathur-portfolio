@@ -1,43 +1,45 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DARK THEME — classic black & white
+   DARK THEME — refined neutral palette
    ============================================================ */
 :root,
 [data-theme="dark"] {
-  --bg:            #0d0d0d;
-  --surface:       #161616;
-  --surface-2:     #202020;
-  --accent:        #d0d0d0;
-  --accent-dim:    rgba(208,208,208,0.07);
-  --accent-border: rgba(208,208,208,0.16);
-  --text:          #f0f0f0;
-  --muted:         #6a6a6a;
-  --border:        rgba(255,255,255,0.07);
-  --border-hover:  rgba(255,255,255,0.14);
-  --shadow:        rgba(0,0,0,0.55);
+  --bg:            #0a0a0a;
+  --surface:       #141414;
+  --surface-2:     #1c1c1c;
+  --accent:        #e0e0e0;
+  --accent-dim:    rgba(224,224,224,0.05);
+  --accent-border: rgba(224,224,224,0.12);
+  --text:          #fafafa;
+  --text-secondary:#a1a1a1;
+  --muted:         #717171;
+  --border:        rgba(255,255,255,0.06);
+  --border-hover:  rgba(255,255,255,0.12);
+  --shadow:        rgba(0,0,0,0.5);
   --font:          'Inter', system-ui, -apple-system, sans-serif;
   --font-display:  'Space Grotesk', system-ui, sans-serif;
-  --max-w:         1200px;
-  --section-px:    clamp(1.5rem, 5vw, 3.5rem);
-  --section-py:    clamp(5rem, 10vw, 7.5rem);
+  --max-w:         1140px;
+  --section-px:    clamp(1.5rem, 5vw, 4rem);
+  --section-py:    clamp(6rem, 12vw, 7.5rem);
 }
 
 /* ============================================================
-   LIGHT THEME — warm tones, easy on the eyes
+   LIGHT THEME — warm, sophisticated neutrals
    ============================================================ */
 [data-theme="light"] {
-  --bg:            #f7f4ef;
+  --bg:            #fafaf8;
   --surface:       #ffffff;
-  --surface-2:     #ede9e2;
-  --accent:        #7a6040;
-  --accent-dim:    rgba(122,96,64,0.07);
-  --accent-border: rgba(122,96,64,0.22);
-  --text:          #1a1714;
-  --muted:         #7a6f5e;
-  --border:        rgba(26,23,20,0.08);
-  --border-hover:  rgba(26,23,20,0.16);
-  --shadow:        rgba(0,0,0,0.12);
+  --surface-2:     #f0ede8;
+  --accent:        #6b5c45;
+  --accent-dim:    rgba(107,92,69,0.05);
+  --accent-border: rgba(107,92,69,0.18);
+  --text:          #171412;
+  --text-secondary:#6b6560;
+  --muted:         #8a847d;
+  --border:        rgba(0,0,0,0.06);
+  --border-hover:  rgba(0,0,0,0.12);
+  --shadow:        rgba(0,0,0,0.08);
 }
 
 /* === RESET === */
@@ -49,11 +51,12 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-weight: 400;
+  font-size: 16px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.65;
-  letter-spacing: 0.01em;
+  line-height: 1.7;
+  letter-spacing: -0.011em;
   transition: background 0.35s ease, color 0.35s ease;
 }
 
@@ -89,12 +92,12 @@ nav,
 .loader-wrap {
   position: fixed; inset: 0; background: var(--bg); z-index: 99990;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
-  transition: background 0.35s;
 }
 .loader-name {
-  font-family: var(--font-display); font-size: clamp(1.4rem,3.5vw,2rem);
-  font-weight: 700; letter-spacing: 0.06em; color: var(--text);
+  font-family: var(--font-display); font-size: clamp(1.5rem,3.8vw,2.2rem);
+  font-weight: 700; letter-spacing: 0.04em; color: var(--text);
   text-transform: uppercase;
+  will-change: opacity, transform;
 }
 .loader-bar-track {
   width: min(220px, 65vw); height: 1px;
@@ -114,32 +117,32 @@ nav,
    ============================================================ */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.65rem 1.4rem;
+  padding: 0.7rem 1.5rem;
   background: var(--text); color: var(--bg);
-  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
-  border: none; border-radius: 6px;
+  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase;
+  border: none; border-radius: 8px;
   text-decoration: none;
-  transition: opacity 0.2s ease, transform 0.2s ease, background 0.35s, color 0.35s;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background 0.35s, color 0.35s;
 }
-.btn-primary:hover { opacity: 0.84; transform: translateY(-1px); }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px var(--shadow); }
 .btn-primary:active { transform: translateY(0); }
 
 .btn-secondary {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.65rem 1.4rem;
+  padding: 0.7rem 1.5rem;
   background: transparent; color: var(--text);
-  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
-  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase;
+  border: 1px solid var(--border-hover); border-radius: 8px;
   text-decoration: none;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, color 0.35s;
 }
-.btn-secondary:hover { border-color: var(--border-hover); background: var(--accent-dim); transform: translateY(-1px); }
+.btn-secondary:hover { border-color: var(--text-secondary); background: var(--accent-dim); transform: translateY(-1px); }
 
 /* ============================================================
    SECTION LABEL
    ============================================================ */
 .section-label {
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted);
 }
 
@@ -240,13 +243,13 @@ nav,
 .project-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 28px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.35s;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.35s;
   display: flex; flex-direction: column; gap: 0.9rem;
   position: relative; overflow: hidden;
 }
-.project-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px var(--shadow); border-color: var(--border-hover); }
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px var(--shadow); border-color: var(--border-hover); }
 
 /* ============================================================
    NAV DOT
@@ -289,19 +292,19 @@ nav,
 .bento-row-1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin-bottom: 1.25rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .bento-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 .bento-row-3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin-top: 1.25rem;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 .bento-cell-large  { min-height: 500px; }
 .bento-cell-medium { min-height: 440px; }
@@ -346,6 +349,22 @@ nav,
   .stats-row { gap: 1.25rem !important; }
   .stats-row > div { min-width: 45%; }
 }
+
+/* ============================================================
+   LINK UNDERLINE ANIMATION
+   ============================================================ */
+.link-hover {
+  position: relative;
+  display: inline-block;
+}
+.link-hover::after {
+  content: "";
+  position: absolute; left: 0; bottom: -1px;
+  width: 0; height: 1px;
+  background: currentColor;
+  transition: width 0.25s ease;
+}
+.link-hover:hover::after { width: 100%; }
 
 /* ============================================================
    F1 WHEEL SPIN

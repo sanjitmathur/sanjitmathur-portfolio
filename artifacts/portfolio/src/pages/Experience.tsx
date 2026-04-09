@@ -1,47 +1,21 @@
 import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
+import { useLang } from "../components/LanguageContext";
 import BarakaWidget from "../components/widgets/BarakaWidget";
 import IndiGoWidget from "../components/widgets/IndiGoWidget";
 import LabWidget from "../components/widgets/LabWidget";
 
-const jobs = [
-  {
-    n: "01", role: "AI Engineering Intern", co: "Baraka Financial Ltd.",
-    type: "FinTech · AI", period: "Jan 2026 - Apr 2026", loc: "Dubai, UAE",
-    bullets: [
-      "Deployed containerized services to Kubernetes; built AI-powered internal tooling that automated error classification and log analysis, eliminating manual triage across support workflows.",
-      "Built Position Search, Trading Account Monitor, CRA, EOD History, Slack Automation and other modules integrating OMS, Instruments, and Wallet microservices, reducing manual portfolio lookup time for operations teams.",
-      "Unified inconsistent data schemas across distributed services into a single portfolio state model, eliminating data discrepancies in cross-market account views.",
-    ],
-    tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"],
-    accent: "#d5b572",
-    Widget: BarakaWidget,
-  },
-  {
-    n: "02", role: "Digital Intern", co: "IndiGo — InterGlobe Aviation",
-    type: "Aviation · ML", period: "Aug - Sep 2025", loc: "Gurgaon, India",
-    bullets: [
-      "Built a Logistic Regression model to predict on-time arrival performance on the DEL-BOM sector using 1,000 flight records and 6 engineered features (block-hour overrun, departure delay, aircraft type, weather index, ATC congestion), achieving 88% accuracy with balanced precision/recall across both classes.",
-      "Engineered features from raw operational data including one-hot encoding of 3 aircraft types (A320, A320neo, A321neo), computed block-hour overrun from scheduled vs. actual hours, and conducted correlation analysis across 10 numerical variables to inform feature selection for modeling.",
-    ],
-    tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"],
-    accent: "#c4934a",
-    Widget: IndiGoWidget,
-  },
-  {
-    n: "03", role: "Software Engineering Intern", co: "Lab of Future",
-    type: "EdTech", period: "Jun - Aug 2025", loc: "Dubai, UAE",
-    bullets: [
-      "Built internal educational software used by 500+ students across 4 campuses.",
-      "Designed backend APIs for course content delivery and student progress tracking.",
-    ],
-    tags: ["React", "Node.js", "Full-Stack"],
-    accent: "#b8895a",
-    Widget: LabWidget,
-  },
+type JobId = "baraka" | "indigo" | "lab";
+
+const jobMeta: { id: JobId; n: string; co: string; period: string; loc: string; tags: string[]; accent: string; Widget: React.FC }[] = [
+  { id: "baraka", n: "01", co: "Baraka Financial Ltd.", period: "Jan 2026 - Apr 2026", loc: "Dubai, UAE", tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"], accent: "#d5b572", Widget: BarakaWidget },
+  { id: "indigo", n: "02", co: "IndiGo — InterGlobe Aviation", period: "Aug - Sep 2025", loc: "Gurgaon, India", tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"], accent: "#c4934a", Widget: IndiGoWidget },
+  { id: "lab", n: "03", co: "Lab of Future", period: "Jun - Aug 2025", loc: "Dubai, UAE", tags: ["React", "Node.js", "Full-Stack"], accent: "#b8895a", Widget: LabWidget },
 ];
 
-function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
+function JobCard({ job, idx, role, type, bullets, keyContrib }: {
+  job: typeof jobMeta[0]; idx: number; role: string; type: string; bullets: string[]; keyContrib: string;
+}) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -60,10 +34,10 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
     >
       <div style={{
         background: "var(--surface)", border: "1px solid var(--border)",
-        borderRadius: 20, overflow: "hidden",
+        borderRadius: 14, overflow: "hidden",
         transform: `perspective(1200px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg)`,
-        transition: tilt.x === 0 ? "transform 0.6s ease, box-shadow 0.3s" : "transform 0.05s linear",
-        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px ${job.accent}22` : "none",
+        transition: tilt.x === 0 ? "transform 0.5s cubic-bezier(0.33,1,0.68,1), box-shadow 0.3s" : "transform 0.05s linear",
+        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px ${job.accent}18` : "none",
       }}>
         {/* Top: widget + header */}
         <div className="exp-card-inner">
@@ -72,10 +46,10 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: job.accent, boxShadow: `0 0 10px ${job.accent}80` }} />
-                <span style={{ fontSize: "0.65rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{job.type}</span>
+                <span style={{ fontSize: "0.65rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{type}</span>
               </div>
-              <div style={{ fontSize: "clamp(1.05rem,2vw,1.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
-              <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{job.role}</div>
+              <div style={{ fontSize: "clamp(1.1rem,2vw,1.3rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.01em", color: "var(--text)", marginBottom: 4, lineHeight: 1.2 }}>{job.co}</div>
+              <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{role}</div>
               <div style={{ fontSize: "0.7rem", color: "var(--muted)", opacity: 0.6 }}>{job.period} · {job.loc}</div>
             </div>
             <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: 16 }}>
@@ -89,15 +63,15 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
           </div>
         </div>
 
-        {/* Key contributions — always visible */}
+        {/* Key contributions */}
         <div style={{ borderTop: "1px solid var(--border)" }}>
           <div style={{ padding: "14px clamp(16px, 4vw, 32px)", color: "var(--muted)", fontSize: "0.78rem" }}>
-            Key contributions
+            {keyContrib}
           </div>
           <ul style={{ listStyle: "none", padding: "0 clamp(16px, 4vw, 32px) 24px", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-            {job.bullets.map((b, i) => (
+            {bullets.map((b, i) => (
               <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>▶</span>
+                <span style={{ color: job.accent, marginTop: "0.45em", flexShrink: 0, fontSize: "0.45rem" }}>&#9654;</span>
                 <span style={{ fontSize: "0.82rem", lineHeight: 1.7, color: "var(--muted)" }}>{b}</span>
               </li>
             ))}
@@ -111,16 +85,28 @@ function JobCard({ job, idx }: { job: typeof jobs[0]; idx: number }) {
 export default function Experience() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
+  const { t } = useLang();
+
+  const te = t.experience;
+
+  const jobTranslations: Record<JobId, { role: string; type: string; bullets: string[] }> = {
+    baraka: te.baraka,
+    indigo: te.indigo,
+    lab: te.lab,
+  };
 
   return (
     <section id="experience" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--bg)" }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
-          <p className="section-label" style={{ marginBottom: "0.75rem" }}>Experience</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Where I've made an impact</h2>
+          <p className="section-label" style={{ marginBottom: "0.85rem" }}>{te.label}</p>
+          <h2 style={{ fontSize: "clamp(1.85rem,4vw,2.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)" }}>{te.heading}</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          {jobs.map((j, i) => <JobCard key={j.n} job={j} idx={i} />)}
+          {jobMeta.map((j, i) => {
+            const jt = jobTranslations[j.id];
+            return <JobCard key={j.n} job={j} idx={i} role={jt.role} type={jt.type} bullets={jt.bullets} keyContrib={te.keyContrib} />;
+          })}
         </div>
       </div>
     </section>

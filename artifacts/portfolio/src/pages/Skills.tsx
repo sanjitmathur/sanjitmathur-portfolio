@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
+import { useLang } from "../components/LanguageContext";
 
 const stack = [
   { name: "Python",       pct: 95, cat: "Language", color: "#3b82f6" },
@@ -18,11 +19,12 @@ const pills = [
   "Pandas", "NumPy", "Matplotlib", "Streamlit", "Plotly", "MATLAB", "SQL", "Pydantic",
 ];
 
-const domains = [
-  { area: "AI / ML", detail: "LLM APIs, OpenCV, scikit-learn, Stacking Ensembles, Quantile Regression", color: "#d5b572" },
-  { area: "Full-Stack", detail: "React, Next.js, Node.js, Express.js, FastAPI, Pydantic", color: "#c4934a" },
-  { area: "Infrastructure", detail: "Docker, Kubernetes, PostgreSQL, Streamlit, Plotly, Joblib", color: "#3b82f6" },
-  { area: "Languages", detail: "Python, TypeScript, C, SQL, MATLAB", color: "#22c55e" },
+type DomainKey = "aiml" | "fullstack" | "infra" | "langs";
+const domainKeys: { key: DomainKey; color: string }[] = [
+  { key: "aiml", color: "#d5b572" },
+  { key: "fullstack", color: "#c4934a" },
+  { key: "infra", color: "#3b82f6" },
+  { key: "langs", color: "#22c55e" },
 ];
 
 function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {
@@ -39,7 +41,7 @@ function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {
   }, []);
 
   return (
-    <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{  }}>
+    <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
         <div style={{ display: "flex", gap: "0.7rem", alignItems: "baseline" }}>
           <span style={{ fontWeight: 500, fontSize: "0.82rem", color: hovered ? skill.color : "var(--text)", transition: "color 0.25s" }}>{skill.name}</span>
@@ -63,15 +65,18 @@ function SkillBar({ skill, i }: { skill: typeof stack[0]; i: number }) {
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
+  const { t } = useLang();
+
+  const ts = t.skills;
 
   return (
     <section id="skills" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--surface)" }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
-          <p className="section-label" style={{ marginBottom: "0.75rem" }}>Skills</p>
-          <h2 style={{ fontSize: "clamp(1.8rem,4vw,2.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", color: "var(--text)" }}>Technical Stack</h2>
-          <p style={{ fontSize: "0.88rem", color: "var(--muted)", marginTop: "0.75rem", maxWidth: "500px", lineHeight: 1.7 }}>
-            From embedded systems to cloud-native AI pipelines — across the full stack with a focus on intelligent, production-grade software.
+          <p className="section-label" style={{ marginBottom: "0.85rem" }}>{ts.label}</p>
+          <h2 style={{ fontSize: "clamp(1.85rem,4vw,2.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)" }}>{ts.heading}</h2>
+          <p style={{ fontSize: "0.9rem", color: "var(--muted)", marginTop: "0.85rem", maxWidth: "520px", lineHeight: 1.7 }}>
+            {ts.subtitle}
           </p>
         </div>
 
@@ -81,20 +86,22 @@ export default function Skills() {
             {stack.map((s, i) => <SkillBar key={s.name} skill={s} i={i} />)}
           </div>
 
-          {/* Right: domains + pills */}
+          {/* Right: domains */}
           <div>
             <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: 0, marginBottom: "2.5rem" }}>
-              {domains.map(d => (
-                <div key={d.area} style={{ display: "flex", gap: "1.25rem", alignItems: "flex-start", padding: "1rem 0", borderBottom: "1px solid var(--border)" }}>
-                  <div style={{ width: 3, height: 36, borderRadius: 2, background: d.color, flexShrink: 0, marginTop: 4 }} />
-                  <div>
-                    <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text)", marginBottom: "0.3rem" }}>{d.area}</div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.6 }}>{d.detail}</div>
+              {domainKeys.map(({ key, color }) => {
+                const d = ts.domains[key];
+                return (
+                  <div key={key} style={{ display: "flex", gap: "1.25rem", alignItems: "flex-start", padding: "1rem 0", borderBottom: "1px solid var(--border)" }}>
+                    <div style={{ width: 3, height: 36, borderRadius: 2, background: color, flexShrink: 0, marginTop: 4 }} />
+                    <div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text)", marginBottom: "0.3rem" }}>{d.area}</div>
+                      <div style={{ fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.6 }}>{d.detail}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-
           </div>
         </div>
       </div>

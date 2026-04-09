@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import { ThemeProvider } from "./components/ThemeContext";
+import { LanguageProvider } from "./components/LanguageContext";
 import Loader from "./components/Loader";
 import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
@@ -40,7 +41,11 @@ function AppInner() {
       {!loaded && (
         <Loader onComplete={() => { setLoaded(true); document.fonts.ready.then(() => setTimeout(() => setShow(true), 80)); }} />
       )}
-      <div style={{ opacity: show ? 1 : 0, transition: "opacity 0.8s ease" }}>
+      <div style={{
+        opacity: show ? 1 : 0,
+        transform: show ? "none" : "translateY(24px)",
+        transition: "opacity 0.8s cubic-bezier(0.33,1,0.68,1) 0.1s, transform 0.8s cubic-bezier(0.33,1,0.68,1) 0.1s",
+      }}>
         <Nav />
         <main>
           {show && <Hero />}
@@ -57,7 +62,9 @@ function AppInner() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AppInner />
+      <LanguageProvider>
+        <AppInner />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

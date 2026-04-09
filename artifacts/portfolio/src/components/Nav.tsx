@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTheme } from "./ThemeContext";
+import { useLang } from "./LanguageContext";
+import { LANG_META, type Lang } from "../i18n";
 
 const sections = ["about", "experience", "projects", "skills", "contact"];
-const labels: Record<string, string> = {
-  about: "About", experience: "Experience", projects: "Projects",
-  skills: "Skills", contact: "Contact",
-};
 
 function SunIcon() {
   return (
@@ -31,11 +29,31 @@ function MoonIcon() {
   );
 }
 
+function GlobeIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  );
+}
+
+const LANGS: Lang[] = ["en", "hi", "ar", "de", "es"];
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("about");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const { theme, toggle } = useTheme();
+  const { lang, setLang, t } = useLang();
+  const langRef = useRef<HTMLDivElement>(null);
+
+  const labels: Record<string, string> = {
+    about: t.nav.about, experience: t.nav.experience, projects: t.nav.projects,
+    skills: t.nav.skills, contact: t.nav.contact,
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -54,6 +72,16 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close lang dropdown on outside click
+  useEffect(() => {
+    if (!langOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [langOpen]);
+
   const go = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
@@ -61,8 +89,8 @@ export default function Nav() {
 
   const navBg = scrolled
     ? theme === "dark"
-      ? "rgba(13,13,13,0.92)"
-      : "rgba(247,244,239,0.92)"
+      ? "rgba(10,10,10,0.92)"
+      : "rgba(250,250,248,0.92)"
     : "transparent";
 
   return (
@@ -70,9 +98,9 @@ export default function Nav() {
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 var(--section-px)", height: "58px",
+        padding: "0 var(--section-px)", height: "56px",
         background: navBg,
-        backdropFilter: scrolled ? "blur(16px)" : "none",
+        backdropFilter: scrolled ? "blur(18px) saturate(1.4)" : "none",
         borderBottom: scrolled ? "1px solid var(--border)" : "none",
         transition: "background 0.4s ease, border-color 0.4s ease",
       }}>
@@ -83,7 +111,7 @@ export default function Nav() {
             <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
           </div>
           <span className="nav-name-text" style={{ fontSize: "0.82rem", fontWeight: 400, letterSpacing: "0.05em", color: "var(--text)", opacity: scrolled ? 1 : 0, transition: "opacity 0.4s, color 0.35s", textTransform: "uppercase" }}>
-            Sanjit Mathur
+            {t.hero.name}
           </span>
         </button>
 
@@ -92,12 +120,12 @@ export default function Nav() {
           {sections.map(s => (
             <button key={s} onClick={() => go(s)} className="clickable"
               style={{
-                background: "none", border: "none",                 padding: "0.38rem 0.75rem", borderRadius: "5px",
-                fontSize: "0.75rem", fontWeight: active === s ? 700 : 400,
+                background: "none", border: "none", padding: "0.38rem 0.75rem", borderRadius: "5px",
+                fontSize: "0.72rem", fontWeight: active === s ? 500 : 400,
                 letterSpacing: "0.04em", textTransform: "uppercase",
                 color: active === s ? "var(--text)" : "var(--muted)",
                 transition: "all 0.2s, color 0.35s",
-                borderBottom: active === s ? "1px solid var(--text)" : "1px solid transparent",
+                borderBottom: active === s ? "1.5px solid var(--text)" : "1.5px solid transparent",
               }}>
               {labels[s]}
             </button>
@@ -105,7 +133,61 @@ export default function Nav() {
         </div>
 
         {/* Right controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          {/* Language selector */}
+          <div ref={langRef} style={{ position: "relative" }}>
+            <button
+              onClick={() => setLangOpen(o => !o)}
+              className="clickable"
+              title="Change language"
+              style={{
+                display: "flex", alignItems: "center", gap: "0.35rem",
+                background: "var(--surface-2)", border: "1px solid var(--border)",
+                borderRadius: "100px", padding: "0.32rem 0.6rem",
+                color: "var(--muted)",
+                fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
+                transition: "all 0.3s",
+              }}>
+              <GlobeIcon />
+              <span>{LANG_META[lang].native}</span>
+            </button>
+
+            {/* Dropdown */}
+            {langOpen && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 6px)", right: 0,
+                background: "var(--surface)", border: "1px solid var(--border)",
+                borderRadius: "10px", padding: "4px",
+                minWidth: "140px",
+                boxShadow: "0 8px 32px var(--shadow)",
+                animation: "fadeIn 0.15s ease",
+                zIndex: 1001,
+              }}>
+                {LANGS.map(l => (
+                  <button
+                    key={l}
+                    onClick={() => { setLang(l); setLangOpen(false); }}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      width: "100%", padding: "0.5rem 0.75rem",
+                      background: lang === l ? "var(--accent-dim)" : "transparent",
+                      border: "none", borderRadius: "7px",
+                      color: lang === l ? "var(--text)" : "var(--muted)",
+                      fontSize: "0.78rem", fontWeight: lang === l ? 500 : 400,
+                      cursor: "pointer",
+                      transition: "background 0.15s, color 0.15s",
+                    }}
+                    onMouseEnter={e => { if (lang !== l) (e.currentTarget.style.background = "var(--accent-dim)"); }}
+                    onMouseLeave={e => { if (lang !== l) (e.currentTarget.style.background = "transparent"); }}
+                  >
+                    <span>{LANG_META[l].label}</span>
+                    <span style={{ fontSize: "0.65rem", opacity: 0.5 }}>{LANG_META[l].native}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Theme toggle */}
           <button
             onClick={toggle}
@@ -121,7 +203,7 @@ export default function Nav() {
             }}>
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             <span style={{ opacity: scrolled ? 1 : 0, transition: "opacity 0.4s" }}>
-              {theme === "dark" ? "Light" : "Dark"}
+              {theme === "dark" ? t.nav.light : t.nav.dark}
             </span>
           </button>
 
@@ -132,7 +214,7 @@ export default function Nav() {
               opacity: scrolled ? 1 : 0, transition: "opacity 0.4s",
               pointerEvents: scrolled ? "auto" : "none",
             }}>
-            Hire Me
+            {t.nav.hireMe}
           </a>
 
           {/* Hamburger — mobile only */}
@@ -156,8 +238,8 @@ export default function Nav() {
       {/* Mobile menu overlay */}
       {menuOpen && (
         <div style={{
-          position: "fixed", top: 58, left: 0, right: 0, bottom: 0, zIndex: 999,
-          background: theme === "dark" ? "rgba(13,13,13,0.97)" : "rgba(247,244,239,0.97)",
+          position: "fixed", top: 56, left: 0, right: 0, bottom: 0, zIndex: 999,
+          background: theme === "dark" ? "rgba(10,10,10,0.97)" : "rgba(250,250,248,0.97)",
           backdropFilter: "blur(20px)",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1.5rem",
           animation: "fadeIn 0.25s ease",
@@ -174,9 +256,27 @@ export default function Nav() {
               {labels[s]}
             </button>
           ))}
+
+          {/* Language selector in mobile menu */}
+          <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+            {LANGS.map(l => (
+              <button key={l} onClick={() => { setLang(l); setMenuOpen(false); }}
+                style={{
+                  padding: "0.4rem 0.75rem", borderRadius: "100px",
+                  background: lang === l ? "var(--text)" : "var(--surface-2)",
+                  color: lang === l ? "var(--bg)" : "var(--muted)",
+                  border: "1px solid var(--border)",
+                  fontSize: "0.72rem", fontWeight: 500, cursor: "pointer",
+                  transition: "all 0.2s",
+                }}>
+                {LANG_META[l].native}
+              </button>
+            ))}
+          </div>
+
           <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary"
             style={{ marginTop: "1rem", fontSize: "0.85rem", cursor: "pointer" }}>
-            Hire Me
+            {t.nav.hireMe}
           </a>
         </div>
       )}

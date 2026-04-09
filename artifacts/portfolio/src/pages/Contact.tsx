@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
+import { useLang } from "../components/LanguageContext";
 
 const links = [
-  { label: "Email",    href: "mailto:sanjitmathur08@gmail.com", handle: "sanjitmathur08@gmail.com", icon: "✉" },
+  { label: "Email",    href: "mailto:sanjitmathur08@gmail.com", handle: "sanjitmathur08@gmail.com", icon: "\u2709" },
   { label: "LinkedIn", href: "https://linkedin.com/in/sanjit-mathur-/",  handle: "/sanjit-mathur-", icon: "in" },
   { label: "GitHub",   href: "https://github.com/sanjitmathur",          handle: "sanjitmathur",    icon: "gh" },
 ];
@@ -11,6 +12,9 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   useRevealChildren(sectionRef, ".fade-up");
+  const { t } = useLang();
+
+  const tc = t.contact;
 
   return (
     <section id="contact" ref={sectionRef} style={{
@@ -21,19 +25,19 @@ export default function Contact() {
         <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(2.5rem, 6vw, 5rem)", alignItems: "start" }}>
           {/* Left */}
           <div className="fade-up">
-            <p className="section-label" style={{ marginBottom: "0.75rem" }}>Contact</p>
-            <h2 style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "0.01em", lineHeight: 1.1, color: "var(--text)", marginBottom: "1.5rem" }}>
-              Let's build<br />
-              <span style={{ color: "var(--accent)" }}>something</span><br />
-              together.
+            <p className="section-label" style={{ marginBottom: "0.85rem" }}>{tc.label}</p>
+            <h2 style={{ fontSize: "clamp(2rem,5vw,3rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", lineHeight: 1.1, color: "var(--text)", marginBottom: "1.75rem" }}>
+              {tc.heading1}<br />
+              <span style={{ color: "var(--accent)" }}>{tc.heading2}</span><br />
+              {tc.heading3}
             </h2>
-            <p style={{ fontSize: "0.88rem", lineHeight: 1.8, color: "var(--muted)", maxWidth: "360px", marginBottom: "2.5rem" }}>
-              Open to internships, collaborations, and ambitious projects. Based in Dubai — available globally.
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "var(--muted)", maxWidth: "380px", marginBottom: "2.5rem" }}>
+              {tc.subtitle}
             </p>
             <a href="mailto:sanjitmathur08@gmail.com"
               className="btn-primary clickable"
               style={{ display: "inline-flex", gap: "0.5rem", alignItems: "center" }}>
-              Say Hello
+              {tc.sayHello}
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <path d="M1.5 6.5h10M6.5 1.5l5 5-5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -53,22 +57,23 @@ export default function Contact() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "1.6rem 0", borderBottom: "1px solid var(--border)",
-                  textDecoration: "none", transition: "all 0.2s",                 }}
+                  textDecoration: "none", transition: "all 0.2s",
+                }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   <div style={{
-                    width: 36, height: 36, borderRadius: 10,
-                    background: hovered === i ? "var(--accent)" : "var(--surface-2)",
+                    width: 38, height: 38, borderRadius: 10,
+                    background: hovered === i ? "var(--text)" : "var(--surface-2)",
                     border: "1px solid var(--border)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    transition: "all 0.2s",
-                    fontSize: "0.65rem", fontWeight: 700, color: hovered === i ? "#fff" : "var(--muted)",
+                    transition: "all 0.25s ease",
+                    fontSize: "0.65rem", fontWeight: 700, color: hovered === i ? "var(--bg)" : "var(--muted)",
                     textTransform: "uppercase", letterSpacing: "0.04em",
                   }}>
                     {link.icon}
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.9rem", fontWeight: 600, color: hovered === i ? "var(--text)" : "var(--text)", marginBottom: 2 }}>{link.label}</div>
+                    <div style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text)", marginBottom: 2 }}>{link.label}</div>
                     <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>{link.handle}</div>
                   </div>
                 </div>
@@ -83,7 +88,7 @@ export default function Contact() {
             {/* Location badge */}
             <div style={{ marginTop: "2rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e80", animation: "blink 2s ease infinite" }} />
-              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Available for new opportunities · Dubai, UAE</span>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{tc.available}</span>
             </div>
           </div>
         </div>
