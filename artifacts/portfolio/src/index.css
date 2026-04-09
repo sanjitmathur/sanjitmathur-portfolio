@@ -311,11 +311,29 @@ nav,
 .bento-cell-tall   { min-height: 500px; }
 
 @media (max-width: 900px) {
-  .bento-row-1, .bento-row-2, .bento-row-3 { grid-template-columns: 1fr; }
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 380px; }
+  .bento-row-1, .bento-row-2, .bento-row-3 {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 420px; height: 420px; }
 }
 @media (max-width: 480px) {
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 320px; }
+  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 380px; height: 380px; }
+}
+
+/* On mobile, disable translateY shift that causes page bounce on scroll */
+@media (max-width: 900px) {
+  .fade-up, .r3d {
+    transform: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .fade-up.in, .r3d.in {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ============================================================
