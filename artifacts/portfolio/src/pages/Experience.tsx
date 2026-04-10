@@ -17,8 +17,10 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
   job: typeof jobMeta[0]; idx: number; role: string; type: string; bullets: string[]; keyContrib: string;
 }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isTouch] = useState(() => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouch) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientY - rect.top) / rect.height - 0.5;
     const y = (e.clientX - rect.left) / rect.width - 0.5;
@@ -35,9 +37,9 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
       <div style={{
         background: "var(--surface)", border: "1px solid var(--border)",
         borderRadius: 14, overflow: "hidden",
-        transform: `perspective(1200px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transform: isTouch ? "none" : `perspective(1200px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: tilt.x === 0 ? "transform 0.5s cubic-bezier(0.33,1,0.68,1), box-shadow 0.3s" : "transform 0.05s linear",
-        boxShadow: tilt.x !== 0 || tilt.y !== 0 ? `0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px ${job.accent}18` : "none",
+        boxShadow: isTouch ? "none" : (tilt.x !== 0 || tilt.y !== 0 ? `0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px ${job.accent}18` : "none"),
       }}>
         {/* Top: widget + header */}
         <div className="exp-card-inner">

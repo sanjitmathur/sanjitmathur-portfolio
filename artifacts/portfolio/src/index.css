@@ -317,10 +317,7 @@ nav,
     margin-left: auto;
     margin-right: auto;
   }
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 420px; height: 420px; }
-}
-@media (max-width: 480px) {
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 380px; height: 380px; }
+  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: auto; height: auto; }
 }
 
 /* On mobile, disable translateY shift that causes page bounce on scroll */
@@ -334,6 +331,20 @@ nav,
     opacity: 1;
     transform: none;
   }
+  /* Kill all interactive/transform animations on mobile */
+  .project-card:hover { transform: none !important; box-shadow: none !important; }
+  canvas { pointer-events: none !important; }
+}
+
+/* Disable all non-essential animations on touch devices */
+@media (pointer: coarse) {
+  /* Nuke all keyframe animations site-wide on mobile — fade-up reveal handles visibility */
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+  /* Prevent 100vh bounce from mobile address bar resize */
+  #about { min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); }
 }
 
 /* ============================================================
@@ -344,8 +355,13 @@ nav,
   grid-template-columns: 1fr 1fr;
   min-height: 200px;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .exp-card-inner { grid-template-columns: 1fr; min-height: auto; }
+  #experience > div > div:last-child {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* ============================================================

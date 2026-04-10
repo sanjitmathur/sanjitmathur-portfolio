@@ -5,9 +5,14 @@ export function useReveal(threshold = 0.1) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const isMobile = window.matchMedia("(max-width: 900px)").matches;
     const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { el.classList.add("in"); }
-      else { el.classList.remove("in"); }
+      if (entry.isIntersecting) {
+        el.classList.add("in");
+        if (isMobile) obs.unobserve(el);
+      } else if (!isMobile) {
+        el.classList.remove("in");
+      }
     }, { threshold });
     obs.observe(el);
     return () => obs.disconnect();
@@ -42,12 +47,14 @@ export function useRevealChildren(
     const sel = _selector || ".r3d, .r3d-left, .r3d-right, .r3d-scale, .r3d-flip";
     const children = container.querySelectorAll(sel);
 
+    const isMobile = window.matchMedia("(max-width: 900px)").matches;
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             (entry.target as HTMLElement).classList.add("in");
-          } else {
+            if (isMobile) obs.unobserve(entry.target);
+          } else if (!isMobile) {
             (entry.target as HTMLElement).classList.remove("in");
           }
         });

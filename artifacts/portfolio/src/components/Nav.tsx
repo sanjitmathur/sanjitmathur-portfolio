@@ -207,14 +207,21 @@ export default function Nav() {
             </span>
           </button>
 
-          {/* Hire Me — desktop */}
-          <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary clickable nav-hire"
+          {/* Resume download — always visible, matches lang/theme pill style */}
+          <a href="/Sanjit_Mathur_Resume.pdf" download className="clickable nav-resume"
             style={{
-              fontSize: "0.72rem", padding: "0.45rem 1rem",
-              opacity: scrolled ? 1 : 0, transition: "opacity 0.4s",
-              pointerEvents: scrolled ? "auto" : "none",
+              display: "flex", alignItems: "center", gap: "0.35rem",
+              background: "var(--surface-2)", border: "1px solid var(--border)",
+              borderRadius: "100px", padding: "0.32rem 0.6rem",
+              color: "var(--muted)",
+              fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
+              transition: "all 0.3s",
+              textDecoration: "none",
             }}>
-            {t.nav.hireMe}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Resume</span>
           </a>
 
           {/* Hamburger — mobile only */}
@@ -274,9 +281,18 @@ export default function Nav() {
             ))}
           </div>
 
-          <a href="mailto:sanjitmathur08@gmail.com" className="btn-primary"
-            style={{ marginTop: "1rem", fontSize: "0.85rem", cursor: "pointer" }}>
-            {t.nav.hireMe}
+          <a href="/Sanjit_Mathur_Resume.pdf" download
+            style={{
+              marginTop: "1rem", display: "inline-flex", gap: "0.4rem", alignItems: "center",
+              background: "var(--surface-2)", border: "1px solid var(--border)",
+              borderRadius: "100px", padding: "0.5rem 1.2rem",
+              color: "var(--muted)", fontSize: "0.85rem", fontWeight: 500,
+              textDecoration: "none", cursor: "pointer",
+            }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Resume
           </a>
         </div>
       )}
