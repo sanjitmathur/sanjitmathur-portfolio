@@ -207,13 +207,13 @@ export default function Nav() {
             </span>
           </button>
 
-          {/* Resume download — always visible, matches lang/theme pill style */}
+          {/* Resume download — always visible, inverted pill to stand out */}
           <a href="/Sanjit_Mathur_Resume.pdf" download className="clickable nav-resume"
             style={{
               display: "flex", alignItems: "center", gap: "0.35rem",
-              background: "var(--surface-2)", border: "1px solid var(--border)",
+              background: "var(--text)", border: "1px solid var(--text)",
               borderRadius: "100px", padding: "0.32rem 0.6rem",
-              color: "var(--muted)",
+              color: "var(--bg)",
               fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
               transition: "all 0.3s",
               textDecoration: "none",

@@ -5,13 +5,10 @@ export function useReveal(threshold = 0.1) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const isMobile = window.matchMedia("(max-width: 900px)").matches;
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         el.classList.add("in");
-        if (isMobile) obs.unobserve(el);
-      } else if (!isMobile) {
-        el.classList.remove("in");
+        obs.unobserve(el);
       }
     }, { threshold });
     obs.observe(el);
@@ -47,15 +44,12 @@ export function useRevealChildren(
     const sel = _selector || ".r3d, .r3d-left, .r3d-right, .r3d-scale, .r3d-flip";
     const children = container.querySelectorAll(sel);
 
-    const isMobile = window.matchMedia("(max-width: 900px)").matches;
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             (entry.target as HTMLElement).classList.add("in");
-            if (isMobile) obs.unobserve(entry.target);
-          } else if (!isMobile) {
-            (entry.target as HTMLElement).classList.remove("in");
+            obs.unobserve(entry.target);
           }
         });
       },
