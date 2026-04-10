@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Lenis from "lenis";
 import { ThemeProvider } from "./components/ThemeContext";
 import { LanguageProvider } from "./components/LanguageContext";
 import Loader from "./components/Loader";
@@ -22,19 +21,8 @@ function AppInner() {
     document.documentElement.setAttribute("data-theme", saved);
   }, []);
 
-  useEffect(() => {
-    if (!show) return;
-    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-    if (isTouchDevice) return;
-    const lenis = new Lenis({
-      duration: 1.6,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-    const raf = (time: number) => { lenis.raf(time); requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
-  }, [show]);
+  /* Lenis smooth scroll removed — caused visible bounce/jitter from
+     scroll-position animation conflicting with layout observers */
 
   return (
     <div style={{ background: "var(--bg)", minHeight: "100vh", transition: "background 0.35s ease" }}>
