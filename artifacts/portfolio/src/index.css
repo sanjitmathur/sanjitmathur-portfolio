@@ -348,6 +348,18 @@ nav,
     animation-duration: 10s !important;
     animation-delay: 0s !important;
   }
+  /* Keep typewriter cursor blinking on mobile */
+  .typewriter-caret {
+    animation-duration: 1s !important;
+  }
+  /* Keep scroll cue entrance and line animation on mobile */
+  .scroll-cue {
+    animation-duration: 0.6s !important;
+    animation-delay: 0.2s !important;
+  }
+  .scroll-line {
+    animation-duration: 2s !important;
+  }
   /* Prevent 100vh bounce from mobile address bar resize */
   #about { min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); }
 }
