@@ -52,15 +52,30 @@ export default function BarakaWidget() {
   });
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#0d1117", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, fontFamily: "var(--font)", overflow: "hidden" }}>
+    <div
+      ref={containerRef}
+      style={{
+        width: "100%",
+        height: "100%",
+        background: "#0d1117",
+        borderRadius: 12,
+        padding: "clamp(10px, 2vw, 14px) clamp(12px, 2.3vw, 16px)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        fontFamily: "var(--font)",
+        overflow: "hidden",
+        minHeight: 0,
+      }}
+    >
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, minHeight: 0 }}>
         <div>
           <div style={{ fontSize: "0.6rem", color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase" }}>BRAK · NYSE</div>
-          <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f5f5f7", letterSpacing: "-0.02em" }}>${price.toFixed(2)}</div>
+          <div style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", fontWeight: 700, color: "#f5f5f7", letterSpacing: "-0.02em", lineHeight: 1.1 }}>${price.toFixed(2)}</div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
-          <span style={{ fontSize: "0.65rem", fontWeight: 600, color: up ? "#22c55e" : "#ef4444", background: up ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 100 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, flexShrink: 0 }}>
+          <span style={{ fontSize: "0.65rem", fontWeight: 600, color: up ? "#22c55e" : "#ef4444", background: up ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 100, whiteSpace: "nowrap" }}>
             {up ? "▲" : "▼"} {Math.abs(delta).toFixed(2)}%
           </span>
           <span style={{ fontSize: "0.55rem", color: "#4b5563" }}>Portfolio</span>
@@ -69,7 +84,7 @@ export default function BarakaWidget() {
       </div>
 
       {/* Line chart */}
-      <div style={{ flex: 1, position: "relative" }}>
+      <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
         <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
           <defs>
             <linearGradient id="baraka-area" x1="0" y1="0" x2="0" y2="1">
@@ -90,10 +105,10 @@ export default function BarakaWidget() {
       </div>
 
       {/* Candlesticks */}
-      <div style={{ display: "flex", gap: 3, alignItems: "flex-end", height: 24 }}>
+      <div style={{ display: "flex", gap: 3, alignItems: "flex-end", height: 20, flexShrink: 0 }}>
         {candles.map((c, i) => {
           const barH = Math.max(4, Math.abs(c.c - c.o) * 20);
-          const wickH = (c.hi - c.lo) * 24;
+          const wickH = Math.min(16, (c.hi - c.lo) * 18);
           return (
             <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", height: "100%" }}>
               <div style={{ width: 1, height: wickH, background: c.bull ? "#22c55e" : "#ef4444", opacity: 0.5 }} />

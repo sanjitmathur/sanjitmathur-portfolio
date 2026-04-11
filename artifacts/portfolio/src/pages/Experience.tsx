@@ -60,7 +60,7 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
           </div>
 
           {/* Right: interactive widget */}
-          <div style={{ padding: 16, background: "var(--surface-2)", overflow: "hidden", contain: "size layout paint", minHeight: 220 }}>
+          <div style={{ padding: 16, background: "var(--surface-2)", overflow: "hidden", contain: "size layout paint", minHeight: "clamp(180px, 26vw, 220px)", display: "flex" }}>
             <job.Widget />
           </div>
         </div>
