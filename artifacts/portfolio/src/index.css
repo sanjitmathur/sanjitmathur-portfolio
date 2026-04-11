@@ -312,12 +312,12 @@ nav,
 
 @media (max-width: 900px) {
   .bento-row-1, .bento-row-2, .bento-row-3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
   }
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: auto; height: auto; overflow: visible; }
+  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: auto; height: auto; overflow: visible; min-width: 0; }
 }
 
 /* On mobile, disable translateY shift that causes page bounce on scroll */
