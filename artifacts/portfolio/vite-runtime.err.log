@@ -1,2 +1,86 @@
 npm warn Unknown user config "auto-install-peers". This will stop working in the next major version of npm.
 npm warn Unknown user config "strict-peer-dependencies". This will stop working in the next major version of npm.
+[2m5:50:27 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+[2m5:54:21 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 7)
+      at async TransformPluginContext.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
+[2m6:05:13 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+[2m6:05:13 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 7)
+      at async TransformPluginContext.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
+[2m6:17:13 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+[2m6:17:37 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Failed to resolve import "../components/widgets/IndiGoWidget" from "src/pages/Experience.tsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36mC:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/src/pages/Experience.tsx[39m:5:25
+[33m  20 |  import { useLang } from "../components/LanguageContext";
+  21 |  import BarakaWidget from "../components/widgets/BarakaWidget";
+  22 |  import IndiGoWidget from "../components/widgets/IndiGoWidget";
+     |                            ^
+  23 |  import LabWidget from "../components/widgets/LabWidget";
+  24 |  const jobMeta = [[39m
+      at TransformPluginContext._formatLog (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 7)
+      at async TransformPluginContext.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///C:/Users/bhawn/OneDrive/Desktop/Portfolio/artifacts/portfolio/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
