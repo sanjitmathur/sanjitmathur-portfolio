@@ -72,7 +72,7 @@ export default function SpotifyWidget() {
   return (
     <div style={{ width: "100%", height: "100%", background: "#0f1a0d", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, fontFamily: "var(--font)", overflow: "hidden" }}>
       {/* Top row: album + info + speaker */}
-      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <div style={{ display: "flex", gap: 12, alignItems: "center", flexShrink: 0 }}>
         {/* Album art */}
         <div style={{
           width: 44, height: 44, borderRadius: 8, flexShrink: 0,
@@ -107,7 +107,7 @@ export default function SpotifyWidget() {
       </div>
 
       {/* Progress bar */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
         <span ref={timeRef} style={{ fontSize: "0.5rem", color: "#4b5563", fontVariantNumeric: "tabular-nums" }}>0:00</span>
         <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
           <div ref={progressRef} style={{ height: "100%", width: "0%", background: "#1db954", borderRadius: 2 }} />
@@ -116,7 +116,7 @@ export default function SpotifyWidget() {
       </div>
 
       {/* Frequency bars — DOM-driven animation, no React re-renders */}
-      <div ref={barsContainerRef} style={{ display: "flex", gap: 2, alignItems: "flex-end", height: 52, flex: 1 }}>
+      <div ref={barsContainerRef} style={{ display: "flex", gap: 2, alignItems: "flex-end", flex: 1, minHeight: 0, overflow: "hidden" }}>
         {Array.from({ length: BAR_COUNT }, (_, i) => (
           <div
             key={i}
@@ -134,7 +134,7 @@ export default function SpotifyWidget() {
       </div>
 
       {/* Controls */}
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16 }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexShrink: 0 }}>
         <button style={{ background: "none", border: "none", color: "#4b5563", fontSize: "0.8rem", padding: 0 }}>⏮</button>
         <button
           onClick={toggle}

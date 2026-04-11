@@ -343,9 +343,9 @@ nav,
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }
-  /* Keep marquee scrolling on mobile */
+  /* Keep marquee scrolling on mobile — faster speed */
   .marquee-track {
-    animation-duration: 28s !important;
+    animation-duration: 10s !important;
     animation-delay: 0s !important;
   }
   /* Prevent 100vh bounce from mobile address bar resize */
