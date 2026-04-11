@@ -165,7 +165,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll cue */}
-      <div className="scroll-cue" style={{ position: "absolute", bottom: "2.5rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", animation: "slideUp 0.6s 1.2s ease both" }}>
+      <div className="scroll-cue" style={{ position: "absolute", bottom: "2.5rem", left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", animation: "slideUp 0.6s 1.2s ease both" }}>
         <span style={{ fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--muted)", fontWeight: 400, transition: "color 0.35s" }}>{t.hero.scroll}</span>
         <div style={{ width: "1px", height: "44px", overflow: "hidden" }}>
           <div className="scroll-line" style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, var(--accent), transparent)", animation: "scrollLine 2s ease infinite", transition: "background 0.35s" }} />
