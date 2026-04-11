@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const MODES = ["STANDBY", "TAKEOFF", "CRUISE", "APPROACH", "DELIVER", "RTH"] as const;
 type Mode = typeof MODES[number];
@@ -23,6 +24,9 @@ const MODE_ALT_PCT: Record<Mode, number> = {
 };
 
 export default function MedAirWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
   const [modeIdx, setModeIdx] = useState(0);
   const [alt, setAlt]   = useState(0);
   const [spd, setSpd]   = useState(0);
@@ -35,6 +39,7 @@ export default function MedAirWidget() {
 
   useEffect(() => {
     const id = setInterval(() => {
+      if (!inViewRef.current) return;
       setTick(prev => {
         const next = prev + 1;
         const phase = Math.floor(next / 28) % MODES.length;
@@ -58,7 +63,7 @@ export default function MedAirWidget() {
   const dotX = 0.5 + Math.sin(tick * 0.04) * 0.2;
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#080c10", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#080c10", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
       {/* Header */}
       <div style={{ padding: "9px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>

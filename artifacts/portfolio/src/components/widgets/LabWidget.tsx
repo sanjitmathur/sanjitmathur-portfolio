@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const snippets = [
   ["import React from 'react';", "const App = () => {", "  return <Dashboard />;", "};"],
@@ -7,6 +8,9 @@ const snippets = [
 ];
 
 export default function LabWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
   const [snip, setSnip] = useState(0);
   const [lines, setLines] = useState(0);
   const [count, setCount] = useState(0);
@@ -45,7 +49,7 @@ export default function LabWidget() {
   const cur = snippets[snip];
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#1a1b14", borderRadius: 12, overflow: "hidden", fontFamily: "'Fira Code', 'Cascadia Code', monospace", display: "flex", flexDirection: "column" }}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#1a1b14", borderRadius: 12, overflow: "hidden", fontFamily: "'Fira Code', 'Cascadia Code', monospace", display: "flex", flexDirection: "column" }}>
       {/* Editor header */}
       <div style={{ background: "#14150f", padding: "8px 14px", display: "flex", alignItems: "center", gap: 6, borderBottom: "1px solid rgba(213,181,114,0.08)" }}>
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#ff5f57" }} />

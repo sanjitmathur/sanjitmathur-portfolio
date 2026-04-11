@@ -317,7 +317,7 @@ nav,
     margin-left: auto;
     margin-right: auto;
   }
-  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: auto; height: auto; }
+  .bento-cell-large, .bento-cell-medium, .bento-cell-tall { min-height: 420px; height: 420px; overflow: hidden; }
 }
 
 /* On mobile, disable translateY shift that causes page bounce on scroll */

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useInView } from "../useInView";
 
 export default function OrvynWidget() {
@@ -10,9 +10,13 @@ export default function OrvynWidget() {
   const [emgLabel, setEmgLabel] = useState("IDLE");
   const [confidence, setConfidence] = useState(0);
 
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
+
   useEffect(() => {
     let t = 0;
     const id = setInterval(() => {
+      if (!inViewRef.current) return;
       t += 0.06;
       const active = hovered;
       const signal = active

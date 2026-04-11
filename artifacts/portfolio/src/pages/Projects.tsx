@@ -68,6 +68,8 @@ function ProjectCard({ proj, title, category, description }: {
           background: "rgba(0,0,0,0.3)",
           borderBottom: "1px solid var(--border)",
           flexShrink: 0,
+          overflow: "hidden",
+          contain: "layout paint",
           padding: "clamp(8px, 2vw, 14px)",
         }}>
           <proj.Widget />

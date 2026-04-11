@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const DOMAINS = ["Airline Bookings", "E-Commerce", "Payments"];
 const ACCENT = "#6366f1";
@@ -43,6 +44,7 @@ function generateBand(points: number[], spread: number): { upper: number[]; lowe
 }
 
 export default function ForecastWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [domain, setDomain] = useState(0);
   const [actual, setActual] = useState(() => generateWave(0, 0));
   const [predicted, setPredicted] = useState(() => generateWave(0, 0.3));
@@ -50,6 +52,8 @@ export default function ForecastWidget() {
   const [forecastIdx] = useState(20); // index where forecast begins
   const frameRef = useRef(0);
   const rafRef = useRef(0);
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
 
   // Auto-cycle domains
   useEffect(() => {
@@ -63,6 +67,8 @@ export default function ForecastWidget() {
   useEffect(() => {
     let accum = 0;
     const animate = () => {
+      rafRef.current = requestAnimationFrame(animate);
+      if (!inViewRef.current) return;
       frameRef.current++;
       accum++;
       if (accum >= 3) {
@@ -74,7 +80,6 @@ export default function ForecastWidget() {
         setPredicted(pred);
         setConfidence(generateBand(pred, 0.08 + domain * 0.015));
       }
-      rafRef.current = requestAnimationFrame(animate);
     };
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
@@ -105,7 +110,7 @@ export default function ForecastWidget() {
   const lbl: React.CSSProperties = { fontSize: "0.36rem", color: "#4b5563", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1 };
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       width: "100%", height: "100%", background: "#0c0c18", borderRadius: 10,
       overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column",
     }}>

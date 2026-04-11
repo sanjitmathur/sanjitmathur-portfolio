@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const BASE = 142.5;
 function rand(min: number, max: number) { return Math.random() * (max - min) + min; }
@@ -19,6 +20,9 @@ function toPath(pts: number[], w: number, h: number): string {
 }
 
 export default function BarakaWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
   const [pts, setPts] = useState(() => genPoints());
   const [price, setPrice] = useState(142.50);
   const [delta, setDelta] = useState(+2.34);
@@ -27,6 +31,7 @@ export default function BarakaWidget() {
 
   useEffect(() => {
     const t = setInterval(() => {
+      if (!inViewRef.current) return;
       const d = rand(-2, 2.5);
       setPrice(p => { const n = Math.max(130, Math.min(160, p + d)); return +n.toFixed(2); });
       setDelta(p => +(p + rand(-0.1, 0.12)).toFixed(2));
@@ -47,7 +52,7 @@ export default function BarakaWidget() {
   });
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#0d1117", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, fontFamily: "var(--font)", overflow: "hidden" }}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#0d1117", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, fontFamily: "var(--font)", overflow: "hidden" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>

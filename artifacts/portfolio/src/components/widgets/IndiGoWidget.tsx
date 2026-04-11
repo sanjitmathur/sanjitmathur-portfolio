@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 export default function IndiGoWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
   const [progress, setProgress] = useState(0);
   const [accuracy] = useState(88);
 
   useEffect(() => {
     let t = 0;
     const id = setInterval(() => {
+      if (!inViewRef.current) return;
       t = (t + 0.008) % 1;
       setProgress(t);
     }, 30);
@@ -45,7 +50,7 @@ export default function IndiGoWidget() {
   const dashOffset = circ * (1 - accuracy / 100);
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#0a0b08", borderRadius: 12, padding: "14px 16px", fontFamily: "var(--font)", overflow: "hidden", position: "relative" }}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#0a0b08", borderRadius: 12, padding: "14px 16px", fontFamily: "var(--font)", overflow: "hidden", position: "relative" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 2 }}>
         <div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const MODELS = ["Isolation Forest", "Autoencoder", "One-Class SVM"];
 const ACCENT = "#f59e0b";
@@ -25,6 +26,7 @@ function smoothPath(points: number[], w: number, h: number, px: number, py: numb
 }
 
 export default function FraudWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [model, setModel] = useState(0);
   const [anomalyScores, setAnomalyScores] = useState<number[]>(() =>
     Array.from({ length: 40 }, () => 0.15 + Math.random() * 0.25)
@@ -39,6 +41,8 @@ export default function FraudWidget() {
   ]);
   const frameRef = useRef(0);
   const rafRef = useRef(0);
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
 
   // Auto-cycle models
   useEffect(() => {
@@ -52,6 +56,8 @@ export default function FraudWidget() {
   useEffect(() => {
     let accum = 0;
     const animate = () => {
+      rafRef.current = requestAnimationFrame(animate);
+      if (!inViewRef.current) return;
       frameRef.current++;
       accum++;
 
@@ -85,7 +91,6 @@ export default function FraudWidget() {
         if (newTxn.flagged) setFlaggedCount(p => p + 1);
       }
 
-      rafRef.current = requestAnimationFrame(animate);
     };
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
@@ -105,7 +110,7 @@ export default function FraudWidget() {
   const vl: React.CSSProperties = { fontSize: "0.55rem", fontWeight: 700, fontFamily: "monospace", lineHeight: 1.3, color: "#e2e2f0" };
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       width: "100%", height: "100%", background: "#0a0a12", borderRadius: 10,
       overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column",
     }}>

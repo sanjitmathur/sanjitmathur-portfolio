@@ -5,18 +5,19 @@ import { useLang } from "../components/LanguageContext";
 const stack = [
   { name: "Python",       pct: 95, cat: "Language", color: "#3b82f6" },
   { name: "TypeScript",   pct: 88, cat: "Language", color: "#d5b572" },
+  { name: "XGBoost",      pct: 85, cat: "ML / AI",  color: "#f59e0b" },
+  { name: "FastAPI",      pct: 85, cat: "Backend",  color: "#22c55e" },
+  { name: "Scikit-learn", pct: 85, cat: "ML / AI",  color: "#c4934a" },
   { name: "React",        pct: 90, cat: "Frontend", color: "#61dafb" },
-  { name: "FastAPI",      pct: 82, cat: "Backend",  color: "#22c55e" },
-  { name: "scikit-learn", pct: 85, cat: "ML / AI",  color: "#f59e0b" },
-  { name: "LLM APIs",     pct: 88, cat: "AI",       color: "#c4934a" },
   { name: "Kubernetes",   pct: 72, cat: "DevOps",   color: "#3b82f6" },
   { name: "Docker",       pct: 85, cat: "DevOps",   color: "#0ea5e9" },
 ];
 
 const pills = [
-  "Python", "React", "TypeScript", "scikit-learn", "Kubernetes", "Docker",
-  "LLM APIs", "FastAPI", "OpenCV", "PostgreSQL", "Node.js", "Next.js",
-  "Pandas", "NumPy", "Matplotlib", "Streamlit", "Plotly", "MATLAB", "SQL", "Pydantic",
+  "Python", "TypeScript", "SQL", "C++",
+  "XGBoost", "LightGBM", "Scikit-learn", "Pandas", "NumPy", "Logistic Regression", "LSTM", "SHAP",
+  "FastAPI", "Node.js", "Express.js", "REST APIs", "Pydantic", "PostgreSQL",
+  "Docker", "Kubernetes", "Streamlit", "Plotly", "React", "Next.js",
 ];
 
 type DomainKey = "aiml" | "fullstack" | "infra" | "langs";

@@ -8,9 +8,9 @@ import LabWidget from "../components/widgets/LabWidget";
 type JobId = "baraka" | "indigo" | "lab";
 
 const jobMeta: { id: JobId; n: string; co: string; period: string; loc: string; tags: string[]; accent: string; Widget: React.FC }[] = [
-  { id: "baraka", n: "01", co: "Baraka Financial Ltd.", period: "Jan 2026 - Apr 2026", loc: "Dubai, UAE", tags: ["Kubernetes", "Docker", "LLM APIs", "Python", "TypeScript"], accent: "#d5b572", Widget: BarakaWidget },
-  { id: "indigo", n: "02", co: "IndiGo — InterGlobe Aviation", period: "Aug - Sep 2025", loc: "Gurgaon, India", tags: ["Python", "scikit-learn", "Pandas", "Feature Engineering"], accent: "#c4934a", Widget: IndiGoWidget },
-  { id: "lab", n: "03", co: "Lab of Future", period: "Jun - Aug 2025", loc: "Dubai, UAE", tags: ["React", "Node.js", "Full-Stack"], accent: "#b8895a", Widget: LabWidget },
+  { id: "baraka", n: "01", co: "Baraka Financial Ltd.", period: "Feb 2026 - Apr 2026", loc: "Dubai, UAE", tags: ["Kubernetes", "Microservices", "LLM", "Python", "TypeScript"], accent: "#d5b572", Widget: BarakaWidget },
+  { id: "indigo", n: "02", co: "IndiGo InterGlobe Aviation Ltd.", period: "Aug - Sep 2025", loc: "Gurgaon, India", tags: ["Python", "Logistic Regression", "Pandas", "Feature Engineering"], accent: "#c4934a", Widget: IndiGoWidget },
+  { id: "lab", n: "03", co: "Lab of Future", period: "Jun - Aug 2025", loc: "Dubai, UAE", tags: ["Node.js", "Express.js", "PostgreSQL"], accent: "#b8895a", Widget: LabWidget },
 ];
 
 function JobCard({ job, idx, role, type, bullets, keyContrib }: {
@@ -60,7 +60,7 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
           </div>
 
           {/* Right: interactive widget */}
-          <div style={{ padding: 16, background: "var(--surface-2)" }}>
+          <div style={{ padding: 16, background: "var(--surface-2)", overflow: "hidden", contain: "size layout paint", minHeight: 220 }}>
             <job.Widget />
           </div>
         </div>

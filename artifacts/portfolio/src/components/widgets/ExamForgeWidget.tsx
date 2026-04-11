@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "../useInView";
 
 const QA_POOL = [
   { q: "What is gradient descent?", a: "An optimization algorithm that iteratively adjusts parameters to minimize a loss function." },
@@ -9,6 +10,7 @@ const QA_POOL = [
 ];
 
 export default function ExamForgeWidget() {
+  const { ref: containerRef, inView } = useInView("200px 0px");
   const [qIdx, setQIdx] = useState(0);
   const [phase, setPhase] = useState<"typing-q" | "typing-a" | "done">("typing-q");
   const [qText, setQText] = useState("");
@@ -63,7 +65,7 @@ export default function ExamForgeWidget() {
   const progress = ((qIdx % QA_POOL.length) / QA_POOL.length) * 100;
 
   return (
-    <div style={{ width: "100%", height: "100%", background: "#0e0f0a", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#0e0f0a", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column" }}>
       {/* Header bar */}
       <div style={{ background: "#13140e", padding: "9px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(213,181,114,0.1)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

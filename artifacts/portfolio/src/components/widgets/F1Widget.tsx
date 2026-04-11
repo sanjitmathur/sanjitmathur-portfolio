@@ -107,9 +107,13 @@ export default function F1Widget() {
   ]);
   const [gForce, setGForce] = useState({ lat: 0, lon: 0 });
 
+  const inViewRef = useRef(false);
+  useEffect(() => { inViewRef.current = inView; }, [inView]);
+
   useEffect(() => {
     let t = 0;
     const id = setInterval(() => {
+      if (!inViewRef.current) return;
       t += 0.018;
       const spd = Math.max(0, Math.min(330, 185 + Math.sin(t) * 120 + Math.sin(t * 1.7) * 35));
       const spdRound = Math.round(spd);
