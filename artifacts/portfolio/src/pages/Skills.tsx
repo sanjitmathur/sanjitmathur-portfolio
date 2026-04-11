@@ -109,7 +109,7 @@ export default function Skills() {
 
       {/* Scrolling marquee */}
       <div style={{ marginTop: "5rem", overflow: "hidden", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>
-        <div style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
+        <div className="marquee-track" style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
           {[...pills, ...pills].map((p, i) => (
             <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.35 }}>{p}</span>
           ))}
