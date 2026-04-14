@@ -31,15 +31,16 @@ function generateWave(frame: number, offset: number): number[] {
     const x = i / 29;
     const base = 0.45 + 0.18 * Math.sin(x * Math.PI * 2 + offset);
     const trend = 0.12 * x;
-    const noise = 0.06 * Math.sin(frame * 0.025 + i * 0.7 + offset * 3);
+    const noise = 0.04 * Math.sin(frame * 0.018 + i * 0.7 + offset * 3)
+                + 0.02 * Math.sin(frame * 0.009 + i * 1.3 + offset);
     return Math.max(0.06, Math.min(0.96, base + trend + noise));
   });
 }
 
 function generateBand(points: number[], spread: number): { upper: number[]; lower: number[] } {
   return {
-    upper: points.map(v => Math.min(0.99, v + spread + Math.random() * 0.02)),
-    lower: points.map(v => Math.max(0.01, v - spread - Math.random() * 0.02)),
+    upper: points.map((v, i) => Math.min(0.99, v + spread + 0.01 * Math.sin(i * 0.5))),
+    lower: points.map((v, i) => Math.max(0.01, v - spread - 0.01 * Math.sin(i * 0.5))),
   };
 }
 
@@ -63,7 +64,7 @@ export default function ForecastWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  // Animation loop
+  // Animation loop — smoother time step
   useEffect(() => {
     let accum = 0;
     const animate = () => {
@@ -71,7 +72,7 @@ export default function ForecastWidget() {
       if (!inViewRef.current) return;
       frameRef.current++;
       accum++;
-      if (accum >= 3) {
+      if (accum >= 4) {
         accum = 0;
         const f = frameRef.current;
         const act = generateWave(f, domain * 2.1);

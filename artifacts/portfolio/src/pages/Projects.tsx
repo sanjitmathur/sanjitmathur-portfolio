@@ -21,91 +21,169 @@ const projectMeta: { id: ProjectId; year: string; tags: string[]; link: string; 
   { id: "medair", year: "2024", tags: ["Python", "IoT", "Flight Control", "Raspberry Pi"], link: "https://github.com/sanjitmathur", accent: "#22c55e", span: "col-medium", Widget: MedAirWidget },
 ];
 
-function ProjectCard({ proj, title, category, description }: {
+/* ============================================================
+   CINEMATIC CARD — full-bleed featured project
+   ============================================================ */
+function CinematicCard({ proj, title, category, description }: {
   proj: typeof projectMeta[0]; title: string; category: string; description: string;
 }) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [hovered, setHovered] = useState(false);
+  return (
+    <div className="fade-up">
+      <div
+        className="proj-cinematic"
+        style={{ "--card-accent": `${proj.accent}4d` } as React.CSSProperties}
+      >
+        {/* Widget as full background */}
+        <div style={{
+          position: "absolute", inset: 0,
+          padding: "clamp(12px, 3vw, 20px)",
+          background: "linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)",
+          overflow: "hidden", contain: "layout paint",
+        }}>
+          <proj.Widget />
+        </div>
+
+        {/* Gradient overlay — text readable over widget */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: "linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.65) 50%, rgba(10,10,10,0.15) 100%)",
+        }} />
+
+        {/* Content */}
+        <div className="cine-content" style={{
+          position: "relative", zIndex: 2,
+          padding: "2.5rem 3rem",
+          display: "flex", flexDirection: "column", justifyContent: "flex-end",
+          minHeight: "440px", maxWidth: "520px",
+        }}>
+          <div style={{
+            fontSize: "0.58rem", fontWeight: 500, color: proj.accent,
+            letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.75rem",
+          }}>
+            {category} · {proj.year}
+          </div>
+          <h3 className="cine-title" style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 700,
+            letterSpacing: "-0.02em", lineHeight: 1.1, marginBottom: "0.85rem",
+            color: "#fafafa",
+          }}>{title}</h3>
+          <p style={{
+            fontSize: "0.85rem", color: "#a1a1a1", lineHeight: 1.7, marginBottom: "1.25rem",
+          }}>{description}</p>
+          <div style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap" }}>
+            {proj.tags.map((t, i) => (
+              <span key={t} style={{ fontSize: "0.62rem", color: "#717171" }}>
+                {t}{i < proj.tags.length - 1 && <span style={{ margin: "0 0.25rem", color: "#444" }}>·</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* GitHub link */}
+        <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{
+          position: "absolute", top: "1.5rem", right: "1.5rem", zIndex: 3,
+          width: 32, height: 32,
+          border: "1px solid rgba(255,255,255,0.1)", borderRadius: "50%",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#717171", textDecoration: "none",
+          transition: "border-color 0.25s, color 0.25s",
+        }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)"; (e.currentTarget as HTMLElement).style.color = "#fafafa"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)"; (e.currentTarget as HTMLElement).style.color = "#717171"; }}
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   GLASS CARD — regular project with animated border
+   ============================================================ */
+function GlassCard({ proj, title, category, description }: {
+  proj: typeof projectMeta[0]; title: string; category: string; description: string;
+}) {
   const [isTouch, setIsTouch] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouch) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientY - rect.top) / rect.height - 0.5;
-    const y = (e.clientX - rect.left) / rect.width - 0.5;
-    setTilt({ x: x * 5, y: y * 5 });
-  };
-
-  const isLarge = proj.span === "col-large";
-  const isTall  = proj.span === "col-medium-tall";
 
   return (
     <div
       className="fade-up"
       onTouchStart={() => { if (!isTouch) setIsTouch(true); }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => { if (!isTouch) setHovered(true); }}
-      onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setHovered(false); }}
       style={{ height: "100%" }}
     >
-      <div style={{
-        height: "100%",
-        background: "var(--surface)",
-        border: `1px solid ${hovered ? `${proj.accent}33` : "var(--border)"}`,
-        borderRadius: 14, overflow: "hidden",
-        display: "flex", flexDirection: "column",
-        transform: isTouch ? "none" : `perspective(1100px) rotateX(${-tilt.x}deg) rotateY(${tilt.y}deg) translateY(${hovered ? -4 : 0}px)`,
-        transition: tilt.x === 0 && !hovered
-          ? "transform 0.5s cubic-bezier(0.33,1,0.68,1), box-shadow 0.3s, border-color 0.25s"
-          : "transform 0.06s linear, border-color 0.25s",
-        boxShadow: hovered
-          ? `0 24px 56px rgba(0,0,0,0.45), 0 0 0 1px ${proj.accent}18`
-          : "none",
-      }}>
+      <div
+        className="glass-border"
+        style={{
+          height: "100%",
+          display: "flex", flexDirection: "column",
+          "--card-accent": `${proj.accent}59`,
+        } as React.CSSProperties}
+      >
+        <div className="glass-light-edge" />
+        <div className="glass-glow" style={{ background: proj.accent, top: "-60px", left: "-30px" }} />
+
         {/* Widget panel */}
         <div style={{
-          height: "clamp(170px, 30vw, " + (isLarge ? "230px" : isTall ? "240px" : "210px") + ")",
-          background: "rgba(0,0,0,0.3)",
-          borderBottom: "1px solid var(--border)",
-          flexShrink: 0,
-          overflow: "hidden",
-          contain: "layout paint",
-          padding: "clamp(8px, 2vw, 14px)",
+          height: "clamp(170px, 30vw, 210px)",
+          background: "rgba(0,0,0,0.28)",
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+          flexShrink: 0, overflow: "hidden", contain: "layout paint",
+          padding: "clamp(8px, 2vw, 14px)", position: "relative",
+          borderRadius: "14px 14px 0 0",
         }}>
           <proj.Widget />
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0, height: "30px",
+            background: "linear-gradient(to bottom, transparent, rgba(20,20,20,0.6))",
+            pointerEvents: "none",
+          }} />
         </div>
 
         {/* Info panel */}
-        <div style={{ padding: "clamp(16px, 3vw, 24px) clamp(16px, 3vw, 26px)", flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{
+          padding: "clamp(16px, 3vw, 22px) clamp(16px, 3vw, 26px)",
+          flex: 1, display: "flex", flexDirection: "column", gap: 10,
+        }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
-                <span style={{ fontSize: "0.6rem", fontWeight: 500, color: proj.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>{category}</span>
-                <span style={{ fontSize: "0.55rem", color: "var(--muted)", opacity: 0.5 }}>· {proj.year}</span>
+                <span style={{ fontSize: "0.55rem", fontWeight: 500, color: proj.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                  {category}
+                </span>
+                <span style={{ fontSize: "0.52rem", color: "var(--muted)", opacity: 0.5 }}>· {proj.year}</span>
               </div>
-              <h3 style={{ fontSize: "1.25rem", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.01em", color: "var(--text)" }}>{title}</h3>
+              <h3 style={{
+                fontSize: "1.1rem", fontWeight: 600,
+                fontFamily: "var(--font-display)", letterSpacing: "-0.01em", color: "var(--text)",
+              }}>{title}</h3>
             </div>
             <a href={proj.link} target="_blank" rel="noopener noreferrer"
               style={{
-                width: 30, height: 30, border: "1px solid var(--border)", borderRadius: "50%",
+                width: 26, height: 26, border: "1px solid var(--border)", borderRadius: "50%",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: "var(--muted)", flexShrink: 0, textDecoration: "none",
-                transition: "border-color 0.2s, color 0.2s",
+                transition: "border-color 0.25s, color 0.25s",
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = proj.accent; (e.currentTarget as HTMLElement).style.color = proj.accent; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "var(--muted)"; }}
             >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
                 <path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
               </svg>
             </a>
           </div>
 
-          <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: "var(--muted)", flex: 1 }}>{description}</p>
+          <p style={{ fontSize: "0.78rem", lineHeight: 1.65, color: "var(--muted)", flex: 1 }}>{description}</p>
 
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", paddingTop: 4 }}>
-            {proj.tags.map(t => (
-              <span key={t} className="skill-pill" style={{ fontSize: "0.65rem", padding: "0.25rem 0.7rem" }}>{t}</span>
+          <div style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap", paddingTop: 4, alignItems: "center" }}>
+            {proj.tags.map((t, i) => (
+              <span key={t} className="tag-inline">
+                {t}{i < proj.tags.length - 1 && <span style={{ margin: "0 0.25rem", color: "var(--border-hover)", fontSize: "0.5rem" }}>·</span>}
+              </span>
             ))}
           </div>
         </div>
@@ -114,6 +192,9 @@ function ProjectCard({ proj, title, category, description }: {
   );
 }
 
+/* ============================================================
+   PROJECTS SECTION
+   ============================================================ */
 export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
@@ -139,31 +220,26 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Bento Row 1 */}
-        <div className="bento-row-1">
-          <div className="bento-cell-large"><ProjectCard proj={fraud} title={tp.fraud.title} category={tp.fraud.cat} description={tp.fraud.desc} /></div>
-          <div className="bento-cell-tall"><ProjectCard proj={forecast} title={tp.forecast.title} category={tp.forecast.cat} description={tp.forecast.desc} /></div>
-        </div>
+        {/* Featured: Cinematic cards */}
+        <CinematicCard proj={fraud} title={tp.fraud.title} category={tp.fraud.cat} description={tp.fraud.desc} />
+        <CinematicCard proj={forecast} title={tp.forecast.title} category={tp.forecast.cat} description={tp.forecast.desc} />
 
-        {/* Bento Row 2 */}
-        <div className="bento-row-2">
+        {/* Row 2: Glass cards (3 col) */}
+        <div className="proj-grid-3">
           {([
             { meta: examforge, t: tp.examforge },
             { meta: orvyn, t: tp.orvyn },
             { meta: f1, t: tp.f1 },
           ]).map(({ meta, t: pt }) => (
-            <div key={meta.id} className="bento-cell-medium">
-              <ProjectCard proj={meta} title={pt.title} category={pt.cat} description={pt.desc} />
-            </div>
+            <GlassCard key={meta.id} proj={meta} title={pt.title} category={pt.cat} description={pt.desc} />
           ))}
         </div>
 
-        {/* Bento Row 3 */}
-        <div className="bento-row-3">
-          <div className="bento-cell-medium"><ProjectCard proj={spotify} title={tp.spotify.title} category={tp.spotify.cat} description={tp.spotify.desc} /></div>
-          <div className="bento-cell-medium"><ProjectCard proj={medair} title={tp.medair.title} category={tp.medair.cat} description={tp.medair.desc} /></div>
+        {/* Row 3: Glass cards (2 col) */}
+        <div className="proj-grid-2">
+          <GlassCard proj={spotify} title={tp.spotify.title} category={tp.spotify.cat} description={tp.spotify.desc} />
+          <GlassCard proj={medair} title={tp.medair.title} category={tp.medair.cat} description={tp.medair.desc} />
         </div>
-
       </div>
     </section>
   );

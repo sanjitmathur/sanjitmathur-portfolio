@@ -90,7 +90,7 @@ export default function Hero() {
         {/* Eyebrow label */}
         <div style={{
           display: "flex", alignItems: "center", gap: "0.75rem",
-          marginBottom: "2rem", animation: "slideUp 0.6s 0.05s ease both",
+          marginBottom: "2rem", animation: "slideUp 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both",
         }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block", animation: "blink 2.5s ease infinite" }} />
           <span style={{ fontSize: "0.74rem", fontWeight: 400, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase", transition: "color 0.35s" }}>
@@ -107,21 +107,21 @@ export default function Hero() {
           lineHeight: 1.08,
           color: "var(--text)",
           marginBottom: "1.75rem",
-          animation: "slideUp 0.65s 0.08s ease both",
+          animation: "slideUp 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) both",
           transition: "color 0.35s",
         }}>
           <TypewriterName name={t.hero.name} />
         </h1>
 
         {/* Thin divider */}
-        <div style={{ width: "40px", height: "1px", background: "var(--border-hover)", marginBottom: "1.75rem", animation: "slideUp 0.5s 0.2s ease both", transition: "background 0.35s" }} />
+        <div style={{ width: "40px", height: "1px", background: "var(--border-hover)", marginBottom: "1.75rem", animation: "slideUp 0.6s 0.3s cubic-bezier(0.16,1,0.3,1) both", transition: "background 0.35s" }} />
 
         {/* Subtitle */}
         <p style={{
           fontSize: "clamp(1rem, 1.8vw, 1.125rem)", fontWeight: 400,
           color: "var(--muted)", maxWidth: "520px", lineHeight: 1.75,
           marginBottom: "3rem",
-          animation: "slideUp 0.7s 0.25s ease both",
+          animation: "slideUp 0.8s 0.35s cubic-bezier(0.16,1,0.3,1) both",
           transition: "color 0.35s",
         }}>
           {t.hero.subtitle}{" "}
@@ -130,7 +130,7 @@ export default function Hero() {
         </p>
 
         {/* CTAs */}
-        <div style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginBottom: "4.5rem", animation: "slideUp 0.7s 0.35s ease both" }}>
+        <div style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginBottom: "4.5rem", animation: "slideUp 0.8s 0.45s cubic-bezier(0.16,1,0.3,1) both" }}>
           <Magnetic strength={0.22}>
             <button className="btn-primary clickable" data-cursor="VIEW" onClick={() => go("projects")}>
               {t.hero.viewProjects}
@@ -148,7 +148,7 @@ export default function Hero() {
         <div className="stats-row" style={{
           display: "flex", gap: "clamp(1.25rem, 4vw, 3rem)", flexWrap: "wrap",
           paddingTop: "2rem", borderTop: "1px solid var(--border)",
-          animation: "slideUp 0.7s 0.45s ease both",
+          animation: "slideUp 0.8s 0.55s cubic-bezier(0.16,1,0.3,1) both",
         }}>
           {[
             ["3+", t.hero.stats.internships],

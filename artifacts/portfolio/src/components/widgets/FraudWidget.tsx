@@ -61,8 +61,8 @@ export default function FraudWidget() {
       frameRef.current++;
       accum++;
 
-      // Update anomaly score wave every 3 frames
-      if (accum >= 3) {
+      // Update anomaly score wave every 4 frames (slightly slower for smoother feel)
+      if (accum >= 4) {
         accum = 0;
         setAnomalyScores(prev => {
           const next = [...prev.slice(1)];
@@ -70,7 +70,11 @@ export default function FraudWidget() {
           // Mostly low scores with occasional spikes
           const base = 0.12 + 0.1 * Math.sin(t * 0.7) + 0.05 * Math.sin(t * 1.3);
           const spike = Math.random() < 0.08 ? 0.4 + Math.random() * 0.5 : 0;
-          next.push(Math.max(0.02, Math.min(0.98, base + spike + Math.random() * 0.08)));
+          // Blend toward previous value for smoother transitions
+          const raw = base + spike + Math.random() * 0.08;
+          const prevVal = prev[prev.length - 1];
+          const smoothed = spike > 0 ? raw : prevVal * 0.3 + raw * 0.7;
+          next.push(Math.max(0.02, Math.min(0.98, smoothed)));
           return next;
         });
       }

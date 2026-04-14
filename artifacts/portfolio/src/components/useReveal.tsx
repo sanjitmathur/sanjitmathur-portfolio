@@ -8,7 +8,8 @@ export function useReveal(threshold = 0.1) {
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         el.classList.add("in");
-        obs.unobserve(el);
+      } else {
+        el.classList.remove("in");
       }
     }, { threshold });
     obs.observe(el);
@@ -49,7 +50,8 @@ export function useRevealChildren(
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             (entry.target as HTMLElement).classList.add("in");
-            obs.unobserve(entry.target);
+          } else {
+            (entry.target as HTMLElement).classList.remove("in");
           }
         });
       },
@@ -58,7 +60,7 @@ export function useRevealChildren(
 
     children.forEach((child, i) => {
       const el = child as HTMLElement;
-      if (!el.style.transitionDelay) el.style.transitionDelay = `${i * 0.1}s`;
+      if (!el.style.transitionDelay) el.style.transitionDelay = `${i * 0.12}s`;
       obs.observe(el);
     });
 
