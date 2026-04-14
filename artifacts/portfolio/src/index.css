@@ -303,12 +303,12 @@ nav,
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   animation: borderRotate 5s linear infinite;
-  opacity: 0.35;
+  opacity: 0;
   transition: opacity 0.5s ease;
   z-index: 1;
   pointer-events: none;
 }
-.glass-border:hover::before { opacity: 1; }
+.glass-border:hover::before { opacity: 0.6; }
 
 /* Static subtle gradient border — always visible */
 .glass-border::after {
@@ -395,12 +395,12 @@ nav,
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   animation: borderRotate 6s linear infinite;
-  opacity: 0.3;
+  opacity: 0;
   transition: opacity 0.5s;
   z-index: 4;
   pointer-events: none;
 }
-.proj-cinematic:hover::before { opacity: 1; }
+.proj-cinematic:hover::before { opacity: 0.6; }
 .proj-cinematic:hover { box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
 
 /* ============================================================
