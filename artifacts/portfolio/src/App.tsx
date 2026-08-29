@@ -34,11 +34,11 @@ function AppInner() {
       <div style={{
         opacity: show ? 1 : 0,
         transform: show ? "none" : "translateY(16px)",
-        transition: "opacity 1s cubic-bezier(0.16,1,0.3,1) 0.05s, transform 1s cubic-bezier(0.16,1,0.3,1) 0.05s",
+        transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s",
       }}>
         <Nav />
         <main>
-          {show && <Hero />}
+          <Hero />
           <div style={{ padding: "0 var(--section-px)" }}><hr className="section-divider" /></div>
           <Experience />
           <div style={{ padding: "0 var(--section-px)" }}><hr className="section-divider" /></div>

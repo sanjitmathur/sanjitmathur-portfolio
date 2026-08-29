@@ -129,18 +129,13 @@ function GlassCard({ proj, title, category, description }: {
         {/* Widget panel */}
         <div style={{
           height: "clamp(170px, 30vw, 210px)",
-          background: "rgba(0,0,0,0.28)",
-          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+          background: "var(--surface-2)",
+          borderBottom: "1px solid var(--border)",
           flexShrink: 0, overflow: "hidden", contain: "layout paint",
           padding: "clamp(8px, 2vw, 14px)", position: "relative",
           borderRadius: "14px 14px 0 0",
         }}>
           <proj.Widget />
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0, height: "30px",
-            background: "linear-gradient(to bottom, transparent, rgba(20,20,20,0.6))",
-            pointerEvents: "none",
-          }} />
         </div>
 
         {/* Info panel */}

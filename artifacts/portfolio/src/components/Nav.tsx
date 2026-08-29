@@ -39,7 +39,7 @@ function GlobeIcon() {
   );
 }
 
-const LANGS: Lang[] = ["en", "hi", "ar", "de", "es"];
+const LANGS: Lang[] = ["en", "ar", "de", "nl", "hi"];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -57,18 +57,29 @@ export default function Nav() {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 60);
-      const mid = window.scrollY + window.innerHeight / 2;
-      for (const id of sections) {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setScrolled(scrollY > 40);
+
+      // If at top area of the page, explicitly lock active to 'about'
+      if (scrollY < window.innerHeight * 0.35) {
+        setActive("about");
+        return;
+      }
+
+      const mid = scrollY + window.innerHeight * 0.4;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const id = sections[i];
         const el = document.getElementById(id);
         if (!el) continue;
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const bot = el.getBoundingClientRect().bottom + window.scrollY;
-        if (mid >= top && mid < bot) { setActive(id); break; }
+        const top = el.getBoundingClientRect().top + scrollY;
+        if (mid >= top) {
+          setActive(id);
+          break;
+        }
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    requestAnimationFrame(onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -90,7 +101,7 @@ export default function Nav() {
   const navBg = scrolled
     ? theme === "dark"
       ? "rgba(10,10,10,0.92)"
-      : "rgba(250,250,248,0.92)"
+      : "rgba(244,243,239,0.92)"
     : "transparent";
 
   return (
@@ -106,7 +117,7 @@ export default function Nav() {
       }}>
         {/* Logo */}
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
-          style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "0.55rem" }}>
+          style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "0.55rem", cursor: "pointer" }}>
           <div style={{ width: 26, height: 26, borderRadius: "6px", background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.35s" }}>
             <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
           </div>
@@ -116,20 +127,29 @@ export default function Nav() {
         </button>
 
         {/* Nav links — desktop only */}
-        <div className="nav-links" style={{ display: "flex", gap: "0.15rem" }}>
-          {sections.map(s => (
-            <button key={s} onClick={() => go(s)} className="clickable"
-              style={{
-                background: "none", border: "none", padding: "0.38rem 0.75rem", borderRadius: "5px",
-                fontSize: "0.72rem", fontWeight: active === s ? 500 : 400,
-                letterSpacing: "0.04em", textTransform: "uppercase",
-                color: active === s ? "var(--text)" : "var(--muted)",
-                transition: "all 0.2s, color 0.35s",
-                borderBottom: active === s ? "1.5px solid var(--text)" : "1.5px solid transparent",
-              }}>
-              {labels[s]}
-            </button>
-          ))}
+        <div className="nav-links" style={{ display: "flex", gap: "0.2rem" }}>
+          {sections.map(s => {
+            const isActive = active === s;
+            return (
+              <button key={s} onClick={() => go(s)} className="clickable"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: "0.38rem 0.75rem",
+                  borderRadius: "6px",
+                  fontSize: "0.72rem",
+                  fontWeight: isActive ? 600 : 400,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  color: isActive ? "var(--text)" : "var(--muted)",
+                  transition: "all 0.2s ease, color 0.35s",
+                  borderBottom: isActive ? "1.5px solid var(--text)" : "1.5px solid transparent",
+                  cursor: "pointer",
+                }}>
+                {labels[s]}
+              </button>
+            );
+          })}
         </div>
 
         {/* Right controls */}
@@ -144,9 +164,10 @@ export default function Nav() {
                 display: "flex", alignItems: "center", gap: "0.35rem",
                 background: "var(--surface-2)", border: "1px solid var(--border)",
                 borderRadius: "100px", padding: "0.32rem 0.6rem",
-                color: "var(--muted)",
+                color: "var(--text-secondary)",
                 fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
-                transition: "all 0.3s",
+                transition: "all 0.25s ease",
+                cursor: "pointer",
               }}>
               <GlobeIcon />
               <span>{LANG_META[lang].native}</span>
@@ -197,9 +218,10 @@ export default function Nav() {
               display: "flex", alignItems: "center", gap: "0.4rem",
               background: "var(--surface-2)", border: "1px solid var(--border)",
               borderRadius: "100px", padding: "0.32rem 0.7rem",
-              color: "var(--muted)",
+              color: "var(--text-secondary)",
               fontSize: "0.72rem", fontWeight: 400, letterSpacing: "0.04em",
               transition: "all 0.3s",
+              cursor: "pointer",
             }}>
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             <span style={{ opacity: scrolled ? 1 : 0, transition: "opacity 0.4s" }}>
@@ -207,18 +229,18 @@ export default function Nav() {
             </span>
           </button>
 
-          {/* Resume download — always visible, inverted pill to stand out */}
+          {/* Resume download */}
           <a href="/Sanjit_Mathur_Resume.pdf" download className="clickable nav-resume"
             style={{
               display: "flex", alignItems: "center", gap: "0.35rem",
               background: "var(--text)", border: "1px solid var(--text)",
-              borderRadius: "100px", padding: "0.32rem 0.6rem",
+              borderRadius: "100px", padding: "0.32rem 0.65rem",
               color: "var(--bg)",
-              fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
-              transition: "all 0.3s",
+              fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.02em",
+              transition: "all 0.25s ease",
               textDecoration: "none",
             }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span>Resume</span>
@@ -246,7 +268,7 @@ export default function Nav() {
       {menuOpen && (
         <div style={{
           position: "fixed", top: 56, left: 0, right: 0, bottom: 0, zIndex: 999,
-          background: theme === "dark" ? "rgba(10,10,10,0.97)" : "rgba(250,250,248,0.97)",
+          background: theme === "dark" ? "rgba(10,10,10,0.97)" : "rgba(238,235,227,0.97)",
           backdropFilter: "blur(20px)",
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1.5rem",
           animation: "fadeIn 0.25s ease",

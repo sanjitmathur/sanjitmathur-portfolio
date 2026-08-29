@@ -98,46 +98,45 @@ export default function ForecastWidget() {
   const upperPath = smoothPath(confidence.upper, w, h, px, py);
   const lowerPoints = [...confidence.lower].reverse();
   const lowerPath = smoothPath(lowerPoints.reverse(), w, h, px, py);
-  // Build band polygon
-  const bandUpper = confidence.upper.map((v, i) => `${toX(i).toFixed(1)},${toY(v).toFixed(1)}`);
-  const bandLower = [...confidence.lower].reverse().map((v, i) => `${toX(29 - i).toFixed(1)},${toY(v).toFixed(1)}`);
-  const bandPath = `M${bandUpper.join(" L")} L${bandLower.join(" L")} Z`;
+  const bandPath = upperPath + ` L${toX(29).toFixed(1)},${toY(confidence.lower[29]).toFixed(1)} ` +
+    lowerPoints.map((v, idx) => `L${toX(29 - idx).toFixed(1)},${toY(v).toFixed(1)}`).join(" ") + " Z";
 
-  // Forecast divider position
   const dividerX = toX(forecastIdx);
-
-  const m = METRICS[domain];
   const domainColor = DOMAIN_COLORS[domain];
+  const m = METRICS[domain];
   const lbl: React.CSSProperties = { fontSize: "0.36rem", color: "#4b5563", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1 };
+  const vl: React.CSSProperties = { fontSize: "0.55rem", fontWeight: 700, fontFamily: "monospace", lineHeight: 1.3, color: "#e2e2f0" };
 
   return (
     <div ref={containerRef} style={{
-      width: "100%", height: "100%", background: "#0c0c18", borderRadius: 10,
+      width: "100%", height: "100%", background: "#0a0a12", borderRadius: 10,
       overflow: "hidden", fontFamily: "var(--font)", display: "flex", flexDirection: "column",
     }}>
       {/* Top bar */}
       <div style={{
-        background: "rgba(0,0,0,0.5)", borderBottom: `1px solid ${ACCENT}18`,
+        background: "rgba(0,0,0,0.5)", borderBottom: `1px solid ${domainColor}18`,
         padding: "4px 10px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{
             width: 7, height: 7, borderRadius: "50%", background: domainColor,
             boxShadow: `0 0 8px ${domainColor}90`, animation: "blink 2.5s ease infinite",
-            transition: "background 0.3s, box-shadow 0.3s",
           }} />
-          <span style={{ fontSize: "0.45rem", fontWeight: 700, color: domainColor, letterSpacing: "0.08em", transition: "color 0.3s" }}>DEMAND FORECAST</span>
+          <span style={{ fontSize: "0.45rem", fontWeight: 700, color: domainColor, letterSpacing: "0.08em" }}>DEMAND FORECAST</span>
           <span style={{ fontSize: "0.38rem", color: "#6b7280" }}>|</span>
-          <span style={{ fontSize: "0.38rem", color: "#9ca3af" }}>XGBoost + LightGBM</span>
+          <span style={{ fontSize: "0.38rem", color: "#9ca3af", fontFamily: "monospace" }}>{DOMAINS[domain]}</span>
         </div>
-        <span style={{ fontSize: "0.36rem", fontWeight: 700, color: "#22c55e", background: "rgba(34,197,94,0.12)", padding: "1px 5px", borderRadius: 3 }}>LIVE</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: "0.38rem", color: domainColor, fontWeight: 600, fontFamily: "monospace" }}>R² = {m.r2}</span>
+          <span style={{ fontSize: "0.36rem", fontWeight: 700, color: "#22c55e", background: "rgba(34,197,94,0.12)", padding: "1px 5px", borderRadius: 3 }}>LIVE</span>
+        </div>
       </div>
 
-      {/* Middle — chart + side stats */}
+      {/* Middle — chart + side panel */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
 
-        {/* Chart area */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+        {/* Main chart area */}
+        <div style={{ flex: 1, position: "relative", minHeight: 0, display: "flex", flexDirection: "column" }}>
 
           {/* Domain tabs */}
           <div style={{ display: "flex", gap: 3, padding: "6px 8px 0" }}>

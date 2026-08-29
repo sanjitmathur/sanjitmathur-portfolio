@@ -69,6 +69,12 @@ export default function Hero() {
   const { t } = useLang();
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
+  const companies = [
+    { name: "Publicis Sapient", role: "AI Engineering", color: "#6366f1" },
+    { name: "Baraka Financial", role: "FinTech AI", color: "#d5b572" },
+    { name: "IndiGo Airlines", role: "Aviation ML", color: "#c4934a" },
+  ];
+
   return (
     <section id="about" style={{
       minHeight: "100vh", display: "flex", alignItems: "center",
@@ -76,37 +82,61 @@ export default function Hero() {
       background: "var(--bg)", position: "relative", overflow: "hidden",
       transition: "background 0.35s ease",
     }}>
-      {/* Subtle grid */}
+      {/* Dynamic ambient background orbs */}
+      <div style={{
+        position: "absolute", top: "15%", left: "10%", width: "clamp(260px, 40vw, 450px)", height: "clamp(260px, 40vw, 450px)",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, rgba(99,102,241,0) 70%)",
+        filter: "blur(60px)",
+        animation: "floatOrb1 18s ease-in-out infinite",
+        pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute", bottom: "10%", right: "10%", width: "clamp(280px, 45vw, 500px)", height: "clamp(280px, 45vw, 500px)",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(213,181,114,0.06) 0%, rgba(213,181,114,0) 70%)",
+        filter: "blur(70px)",
+        animation: "floatOrb2 22s ease-in-out infinite",
+        pointerEvents: "none",
+      }} />
+
+      {/* Subtle grid pattern */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
         backgroundImage: `linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)`,
         backgroundSize: "72px 72px",
-        opacity: 0.5,
-        maskImage: "radial-gradient(ellipse 75% 75% at 50% 50%, black 10%, transparent 100%)",
+        opacity: 0.45,
+        maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 15%, transparent 100%)",
       }} />
 
-      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", paddingTop: "clamp(3rem, 8vw, 6rem)" }}>
+      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", paddingTop: "clamp(3.5rem, 8vw, 6rem)", paddingBottom: "3rem", position: "relative", zIndex: 1 }}>
 
-        {/* Eyebrow label */}
+        {/* Eyebrow status (clean without box) */}
         <div style={{
-          display: "flex", alignItems: "center", gap: "0.75rem",
-          marginBottom: "2rem", animation: "slideUp 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both",
+          display: "flex", alignItems: "center", gap: "0.65rem",
+          marginBottom: "1.75rem", animation: "slideUp 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both",
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block", animation: "blink 2.5s ease infinite" }} />
-          <span style={{ fontSize: "0.74rem", fontWeight: 400, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase", transition: "color 0.35s" }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: "50%",
+            background: "#22c55e",
+            boxShadow: "0 0 8px #22c55e",
+            display: "inline-block",
+            animation: "blink 2.5s ease infinite",
+          }} />
+          <span style={{ fontSize: "0.74rem", fontWeight: 500, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
             {t.hero.eyebrow}
           </span>
         </div>
 
-        {/* Heading */}
+        {/* Heading with Typewriter */}
         <h1 style={{
-          fontSize: "clamp(3rem, 6.5vw, 4rem)",
+          fontSize: "clamp(3.2rem, 7vw, 4.4rem)",
           fontWeight: 700,
           fontFamily: "var(--font-display)",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.08,
+          letterSpacing: "-0.025em",
+          lineHeight: 1.05,
           color: "var(--text)",
-          marginBottom: "1.75rem",
+          marginBottom: "1.5rem",
           animation: "slideUp 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) both",
           transition: "color 0.35s",
         }}>
@@ -114,23 +144,23 @@ export default function Hero() {
         </h1>
 
         {/* Thin divider */}
-        <div style={{ width: "40px", height: "1px", background: "var(--border-hover)", marginBottom: "1.75rem", animation: "slideUp 0.6s 0.3s cubic-bezier(0.16,1,0.3,1) both", transition: "background 0.35s" }} />
+        <div style={{ width: "48px", height: "2px", background: "var(--border-hover)", marginBottom: "1.75rem", animation: "slideUp 0.6s 0.3s cubic-bezier(0.16,1,0.3,1) both", transition: "background 0.35s" }} />
 
         {/* Subtitle */}
         <p style={{
-          fontSize: "clamp(1rem, 1.8vw, 1.125rem)", fontWeight: 400,
-          color: "var(--muted)", maxWidth: "520px", lineHeight: 1.75,
-          marginBottom: "3rem",
+          fontSize: "clamp(1.05rem, 1.8vw, 1.18rem)", fontWeight: 400,
+          color: "var(--muted)", maxWidth: "560px", lineHeight: 1.75,
+          marginBottom: "2.5rem",
           animation: "slideUp 0.8s 0.35s cubic-bezier(0.16,1,0.3,1) both",
           transition: "color 0.35s",
         }}>
           {t.hero.subtitle}{" "}
-          <span style={{ color: "var(--text)", fontWeight: 500, transition: "color 0.35s" }}>{t.hero.subtitleCompany}</span>
+          <span style={{ color: "var(--text)", fontWeight: 600, transition: "color 0.35s" }}>{t.hero.subtitleCompany}</span>
           {" "}{t.hero.subtitleSuffix}
         </p>
 
         {/* CTAs */}
-        <div style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginBottom: "4.5rem", animation: "slideUp 0.8s 0.45s cubic-bezier(0.16,1,0.3,1) both" }}>
+        <div style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginBottom: "2.8rem", animation: "slideUp 0.8s 0.45s cubic-bezier(0.16,1,0.3,1) both" }}>
           <Magnetic strength={0.22}>
             <button className="btn-primary clickable" data-cursor="VIEW" onClick={() => go("projects")}>
               {t.hero.viewProjects}
@@ -142,6 +172,40 @@ export default function Hero() {
               {t.hero.contactMe}
             </button>
           </Magnetic>
+        </div>
+
+        {/* Experience Trust Bar (clean text without boxes) */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap",
+          marginBottom: "3.5rem",
+          animation: "slideUp 0.8s 0.5s cubic-bezier(0.16,1,0.3,1) both",
+        }}>
+          <span style={{ fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted)", marginRight: "0.25rem" }}>
+            Experience at:
+          </span>
+          {companies.map((c, i) => (
+            <span
+              key={c.name}
+              className="clickable"
+              onClick={() => go("experience")}
+              style={{
+                fontSize: "0.78rem",
+                color: "var(--text-secondary)",
+                fontWeight: 500,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                cursor: "pointer",
+                transition: "color 0.25s ease",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "var(--text)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)"; }}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: c.color }} />
+              <span>{c.name}</span>
+              {i < companies.length - 1 && <span style={{ color: "var(--border)", marginLeft: "0.35rem" }}>·</span>}
+            </span>
+          ))}
         </div>
 
         {/* Stats row */}
@@ -156,9 +220,9 @@ export default function Hero() {
             ["88%", t.hero.stats.mlAccuracy],
             ["UOWD", t.hero.stats.dubai],
           ].map(([n, l]) => (
-            <div key={n}>
-              <div style={{ fontSize: "1.35rem", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.01em", color: "var(--text)", transition: "color 0.35s" }}>{n}</div>
-              <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: "0.25rem", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 400, transition: "color 0.35s" }}>{l}</div>
+            <div key={n} style={{ transition: "transform 0.25s ease" }}>
+              <div style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.7rem)", fontWeight: 700, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)", transition: "color 0.35s" }}>{n}</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: "0.25rem", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 500, transition: "color 0.35s" }}>{l}</div>
             </div>
           ))}
         </div>

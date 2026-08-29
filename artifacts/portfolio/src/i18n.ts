@@ -1,11 +1,11 @@
-export type Lang = "en" | "hi" | "ar" | "de" | "es";
+export type Lang = "en" | "ar" | "de" | "nl" | "hi";
 
 export const LANG_META: Record<Lang, { label: string; native: string; dir: "ltr" | "rtl" }> = {
   en: { label: "English", native: "EN", dir: "ltr" },
-  hi: { label: "Hindi", native: "हि", dir: "ltr" },
   ar: { label: "Arabic", native: "ع", dir: "rtl" },
   de: { label: "German", native: "DE", dir: "ltr" },
-  es: { label: "Spanish", native: "ES", dir: "ltr" },
+  nl: { label: "Dutch", native: "NL", dir: "ltr" },
+  hi: { label: "Hindi", native: "हि", dir: "ltr" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -35,6 +35,7 @@ const translations: Record<Lang, {
   };
   experience: {
     label: string; heading: string; keyContrib: string;
+    publicis: { role: string; type: string; bullets: string[] };
     baraka: { role: string; type: string; bullets: string[] };
     indigo: { role: string; type: string; bullets: string[] };
     lab: { role: string; type: string; bullets: string[] };
@@ -53,9 +54,9 @@ const translations: Record<Lang, {
     hero: {
       eyebrow: "AI Engineer & Software Developer — Dubai, UAE",
       name: "Sanjit Mathur",
-      subtitle: "Building intelligent systems, modern web applications, and developer tools. Previously at",
-      subtitleCompany: "Baraka Financial",
-      subtitleSuffix: "— open to new opportunities.",
+      subtitle: "Building intelligent systems, modern web applications, and developer tools. Currently at",
+      subtitleCompany: "Publicis Sapient",
+      subtitleSuffix: ", open to new opportunities.",
       viewProjects: "View Projects",
       contactMe: "Contact Me",
       scroll: "scroll",
@@ -83,6 +84,14 @@ const translations: Record<Lang, {
     },
     experience: {
       label: "Experience", heading: "Where I've made an impact", keyContrib: "Key contributions",
+      publicis: {
+        role: "AI Engineering Intern", type: "IT Consulting · AI",
+        bullets: [
+          "Engineered a production-grade REST API using Node.js, Express 5, TypeScript, and PostgreSQL, implementing layered architecture, Prisma ORM, relational data models, and full CRUD task management with pagination and filtering.",
+          "Built a secure authentication and authorization system with JWT, bcrypt, RBAC, and reusable middleware, enforcing role-based permissions, resource ownership validation, and admin overrides across protected endpoints.",
+          "Strengthened API reliability and maintainability with Zod request validation, centralized error handling, Jest + Supertest testing, ESLint, Prettier, and tsx, delivering structured error responses and a robust developer workflow.",
+        ],
+      },
       baraka: {
         role: "AI Engineering Intern", type: "FinTech · AI",
         bullets: [
@@ -122,9 +131,9 @@ const translations: Record<Lang, {
     hero: {
       eyebrow: "AI इंजीनियर और सॉफ्टवेयर डेवलपर — दुबई, UAE",
       name: "संजित माथुर",
-      subtitle: "बुद्धिमान प्रणालियाँ, आधुनिक वेब एप्लिकेशन और डेवलपर टूल्स बना रहा हूँ। पहले",
-      subtitleCompany: "Baraka Financial",
-      subtitleSuffix: "में काम कर चुका हूँ — नए अवसरों के लिए उपलब्ध।",
+      subtitle: "बुद्धिमान प्रणालियाँ, आधुनिक वेब एप्लिकेशन और डेवलपर टूल्स बना रहा हूँ। वर्तमान में",
+      subtitleCompany: "Publicis Sapient",
+      subtitleSuffix: ", नए अवसरों के लिए उपलब्ध।",
       viewProjects: "प्रोजेक्ट्स देखें",
       contactMe: "संपर्क करें",
       scroll: "स्क्रॉल",
@@ -152,6 +161,14 @@ const translations: Record<Lang, {
     },
     experience: {
       label: "अनुभव", heading: "जहाँ मैंने प्रभाव डाला", keyContrib: "मुख्य योगदान",
+      publicis: {
+        role: "AI इंजीनियरिंग इंटर्न", type: "IT कंसल्टिंग · AI",
+        bullets: [
+          "Node.js, Express 5, TypeScript और PostgreSQL का उपयोग करके प्रोडक्शन-ग्रेड REST API इंजीनियर किया, जिसमें लेयर्ड आर्किटेक्चर, Prisma ORM, रिलेशनल डेटा मॉडल और पेजिनेशन व फ़िल्टरिंग सहित पूर्ण CRUD टास्क मैनेजमेंट लागू किया।",
+          "JWT, bcrypt, RBAC और पुनरउपयोगी मिडलवेयर के साथ सुरक्षित प्रमाणीकरण और प्राधिकरण प्रणाली बनाई, जो रोल-आधारित अनुमतियाँ, संसाधन स्वामित्व सत्यापन और एडमिन ओवरराइड लागू करती है।",
+          "Zod अनुरोध सत्यापन, केंद्रीकृत एरर हैंडलिंग, Jest + Supertest टेस्टिंग, ESLint, Prettier और tsx के साथ API विश्वसनीयता और रखरखाव मजबूत किया।",
+        ],
+      },
       baraka: {
         role: "AI इंजीनियरिंग इंटर्न", type: "फिनटेक · AI",
         bullets: [
@@ -191,9 +208,9 @@ const translations: Record<Lang, {
     hero: {
       eyebrow: "مهندس ذكاء اصطناعي ومطوّر برمجيات — دبي، الإمارات",
       name: "سانجيت ماثور",
-      subtitle: "أبني أنظمة ذكية وتطبيقات ويب حديثة وأدوات للمطورين. عملت سابقاً في",
-      subtitleCompany: "Baraka Financial",
-      subtitleSuffix: "— متاح لفرص جديدة.",
+      subtitle: "أبني أنظمة ذكية وتطبيقات ويب حديثة وأدوات للمطوّرين. حالياً في",
+      subtitleCompany: "Publicis Sapient",
+      subtitleSuffix: "، متاح لفرص جديدة.",
       viewProjects: "عرض المشاريع",
       contactMe: "تواصل معي",
       scroll: "مرّر",
@@ -221,6 +238,14 @@ const translations: Record<Lang, {
     },
     experience: {
       label: "الخبرة", heading: "أين أحدثت تأثيراً", keyContrib: "المساهمات الرئيسية",
+      publicis: {
+        role: "متدرب هندسة AI", type: "استشارات IT · AI",
+        bullets: [
+          "هندست REST API جاهزة للإنتاج باستخدام Node.js وExpress 5 وTypeScript وPostgreSQL، مع تطبيق معمارية طبقية وPrisma ORM ونماذج بيانات علائقية وإدارة مهام CRUD كاملة مع ترقيم الصفحات والتصفية.",
+          "بنيت نظام مصادقة وتفويض آمنًا باستخدام JWT وbcrypt وRBAC ووسيطة قابلة لإعادة الاستخدام، مع تطبيق الأذونات القائمة على الأدوار والتحقق من ملكية الموارد.",
+          "عزّزت موثوقية API وقابلية صيانتها بالتحقق من الطلبات Zod ومعالجة الأخطاء المركزية واختبارات Jest + Supertest وESLint وPrettier وtsx.",
+        ],
+      },
       baraka: {
         role: "متدرب هندسة AI", type: "تقنية مالية · AI",
         bullets: [
@@ -260,9 +285,9 @@ const translations: Record<Lang, {
     hero: {
       eyebrow: "KI-Ingenieur & Softwareentwickler — Dubai, VAE",
       name: "Sanjit Mathur",
-      subtitle: "Ich entwickle intelligente Systeme, moderne Webanwendungen und Entwickler-Tools. Zuvor bei",
-      subtitleCompany: "Baraka Financial",
-      subtitleSuffix: "— offen für neue Möglichkeiten.",
+      subtitle: "Ich entwickle intelligente Systeme, moderne Webanwendungen und Entwickler-Tools. Derzeit bei",
+      subtitleCompany: "Publicis Sapient",
+      subtitleSuffix: ", offen für neue Möglichkeiten.",
       viewProjects: "Projekte ansehen",
       contactMe: "Kontakt",
       scroll: "scrollen",
@@ -290,6 +315,14 @@ const translations: Record<Lang, {
     },
     experience: {
       label: "Erfahrung", heading: "Wo ich Wirkung erzielt habe", keyContrib: "Wichtige Beiträge",
+      publicis: {
+        role: "KI-Engineering-Praktikant", type: "IT-Beratung · KI",
+        bullets: [
+          "Eine produktionsreife REST API mit Node.js, Express 5, TypeScript und PostgreSQL entwickelt, mit geschichteter Architektur, Prisma ORM, relationalen Datenmodellen und vollständigem CRUD-Aufgabenmanagement mit Paginierung und Filterung.",
+          "Ein sicheres Authentifizierungs- und Autorisierungssystem mit JWT, bcrypt, RBAC und wiederverwendbarer Middleware entwickelt, das rollenbasierte Berechtigungen, Ressourceneigentümervalidierung und Admin-Overrides durchsetzt.",
+          "API-Zuverlässigkeit und -Wartbarkeit mit Zod-Anforderungsvalidierung, zentralisierter Fehlerbehandlung, Jest + Supertest-Tests, ESLint, Prettier und tsx gestärkt.",
+        ],
+      },
       baraka: {
         role: "KI-Engineering-Praktikant", type: "FinTech · KI",
         bullets: [
@@ -322,71 +355,79 @@ const translations: Record<Lang, {
   },
 
   /* ================================================================ */
-  /*  SPANISH                                                          */
+  /*  DUTCH                                                            */
   /* ================================================================ */
-  es: {
-    nav: { about: "Sobre mí", experience: "Experiencia", projects: "Proyectos", skills: "Habilidades", contact: "Contacto", light: "Claro", dark: "Oscuro", hireMe: "Contrátame" },
+  nl: {
+    nav: { about: "Over mij", experience: "Ervaring", projects: "Projecten", skills: "Vaardigheden", contact: "Contact", light: "Licht", dark: "Donker", hireMe: "Huur mij in" },
     hero: {
-      eyebrow: "Ingeniero de IA y Desarrollador de Software — Dubái, EAU",
+      eyebrow: "AI-ingenieur & Softwareontwikkelaar — Dubai, VAE",
       name: "Sanjit Mathur",
-      subtitle: "Construyo sistemas inteligentes, aplicaciones web modernas y herramientas para desarrolladores. Anteriormente en",
-      subtitleCompany: "Baraka Financial",
-      subtitleSuffix: "— abierto a nuevas oportunidades.",
-      viewProjects: "Ver Proyectos",
-      contactMe: "Contáctame",
-      scroll: "desplazar",
-      stats: { internships: "Prácticas", studentsReached: "Estudiantes alcanzados", mlAccuracy: "Precisión ML", dubai: "Dubái" },
+      subtitle: "Ik bouw intelligente systemen, moderne webapplicaties en ontwikkelaarstools. Momenteel bij",
+      subtitleCompany: "Publicis Sapient",
+      subtitleSuffix: ", open voor nieuwe kansen.",
+      viewProjects: "Projecten bekijken",
+      contactMe: "Contact",
+      scroll: "scrollen",
+      stats: { internships: "Stages", studentsReached: "Studenten bereikt", mlAccuracy: "ML-nauwkeurigheid", dubai: "Dubai" },
     },
     projects: {
-      label: "Proyectos", heading: "Lo que he construido", allGithub: "Todo en GitHub →",
-      fraud: { title: "Distributed Fraud Detection", cat: "ML · Seguridad", desc: "Construí un sistema distribuido de detección de fraude que analiza 284K transacciones de tarjetas de crédito usando modelos Isolation Forest, LOF y Autoencoder. Diseñé características de dominio y entrené modelos con pipelines de datos normales con optimización automática de umbrales mediante análisis precision-recall. Desarrollé un panel interactivo en Streamlit con explicabilidad SHAP para razonamiento de fraude a nivel de transacción e investigación de anomalías en tiempo real." },
-      forecast: { title: "Multi-Domain Demand Forecaster", cat: "ML · Pronóstico", desc: "Construí un motor de pronóstico de demanda usando ensamble de apilamiento XGBoost + LightGBM con meta-aprendiz Ridge. Implementé Regresión Cuantílica para intervalos de confianza del percentil 10/90 y diseñé codificaciones temporales cíclicas seno/coseno con estadísticas rodantes específicas del dominio. Desplegado mediante servicio RESTful FastAPI y panel interactivo Streamlit." },
-      examforge: { title: "ExamForge", cat: "IA · EdTech", desc: "Construí una plataforma de generación de exámenes IA usando APIs LLM para generar dinámicamente evaluaciones multiformato en diversas materias. Diseñé flujos de trabajo interactivos que permiten a los profesores generar, intentar y revisar exámenes personalizados con pipelines de evaluación automatizados." },
-      orvyn: { title: "Orvyn ExoArm", cat: "Robótica · Rehab", desc: "Desarrollando un pipeline de clasificación de señales para diferenciar entre movimientos de dedos intencionados y ruido, apuntando a una precisión del 90%+ para ejercicios de rehabilitación asistida. Diseñando un exoesqueleto de rehabilitación basado en microcontrolador que interpreta señales sEMG para asistir el movimiento de dedos." },
-      f1: { title: "F1 Simulation Dashboard", cat: "Datos Viz · Carreras", desc: "Construí un motor de simulación de carreras completo que modela degradación de neumáticos, estrategia de boxes, coches de seguridad, clima y adelantamientos en los 24 GPs de 2026 usando métodos de probabilidad Monte Carlo. Implementé interfaz de modo dual: predicciones de temporada y simulaciones de carrera personalizables." },
-      spotify: { title: "Spotify Song Analyzer", cat: "Datos · Música", desc: "Construí un pipeline de análisis de datos de Spotify para extraer y analizar características de audio (tempo, energía, bailabilidad) usando Python. Identifiqué correlaciones clave en atributos musicales mediante análisis exploratorio e ingeniería de características." },
-      medair: { title: "MedAir", cat: "Autónomo · Médico", desc: "Diseñé una aeronave autónoma híbrida para entrega médica de emergencia con lógica de control de vuelo embebida y sistemas de transición basados en misiones. Premiado con Platino y Oro en la Feria de Innovación de la Universidad de Dubái." },
+      label: "Projecten", heading: "Wat ik heb gebouwd", allGithub: "Alles op GitHub →",
+      fraud: { title: "Distributed Fraud Detection", cat: "ML · Beveiliging", desc: "Ensemble anomaliedetectiesysteem gebouwd (Isolation Forest, LOF, Autoencoder) voor 284K creditcardtransacties. Domeinspecifieke kenmerken ontworpen en modellen getraind op normale data; geautomatiseerde drempeloptimalisatie via precision-recall-analyse. Interactief Streamlit-dashboard ontwikkeld met SHAP-verklaarbaarheid voor frauderedenering op transactieniveau." },
+      forecast: { title: "Multi-Domain Demand Forecaster", cat: "ML · Voorspelling", desc: "Ensemble ML-prognose-engine gebouwd met XGBoost + LightGBM stacking met Ridge meta-learner voor vraagvoorspelling in meerdere domeinen. Geavanceerde temporele kenmerken ontworpen: cyclische coderingen, rollende statistieken. FastAPI-microservice en Streamlit-dashboard geïmplementeerd voor realtime prognoses." },
+      examforge: { title: "ExamForge", cat: "AI · EdTech", desc: "Full-stack LLM-aangedreven examenplatform gebouwd waarmee docenten dynamisch multi-format toetsen kunnen maken. Interactieve workflows ontworpen voor examenontwikkeling, studentpogingen en geautomatiseerde evaluatie." },
+      orvyn: { title: "Orvyn ExoArm", cat: "Robotica · Revalidatie", desc: "Signaalclassificatiepijplijn in ontwikkeling om onderscheid te maken tussen bedoelde vingerbewegingen en ruis, gericht op 90%+ nauwkeurigheid. Microcontrollergebaseerd revalidatie-exoskelet ontworpen dat sEMG-signalen interpreteert." },
+      f1: { title: "F1 Simulation Dashboard", cat: "Data Viz · Racen", desc: "Full-stack racesimulatieengine gebouwd die bandenslijtage, boxenstrategie, safetycars, weer en inhaalmanoeuvres modelleert over alle 24 GP's van 2026 met Monte Carlo-kansen. Dual-mode interface geïmplementeerd." },
+      spotify: { title: "Spotify Song Analyzer", cat: "Data · Muziek", desc: "Spotify-data-analysepijplijn gebouwd om audio-eigenschappen (tempo, energie, dansbaarheid) te extraheren en analyseren met Python. Sleutelcorrelaties in muziekattributen geïdentificeerd via exploratieve analyse." },
+      medair: { title: "MedAir", cat: "Autonoom · Medisch", desc: "Hybride autonoom vliegtuig ontworpen voor medische noodlevering met ingebedde vluchtbesturingslogica en missiegebaseerde transitiesystemen. Bekroond met Platina en Goud op de Dubai University Innovation Fair." },
     },
     skills: {
-      label: "Habilidades", heading: "Stack Técnico",
-      subtitle: "Desde sistemas embebidos hasta pipelines de IA nativas en la nube — a través de todo el stack con enfoque en software inteligente y listo para producción.",
+      label: "Vaardigheden", heading: "Technische Stack",
+      subtitle: "Van embedded systemen tot cloud-native AI-pijplijnen — door de hele stack met focus op intelligente, productieklare software.",
       domains: {
-        aiml: { area: "IA / ML / Datos", detail: "XGBoost, LightGBM, Scikit-learn, Pandas, NumPy, Logistic Regression, LSTM, SHAP" },
+        aiml: { area: "AI / ML / Data", detail: "XGBoost, LightGBM, Scikit-learn, Pandas, NumPy, Logistic Regression, LSTM, SHAP" },
         fullstack: { area: "Full-Stack", detail: "FastAPI, Node.js, Express.js, REST APIs, Pydantic, PostgreSQL, React, Next.js" },
-        infra: { area: "Infraestructura", detail: "Docker, Kubernetes, Streamlit, Plotly" },
-        langs: { area: "Lenguajes", detail: "Python, TypeScript, SQL, C++" },
+        infra: { area: "Infrastructuur", detail: "Docker, Kubernetes, Streamlit, Plotly" },
+        langs: { area: "Talen", detail: "Python, TypeScript, SQL, C++" },
       },
     },
     experience: {
-      label: "Experiencia", heading: "Donde he generado impacto", keyContrib: "Contribuciones clave",
-      baraka: {
-        role: "Pasante de Ingeniería IA", type: "FinTech · IA",
+      label: "Ervaring", heading: "Waar ik impact heb gemaakt", keyContrib: "Belangrijkste bijdragen",
+      publicis: {
+        role: "AI Engineering Intern", type: "IT Consulting · AI",
         bullets: [
-          "Desplegué servicios contenedorizados en Kubernetes; construí herramientas internas impulsadas por IA que automatizaron la clasificación de errores y el análisis de logs, eliminando el triaje manual en flujos de soporte.",
-          "Construí Position Search, Trading Account Monitor, CRA, EOD History, Slack Automation y otros módulos integrando microservicios OMS, Instruments y Wallet, reduciendo el tiempo de búsqueda manual de portafolio para equipos de operaciones.",
-          "Unifiqué esquemas de datos inconsistentes entre servicios distribuidos en un modelo único de estado de portafolio, eliminando discrepancias de datos en vistas de cuentas entre mercados.",
+          "Productieklare REST API gebouwd met Node.js, Express 5, TypeScript en PostgreSQL, met gelaagde architectuur, Prisma ORM, relationele datamodellen en volledig CRUD-taakbeheer met paginering en filtering.",
+          "Veilig authenticatie- en autorisatiesysteem gebouwd met JWT, bcrypt, RBAC en herbruikbare middleware, waarmee rolgebaseerde machtigingen, eigendomsvalidatie en beheerdersoverrides worden afgedwongen.",
+          "API-betrouwbaarheid versterkt met Zod-requestvalidatie, gecentraliseerde foutafhandeling, Jest + Supertest-testen, ESLint, Prettier en tsx, met gestructureerde foutresponsen en robuuste ontwikkelaarsworkflow.",
+        ],
+      },
+      baraka: {
+        role: "AI Engineering Intern", type: "FinTech · AI",
+        bullets: [
+          "5 productiemicroservices gebouwd en uitgerold (Position Search, Trading Account Monitor, CRA, EOD History, Slack Automation) op Kubernetes; dagelijks gebruikt door het volledige operationele team.",
+          "LLM-aangedreven foutclassificatiepijplijn gebouwd die handmatige triageringsduur met 6+ uur per week verminderde, geautomatiseerde categorisering van supporttickets over OMS, Instruments en Wallet microservices.",
+          "Unified portfoliostatusmodel gebouwd dat inconsistente dataschema's consolideert; data-discrepanties geëlimineerd die eerder gebruikersaccounts beïnvloedden.",
         ],
       },
       indigo: {
-        role: "Pasante Digital", type: "Aviación · ML",
+        role: "Digital Intern", type: "Luchtvaart · ML",
         bullets: [
-          "Construí un modelo de Regresión Logística para predecir el rendimiento de llegada puntual en el sector DEL-BOM usando 1,000 registros de vuelo y 6 características diseñadas (exceso de horas bloque, retraso de salida, tipo de aeronave, índice meteorológico, congestión ATC), logrando 88% de precisión con precisión/recall equilibrados.",
-          "Diseñé características a partir de datos operacionales crudos incluyendo codificación one-hot de 3 tipos de aeronave (A320, A320neo, A321neo), calculé exceso de horas bloque y realicé análisis de correlación en 10 variables numéricas para informar la selección de características.",
+          "End-to-end Logistische Regressiepijplijn gebouwd voor puntualiteitsvoorspelling (DEL–BOM-sector), 88% nauwkeurigheid behaald met 1.000 vluchtrijen en 30 variabelen.",
+          "Uitgebreide feature engineering uitgevoerd: blokkuuroverschrijding, vertreksvertraging, ATC-congestie-indexering, weerextractie; top 6 kenmerken geïdentificeerd via correlatieanalyse over 10 numerieke variabelen en 3 vliegtuigtypen.",
         ],
       },
       lab: {
-        role: "Pasante de Ingeniería de Software", type: "EdTech",
+        role: "Software Engineering Intern", type: "EdTech",
         bullets: [
-          "Construí software educativo interno usado por 500+ estudiantes en 4 campus.",
-          "Diseñé APIs backend para entrega de contenido de cursos y seguimiento del progreso estudiantil.",
+          "Backend-API's ontworpen voor cursusinhoudlevering en studentvoortgangsbeheer; systeem bediende 500+ studenten over 4 campussen.",
+          "Authenticatie, cursusinschrijving en voortgangslagen gebouwd met Node.js/Express en PostgreSQL.",
         ],
       },
     },
     contact: {
-      label: "Contacto",
-      heading1: "Construyamos", heading2: "algo", heading3: "juntos.",
-      subtitle: "Abierto a prácticas, colaboraciones y proyectos ambiciosos. Basado en Dubái — disponible globalmente.",
-      sayHello: "Saluda", available: "Disponible para nuevas oportunidades · Dubái, EAU",
+      label: "Contact",
+      heading1: "Laten we", heading2: "iets", heading3: "bouwen.",
+      subtitle: "Open voor stages, samenwerkingen en ambitieuze projecten. Gevestigd in Dubai — wereldwijd beschikbaar.",
+      sayHello: "Zeg hallo", available: "Beschikbaar voor nieuwe kansen · Dubai, VAE",
     },
   },
 };

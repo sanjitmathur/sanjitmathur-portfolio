@@ -67,51 +67,94 @@ export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   useRevealChildren(sectionRef, ".fade-up");
   const { t } = useLang();
+  const [selectedCat, setSelectedCat] = useState<string>("All");
 
   const ts = t.skills;
 
+  const categories = ["All", "Language", "ML / AI", "Backend", "Frontend", "DevOps"];
+
+  const filteredStack = selectedCat === "All"
+    ? stack
+    : stack.filter(s => s.cat === selectedCat);
+
   return (
-    <section id="skills" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--surface)" }}>
+    <section id="skills" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--surface)", transition: "background 0.35s ease" }}>
       <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
-        <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
+        {/* Header */}
+        <div className="fade-up" style={{ marginBottom: "3rem" }}>
           <p className="section-label" style={{ marginBottom: "0.85rem" }}>{ts.label}</p>
-          <h2 style={{ fontSize: "clamp(1.85rem,4vw,2.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)" }}>{ts.heading}</h2>
-          <p style={{ fontSize: "0.9rem", color: "var(--muted)", marginTop: "0.85rem", maxWidth: "520px", lineHeight: 1.7 }}>
-            {ts.subtitle}
-          </p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1.5rem" }}>
+            <div>
+              <h2 style={{ fontSize: "clamp(1.85rem,4vw,2.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)" }}>{ts.heading}</h2>
+              <p style={{ fontSize: "0.9rem", color: "var(--muted)", marginTop: "0.85rem", maxWidth: "520px", lineHeight: 1.7 }}>
+                {ts.subtitle}
+              </p>
+            </div>
+
+            {/* Category filter pills */}
+            <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCat(cat)}
+                  className={`category-tab ${selectedCat === cat ? "active" : ""}`}
+                >
+                  <span>{cat}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="skills-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(2rem, 5vw, 4rem)", alignItems: "start" }}>
           {/* Left: skill bars */}
-          <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
-            {stack.map((s, i) => <SkillBar key={s.name} skill={s} i={i} />)}
+          <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "1.35rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: "0.75rem", marginBottom: "0.25rem" }}>
+              <span style={{ fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted)", fontWeight: 600 }}>
+                Proficiency & Tools ({filteredStack.length})
+              </span>
+              <span style={{ fontSize: "0.68rem", color: "var(--muted)" }}>
+                Verified via Production Experience
+              </span>
+            </div>
+            {filteredStack.map((s, i) => <SkillBar key={s.name} skill={s} i={i} />)}
           </div>
 
-          {/* Right: domains */}
-          <div>
-            <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: 0, marginBottom: "2.5rem" }}>
-              {domainKeys.map(({ key, color }) => {
-                const d = ts.domains[key];
-                return (
-                  <div key={key} style={{ display: "flex", gap: "1.25rem", alignItems: "flex-start", padding: "1rem 0", borderBottom: "1px solid var(--border)" }}>
-                    <div style={{ width: 3, height: 36, borderRadius: 2, background: color, flexShrink: 0, marginTop: 4 }} />
-                    <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text)", marginBottom: "0.3rem" }}>{d.area}</div>
-                      <div style={{ fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.6 }}>{d.detail}</div>
-                    </div>
-                  </div>
-                );
-              })}
+          {/* Right: domain cards */}
+          <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "0.75rem", marginBottom: "0.25rem" }}>
+              <span style={{ fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted)", fontWeight: 600 }}>
+                Core Engineering Domains
+              </span>
             </div>
+            {domainKeys.map(({ key, color }) => {
+              const d = ts.domains[key];
+              return (
+                <div key={key} className="domain-card">
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.45rem" }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}60` }} />
+                    <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text)" }}>{d.area}</div>
+                  </div>
+                  <div style={{ fontSize: "0.76rem", color: "var(--muted)", lineHeight: 1.6, paddingLeft: "1.1rem" }}>
+                    {d.detail}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
       {/* Scrolling marquee */}
       <div style={{ marginTop: "5rem", overflow: "hidden", borderTop: "1px solid var(--border)", paddingTop: "2rem" }}>
-        <div className="marquee-track" style={{ display: "flex", gap: "3rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap" }}>
+        <div className="marquee-track" style={{ display: "flex", gap: "2.5rem", animation: "marquee 28s linear infinite", whiteSpace: "nowrap", alignItems: "center" }}>
           {[...pills, ...pills].map((p, i) => (
-            <span key={i} style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.35 }}>{p}</span>
+            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "0.85rem" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.45 }}>
+                {p}
+              </span>
+              <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--border-hover)" }} />
+            </span>
           ))}
         </div>
       </div>

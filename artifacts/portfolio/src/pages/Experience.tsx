@@ -1,16 +1,18 @@
 import { useRef } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import { useLang } from "../components/LanguageContext";
+import PublicisSapientWidget from "../components/widgets/PublicisSapientWidget";
 import BarakaWidget from "../components/widgets/BarakaWidget";
 import IndiGoWidget from "../components/widgets/IndiGoWidget";
 import LabWidget from "../components/widgets/LabWidget";
 
-type JobId = "baraka" | "indigo" | "lab";
+type JobId = "publicis" | "baraka" | "indigo" | "lab";
 
 const jobMeta: { id: JobId; n: string; co: string; period: string; loc: string; tags: string[]; accent: string; Widget: React.FC }[] = [
-  { id: "baraka", n: "01", co: "Baraka Financial Ltd.", period: "Feb 2026 - Apr 2026", loc: "Dubai, UAE", tags: ["Kubernetes", "Microservices", "LLM", "Python", "TypeScript"], accent: "#d5b572", Widget: BarakaWidget },
-  { id: "indigo", n: "02", co: "IndiGo InterGlobe Aviation Ltd.", period: "Aug - Sep 2025", loc: "Gurgaon, India", tags: ["Python", "Logistic Regression", "Pandas", "Feature Engineering"], accent: "#c4934a", Widget: IndiGoWidget },
-  { id: "lab", n: "03", co: "Lab of Future", period: "Jun - Aug 2025", loc: "Dubai, UAE", tags: ["Node.js", "Express.js", "PostgreSQL"], accent: "#b8895a", Widget: LabWidget },
+  { id: "publicis", n: "01", co: "Publicis Sapient", period: "Jul 2026 – Present", loc: "Dubai, UAE", tags: ["Node.js", "TypeScript", "PostgreSQL", "JWT", "REST APIs"], accent: "#6366f1", Widget: PublicisSapientWidget },
+  { id: "baraka", n: "02", co: "Baraka Financial Ltd.", period: "Feb 2026 – Apr 2026", loc: "Dubai, UAE", tags: ["Kubernetes", "Microservices", "LLM", "Python", "TypeScript"], accent: "#d5b572", Widget: BarakaWidget },
+  { id: "indigo", n: "03", co: "IndiGo InterGlobe Aviation Ltd.", period: "Aug – Sep 2025", loc: "Gurgaon, India", tags: ["Python", "Logistic Regression", "Pandas", "Feature Engineering"], accent: "#c4934a", Widget: IndiGoWidget },
+  { id: "lab", n: "04", co: "Lab of Future", period: "Jun – Aug 2025", loc: "Dubai, UAE", tags: ["Node.js", "Express.js", "PostgreSQL"], accent: "#b8895a", Widget: LabWidget },
 ];
 
 function JobCard({ job, idx, role, type, bullets, keyContrib }: {
@@ -51,22 +53,22 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
             <div style={{
               padding: "clamp(16px, 4vw, 28px) clamp(16px, 4vw, 32px)",
               display: "flex", flexDirection: "column", justifyContent: "space-between",
-              borderRight: "1px solid rgba(255,255,255,0.06)",
-              background: "rgba(255,255,255,0.015)",
+              borderRight: "1px solid var(--border)",
+              background: "var(--surface)",
             }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: job.accent }} />
-                  <span style={{ fontSize: "0.6rem", color: job.accent, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" }}>{type}</span>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: job.accent }} />
+                  <span style={{ fontSize: "0.62rem", color: job.accent, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>{type}</span>
                 </div>
                 <div style={{
-                  fontSize: "clamp(1.1rem,2vw,1.35rem)", fontWeight: 600,
+                  fontSize: "clamp(1.15rem,2vw,1.4rem)", fontWeight: 700,
                   fontFamily: "var(--font-display)", letterSpacing: "-0.01em",
                   color: "var(--text)", marginBottom: 4, lineHeight: 1.2,
                 }}>{job.co}</div>
-                <div style={{ fontSize: "0.82rem", color: "var(--muted)", marginBottom: 2 }}>{role}</div>
+                <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: 4, fontWeight: 500 }}>{role}</div>
                 {/* Show period/loc inline on mobile (timeline hidden) */}
-                <div className="exp-mobile-meta" style={{ fontSize: "0.68rem", color: "var(--muted)", opacity: 0.5 }}>
+                <div className="exp-mobile-meta" style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
                   {job.period} · {job.loc}
                 </div>
               </div>
@@ -81,8 +83,7 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
 
             {/* Widget */}
             <div style={{
-              padding: 16, background: "rgba(0,0,0,0.25)",
-              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              padding: 16, background: "var(--surface-2)",
               overflow: "hidden",
               contain: "size layout paint", minHeight: "clamp(180px, 26vw, 220px)", display: "flex",
               borderRadius: "0 14px 0 0",
@@ -92,25 +93,25 @@ function JobCard({ job, idx, role, type, bullets, keyContrib }: {
           </div>
 
           {/* Key contributions */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+          <div style={{ borderTop: "1px solid var(--border)" }}>
             <div style={{
               padding: "14px clamp(16px, 4vw, 32px)",
-              color: "var(--muted)", fontSize: "0.65rem", fontWeight: 500,
+              color: "var(--muted)", fontSize: "0.68rem", fontWeight: 600,
               letterSpacing: "0.08em", textTransform: "uppercase",
             }}>
               {keyContrib}
             </div>
             <ul style={{
               listStyle: "none", padding: "0 clamp(16px, 4vw, 32px) 24px",
-              display: "flex", flexDirection: "column", gap: "0.45rem",
+              display: "flex", flexDirection: "column", gap: "0.55rem",
             }}>
               {bullets.map((b, i) => (
-                <li key={i} style={{ display: "flex", gap: "0.7rem", alignItems: "flex-start" }}>
+                <li key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
                   <span style={{
-                    width: "10px", height: "1px", flexShrink: 0,
-                    marginTop: "0.6em", background: job.accent, opacity: 0.4,
+                    width: "8px", height: "2px", flexShrink: 0,
+                    marginTop: "0.6em", background: job.accent, borderRadius: 1,
                   }} />
-                  <span style={{ fontSize: "0.78rem", lineHeight: 1.65, color: "var(--muted)" }}>{b}</span>
+                  <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{b}</span>
                 </li>
               ))}
             </ul>
@@ -129,6 +130,7 @@ export default function Experience() {
   const te = t.experience;
 
   const jobTranslations: Record<JobId, { role: string; type: string; bullets: string[] }> = {
+    publicis: te.publicis,
     baraka: te.baraka,
     indigo: te.indigo,
     lab: te.lab,
