@@ -98,6 +98,8 @@ export default function Nav() {
     setMenuOpen(false);
   };
 
+  const resumeUrl = `${import.meta.env.BASE_URL}Sanjit_Mathur_Resume.pdf`;
+
   const navBg = scrolled
     ? theme === "dark"
       ? "rgba(10,10,10,0.92)"
@@ -230,7 +232,14 @@ export default function Nav() {
           </button>
 
           {/* Resume download */}
-          <a href="/Sanjit_Mathur_Resume.pdf" download className="clickable nav-resume"
+          <a
+            href={resumeUrl}
+            download="Sanjit_Mathur_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="clickable nav-resume"
+            data-cursor="RESUME"
+            title="Download Resume (PDF)"
             style={{
               display: "flex", alignItems: "center", gap: "0.35rem",
               background: "var(--text)", border: "1px solid var(--text)",
@@ -239,11 +248,12 @@ export default function Nav() {
               fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.02em",
               transition: "all 0.25s ease",
               textDecoration: "none",
+              cursor: "pointer",
             }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span>Resume</span>
+            <span>{t.nav.resume || "Resume"}</span>
           </a>
 
           {/* Hamburger — mobile only */}
@@ -303,7 +313,14 @@ export default function Nav() {
             ))}
           </div>
 
-          <a href="/Sanjit_Mathur_Resume.pdf" download
+          <a
+            href={resumeUrl}
+            download="Sanjit_Mathur_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMenuOpen(false)}
+            data-cursor="RESUME"
+            title="Download Resume (PDF)"
             style={{
               marginTop: "1rem", display: "inline-flex", gap: "0.4rem", alignItems: "center",
               background: "var(--surface-2)", border: "1px solid var(--border)",
@@ -314,7 +331,7 @@ export default function Nav() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Resume
+            {t.nav.resume || "Resume"}
           </a>
         </div>
       )}

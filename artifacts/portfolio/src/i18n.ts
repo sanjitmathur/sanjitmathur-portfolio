@@ -13,7 +13,7 @@ export const LANG_META: Record<Lang, { label: string; native: string; dir: "ltr"
 /* ------------------------------------------------------------------ */
 
 const translations: Record<Lang, {
-  nav: { about: string; experience: string; projects: string; skills: string; contact: string; light: string; dark: string; hireMe: string };
+  nav: { about: string; experience: string; projects: string; skills: string; contact: string; light: string; dark: string; hireMe: string; resume: string };
   hero: {
     eyebrow: string; name: string; subtitle: string; subtitleCompany: string; subtitleSuffix: string;
     viewProjects: string; contactMe: string; scroll: string;
@@ -50,7 +50,7 @@ const translations: Record<Lang, {
   /*  ENGLISH                                                          */
   /* ================================================================ */
   en: {
-    nav: { about: "About", experience: "Experience", projects: "Projects", skills: "Skills", contact: "Contact", light: "Light", dark: "Dark", hireMe: "Hire Me" },
+    nav: { about: "About", experience: "Experience", projects: "Projects", skills: "Skills", contact: "Contact", light: "Light", dark: "Dark", hireMe: "Hire Me", resume: "Resume" },
     hero: {
       eyebrow: "AI Engineer & Software Developer — Dubai, UAE",
       name: "Sanjit Mathur",
@@ -127,7 +127,7 @@ const translations: Record<Lang, {
   /*  HINDI                                                            */
   /* ================================================================ */
   hi: {
-    nav: { about: "परिचय", experience: "अनुभव", projects: "प्रोजेक्ट्स", skills: "कौशल", contact: "संपर्क", light: "लाइट", dark: "डार्क", hireMe: "संपर्क करें" },
+    nav: { about: "परिचय", experience: "अनुभव", projects: "प्रोजेक्ट्स", skills: "कौशल", contact: "संपर्क", light: "लाइट", dark: "डार्क", hireMe: "संपर्क करें", resume: "रिज्यूमे" },
     hero: {
       eyebrow: "AI इंजीनियर और सॉफ्टवेयर डेवलपर — दुबई, UAE",
       name: "संजित माथुर",
@@ -204,7 +204,7 @@ const translations: Record<Lang, {
   /*  ARABIC                                                           */
   /* ================================================================ */
   ar: {
-    nav: { about: "نبذة", experience: "الخبرة", projects: "المشاريع", skills: "المهارات", contact: "تواصل", light: "فاتح", dark: "داكن", hireMe: "وظّفني" },
+    nav: { about: "نبذة", experience: "الخبرة", projects: "المشاريع", skills: "المهارات", contact: "تواصل", light: "فاتح", dark: "داكن", hireMe: "وظّفني", resume: "السيرة الذاتية" },
     hero: {
       eyebrow: "مهندس ذكاء اصطناعي ومطوّر برمجيات — دبي، الإمارات",
       name: "سانجيت ماثور",
@@ -281,7 +281,7 @@ const translations: Record<Lang, {
   /*  GERMAN                                                           */
   /* ================================================================ */
   de: {
-    nav: { about: "Über mich", experience: "Erfahrung", projects: "Projekte", skills: "Skills", contact: "Kontakt", light: "Hell", dark: "Dunkel", hireMe: "Kontakt" },
+    nav: { about: "Über mich", experience: "Erfahrung", projects: "Projekte", skills: "Skills", contact: "Kontakt", light: "Hell", dark: "Dunkel", hireMe: "Kontakt", resume: "Lebenslauf" },
     hero: {
       eyebrow: "KI-Ingenieur & Softwareentwickler — Dubai, VAE",
       name: "Sanjit Mathur",
@@ -358,7 +358,7 @@ const translations: Record<Lang, {
   /*  DUTCH                                                            */
   /* ================================================================ */
   nl: {
-    nav: { about: "Over mij", experience: "Ervaring", projects: "Projecten", skills: "Vaardigheden", contact: "Contact", light: "Licht", dark: "Donker", hireMe: "Huur mij in" },
+    nav: { about: "Over mij", experience: "Ervaring", projects: "Projecten", skills: "Vaardigheden", contact: "Contact", light: "Licht", dark: "Donker", hireMe: "Huur mij in", resume: "CV" },
     hero: {
       eyebrow: "AI-ingenieur & Softwareontwikkelaar — Dubai, VAE",
       name: "Sanjit Mathur",
