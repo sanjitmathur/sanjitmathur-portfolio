@@ -97,8 +97,8 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
       const w = canvas.width;
       const h = canvas.height;
 
-      // Dark futuristic slate background matching the 3D circuit board
-      ctx.fillStyle = "#0c1017";
+      // Background matching page background #050505
+      ctx.fillStyle = "#050505";
       ctx.fillRect(0, 0, w, h);
 
       if (img && img.complete && img.naturalWidth > 0) {
@@ -167,12 +167,12 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
         position: "relative",
         width: "100%",
         height: "100%",
-        minHeight: "clamp(220px, 35vh, 540px)",
-        borderRadius: 14,
+        maxHeight: "100%",
         overflow: "hidden",
-        background: "#080c14",
-        border: "1px solid rgba(99, 102, 241, 0.25)",
-        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(5, 8, 15, 0.8)",
+        background: "#050505",
+        border: "none",
+        boxShadow: "none",
+        borderRadius: 0,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -184,17 +184,21 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
           width: "100%",
           height: "100%",
           display: "block",
-          objectFit: "cover",
+          objectFit: "contain",
         }}
       />
 
-      {/* Atmospheric vignette edge overlay blending canvas into dark theme */}
+      {/* Seamless atmospheric vignette blending visual into page background #050505 */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           pointerEvents: "none",
-          background: "radial-gradient(ellipse at center, transparent 65%, rgba(8, 12, 20, 0.6) 90%, rgba(8, 12, 20, 0.95) 100%)",
+          background: `
+            radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(5, 5, 5, 0.5) 80%, #050505 100%),
+            linear-gradient(to right, #050505 0%, transparent 12%, transparent 82%, #050505 100%),
+            linear-gradient(to bottom, #050505 0%, transparent 10%, transparent 88%, #050505 100%)
+          `,
         }}
       />
 

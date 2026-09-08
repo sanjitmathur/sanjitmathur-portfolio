@@ -431,53 +431,64 @@ nav,
 }
 
 /* ============================================================
-   PUBLICIS SHOWCASE (WIDGET ON LEFT, TEXT ON RIGHT)
+   PUBLICIS SHOWCASE (OPEN STAGE, NOT A CARD — LIKE ABOUT SECTION)
    ============================================================ */
 .publicis-pinned-container {
   position: relative;
   height: 240vh;
   margin-bottom: 3rem;
+  background: #050505;
 }
 .publicis-sticky-stage {
   position: sticky;
-  top: clamp(65px, 8.5vh, 85px);
-  z-index: 10;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
   width: 100%;
-}
-.publicis-showcase-card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid rgba(99, 102, 241, 0.28);
-  border-radius: 16px;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 32px rgba(99, 102, 241, 0.08);
+  padding: 56px clamp(20px, 4.5vw, 64px) 16px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.publicis-stage-grid {
   display: grid;
-  grid-template-columns: 1.12fr 1fr;
-  min-height: clamp(480px, 66vh, 620px);
+  grid-template-columns: 1.1fr 1fr;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  height: 100%;
+  max-height: calc(100vh - 80px);
+  max-height: calc(100dvh - 80px);
 }
-.publicis-widget-side {
+.publicis-widget-stage {
   position: relative;
-  background: #080c14;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  height: 100%;
+  max-height: clamp(340px, 58vh, 520px);
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  padding: 14px;
 }
-.publicis-text-side {
+.publicis-text-stage {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(18px, 2.5vw, 30px);
-  background: var(--surface);
+  justify-content: center;
+  max-width: 580px;
 }
 .publicis-sync-meter {
-  background: rgba(99, 102, 241, 0.05);
-  border: 1px solid rgba(99, 102, 241, 0.18);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin: 12px 0 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 10px 0 14px;
 }
 
 @media (max-width: 900px) {
@@ -486,20 +497,20 @@ nav,
     margin-bottom: 2rem;
   }
   .publicis-sticky-stage {
-    top: 56px;
+    padding-top: 56px;
+    align-items: flex-start;
+    overflow-y: auto;
   }
-  .publicis-showcase-card {
+  .publicis-stage-grid {
     grid-template-columns: 1fr;
-    min-height: auto;
+    height: auto;
+    max-height: none;
+    gap: 16px;
+    padding-bottom: 24px;
   }
-  .publicis-widget-side {
-    height: clamp(210px, 32vh, 270px);
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 8px;
-  }
-  .publicis-text-side {
-    padding: 16px 14px 20px;
+  .publicis-widget-stage {
+    height: clamp(180px, 28vh, 230px);
+    max-height: 240px;
   }
 }
 
