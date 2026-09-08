@@ -31,7 +31,11 @@ export default function Hero() {
   const { t } = useLang();
 
   const go = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const targetId =
+      id === "experience" && document.getElementById("experience-transition")
+        ? "experience-transition"
+        : id;
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
   };
 
   const companies = [

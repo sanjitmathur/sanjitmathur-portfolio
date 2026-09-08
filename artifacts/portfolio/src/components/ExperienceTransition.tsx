@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const TOTAL_FRAMES = 120;
-const FRAME_PATH = "/airplane-frames/frame_";
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const FRAME_PATH = `${BASE_URL.replace(/\/$/, "")}/airplane-frames/frame_`;
 
 export default function ExperienceTransition() {
   const containerRef = useRef<HTMLElement>(null);

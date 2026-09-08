@@ -69,7 +69,11 @@ export default function Nav() {
       const mid = scrollY + window.innerHeight * 0.4;
       for (let i = sections.length - 1; i >= 0; i--) {
         const id = sections[i];
-        const el = document.getElementById(id);
+        let el = document.getElementById(id);
+        if (id === "experience") {
+          const transEl = document.getElementById("experience-transition");
+          if (transEl) el = transEl;
+        }
         if (!el) continue;
         const top = el.getBoundingClientRect().top + scrollY;
         if (mid >= top) {
@@ -94,7 +98,11 @@ export default function Nav() {
   }, [langOpen]);
 
   const go = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const targetId =
+      id === "experience" && document.getElementById("experience-transition")
+        ? "experience-transition"
+        : id;
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
