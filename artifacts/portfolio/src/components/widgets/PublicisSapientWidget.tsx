@@ -158,6 +158,8 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
     };
   }, [initialFrameLoaded]);
 
+  const currentFrameNum = Math.min(TOTAL_FRAMES, Math.max(1, Math.floor(progress * (TOTAL_FRAMES - 1)) + 1));
+
   return (
     <div
       ref={containerRef}
@@ -165,12 +167,12 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
         position: "relative",
         width: "100%",
         height: "100%",
-        minHeight: "clamp(190px, 26vw, 290px)",
-        borderRadius: 12,
+        minHeight: "clamp(220px, 35vh, 540px)",
+        borderRadius: 14,
         overflow: "hidden",
-        background: "#0c1017",
+        background: "#080c14",
         border: "1px solid rgba(99, 102, 241, 0.25)",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
+        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(5, 8, 15, 0.8)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -185,24 +187,61 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
           objectFit: "cover",
         }}
       />
-      {/* Live sync badge */}
+
+      {/* Atmospheric vignette edge overlay blending canvas into dark theme */}
       <div
         style={{
           position: "absolute",
-          top: 10,
-          right: 12,
-          background: "rgba(12, 16, 23, 0.8)",
+          inset: 0,
+          pointerEvents: "none",
+          background: "radial-gradient(ellipse at center, transparent 65%, rgba(8, 12, 20, 0.6) 90%, rgba(8, 12, 20, 0.95) 100%)",
+        }}
+      />
+
+      {/* Top Left: HUD Spec badge */}
+      <div
+        style={{
+          position: "absolute",
+          top: 12,
+          left: 14,
+          background: "rgba(8, 12, 20, 0.75)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius: 100,
+          padding: "3px 10px",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          pointerEvents: "none",
+          fontFamily: "var(--font-mono, monospace)",
+          fontSize: "0.6rem",
+          color: "rgba(255, 255, 255, 0.7)",
+          letterSpacing: "0.06em",
+        }}
+      >
+        <span style={{ color: "#6366f1", fontWeight: 700 }}>01</span>
+        <span>// CAD ARCHITECTURE</span>
+      </div>
+
+      {/* Top Right: Live sync badge */}
+      <div
+        style={{
+          position: "absolute",
+          top: 12,
+          right: 14,
+          background: "rgba(8, 12, 20, 0.75)",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
           border: "1px solid rgba(99, 102, 241, 0.3)",
           borderRadius: 100,
-          padding: "2px 8px",
+          padding: "3px 10px",
           display: "flex",
           alignItems: "center",
-          gap: 5,
+          gap: 6,
           pointerEvents: "none",
           fontFamily: "var(--font-mono, monospace)",
-          fontSize: "0.58rem",
+          fontSize: "0.6rem",
           color: "#98c379",
           letterSpacing: "0.06em",
         }}
@@ -217,6 +256,51 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
           }}
         />
         <span>3D LIVE ARCHITECTURE</span>
+      </div>
+
+      {/* Bottom Left: Tech watermark */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 12,
+          left: 14,
+          pointerEvents: "none",
+          fontFamily: "var(--font-mono, monospace)",
+          fontSize: "0.58rem",
+          color: "rgba(255, 255, 255, 0.45)",
+          letterSpacing: "0.08em",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
+        <span>NODE.JS</span>
+        <span>·</span>
+        <span>POSTGRESQL</span>
+        <span>·</span>
+        <span>PRISMA</span>
+      </div>
+
+      {/* Bottom Right: Frame counter */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 12,
+          right: 14,
+          background: "rgba(8, 12, 20, 0.75)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius: 6,
+          padding: "2px 8px",
+          pointerEvents: "none",
+          fontFamily: "var(--font-mono, monospace)",
+          fontSize: "0.58rem",
+          color: "rgba(255, 255, 255, 0.6)",
+          letterSpacing: "0.05em",
+        }}
+      >
+        FRAME {String(currentFrameNum).padStart(2, "0")} / {TOTAL_FRAMES}
       </div>
     </div>
   );
