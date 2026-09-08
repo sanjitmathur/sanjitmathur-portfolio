@@ -431,6 +431,29 @@ nav,
 }
 
 /* ============================================================
+   PUBLICIS PINNED SCROLL EXPERIENCE
+   ============================================================ */
+.publicis-pinned-container {
+  position: relative;
+  height: 240vh;
+  margin-bottom: 2rem;
+}
+.publicis-sticky-stage {
+  position: sticky;
+  top: clamp(65px, 8.5vh, 85px);
+  z-index: 10;
+}
+@media (max-width: 900px) {
+  .publicis-pinned-container {
+    height: 180vh;
+    margin-bottom: 1.5rem;
+  }
+  .publicis-sticky-stage {
+    top: 58px;
+  }
+}
+
+/* ============================================================
    PROJECT CARD (legacy — kept for any remaining usage)
    ============================================================ */
 .project-card {

@@ -1,180 +1,222 @@
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "../useInView";
+import React, { useEffect, useRef, useState } from "react";
 
-const ENDPOINTS = [
-  { method: "POST", path: "/api/auth/login", status: 200 },
-  { method: "GET",  path: "/api/tasks?page=1&limit=20", status: 200 },
-  { method: "POST", path: "/api/tasks", status: 201 },
-  { method: "PUT",  path: "/api/tasks/42", status: 200 },
-  { method: "GET",  path: "/api/users/me", status: 200 },
-  { method: "DELETE", path: "/api/tasks/17", status: 200 },
-  { method: "POST", path: "/api/auth/refresh", status: 201 },
-  { method: "GET",  path: "/api/tasks?filter=active", status: 200 },
-  { method: "GET",  path: "/api/admin/users", status: 200 },
-  { method: "PUT",  path: "/api/tasks/55", status: 200 },
-];
+const TOTAL_FRAMES = 80;
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const FRAME_PATH = `${BASE_URL.replace(/\/$/, "")}/publicis-frames/frame_`;
 
-const METHOD_COLOR: Record<string, string> = {
-  GET:    "#61afef",
-  POST:   "#98c379",
-  PUT:    "#e5c07b",
-  DELETE: "#e06c75",
-};
+interface PublicisSapientWidgetProps {
+  progress?: number;
+}
 
-const STATUS_COLOR: Record<number, string> = {
-  200: "#98c379",
-  201: "#56b6c2",
-  401: "#e06c75",
-};
+export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientWidgetProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(TOTAL_FRAMES).fill(null));
+  const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
+  const animRef = useRef<number>(0);
+  const targetProgressRef = useRef<number>(0);
+  const currentProgressRef = useRef<number>(0);
+  const lastDrawnFrameRef = useRef<number>(-1);
 
-const ACCENT = "#6366f1";
-
-export default function PublicisSapientWidget() {
-  const { ref: containerRef, inView } = useInView("200px 0px");
-  const inViewRef = useRef(false);
-  useEffect(() => { inViewRef.current = inView; }, [inView]);
-
-  const [logs, setLogs] = useState<typeof ENDPOINTS>([]);
-  const [reqCount, setReqCount] = useState(1_238);
-  const idxRef = useRef(0);
-
-  // Animate total request counter
+  // Synchronize target progress
   useEffect(() => {
-    const t = setInterval(() => {
-      if (!inViewRef.current) return;
-      setReqCount(n => n + Math.floor(Math.random() * 3) + 1);
-    }, 900);
-    return () => clearInterval(t);
+    targetProgressRef.current = Math.max(0, Math.min(1, progress));
+  }, [progress]);
+
+  // Progressive frame loading
+  useEffect(() => {
+    let isMounted = true;
+
+    // Load frame 0 immediately
+    const img0 = new Image();
+    img0.src = `${FRAME_PATH}000.webp`;
+    img0.onload = () => {
+      if (!isMounted) return;
+      imagesRef.current[0] = img0;
+      setInitialFrameLoaded(true);
+    };
+    img0.onerror = () => {
+      console.warn("Could not load Publicis initial frame:", img0.src);
+    };
+
+    // Preload remaining frames
+    for (let i = 1; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const padded = i.toString().padStart(3, "0");
+      img.src = `${FRAME_PATH}${padded}.webp`;
+      img.onload = () => {
+        if (!isMounted) return;
+        imagesRef.current[i] = img;
+      };
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Stream request log entries
+  // Canvas draw loop
   useEffect(() => {
-    const t = setInterval(() => {
-      if (!inViewRef.current) return;
-      const entry = ENDPOINTS[idxRef.current % ENDPOINTS.length];
-      idxRef.current++;
-      setLogs(prev => [...prev.slice(-4), entry]);
-    }, 1_300);
-    return () => clearInterval(t);
-  }, []);
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      if (!canvas || !container) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      lastDrawnFrameRef.current = -1;
+    };
+
+    const drawFrame = (frameIdx: number) => {
+      if (!canvas || !ctx) return;
+
+      let img = imagesRef.current[frameIdx];
+      if (!img) {
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          if (frameIdx - d >= 0 && imagesRef.current[frameIdx - d]) {
+            img = imagesRef.current[frameIdx - d];
+            break;
+          }
+          if (frameIdx + d < TOTAL_FRAMES && imagesRef.current[frameIdx + d]) {
+            img = imagesRef.current[frameIdx + d];
+            break;
+          }
+        }
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Dark futuristic slate background matching the 3D circuit board
+      ctx.fillStyle = "#0c1017";
+      ctx.fillRect(0, 0, w, h);
+
+      if (img && img.complete && img.naturalWidth > 0) {
+        const imgW = img.naturalWidth;
+        const imgH = img.naturalHeight;
+        const imgRatio = imgW / imgH;
+        const canvasRatio = w / h;
+
+        let renderW: number;
+        let renderH: number;
+        let offsetX: number;
+        let offsetY: number;
+
+        if (canvasRatio > imgRatio) {
+          renderW = w;
+          renderH = w / imgRatio;
+          offsetX = 0;
+          offsetY = (h - renderH) / 2;
+        } else {
+          renderH = h;
+          renderW = h * imgRatio;
+          offsetX = (w - renderW) / 2;
+          offsetY = 0;
+        }
+
+        ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
+        lastDrawnFrameRef.current = frameIdx;
+      }
+    };
+
+    const loop = () => {
+      const target = targetProgressRef.current;
+      currentProgressRef.current += (target - currentProgressRef.current) * 0.16;
+      if (Math.abs(target - currentProgressRef.current) < 0.001) {
+        currentProgressRef.current = target;
+      }
+
+      const frameIdx = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.floor(currentProgressRef.current * (TOTAL_FRAMES - 1)))
+      );
+
+      if (frameIdx !== lastDrawnFrameRef.current) {
+        drawFrame(frameIdx);
+      }
+
+      animRef.current = requestAnimationFrame(loop);
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    animRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [initialFrameLoaded]);
 
   return (
     <div
       ref={containerRef}
       style={{
-        width: "100%", height: "100%",
-        background: "#0d1117",
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        minHeight: "clamp(190px, 26vw, 290px)",
         borderRadius: 12,
-        padding: "clamp(10px,2vw,14px) clamp(12px,2.3vw,16px)",
-        display: "flex", flexDirection: "column", gap: 8,
-        fontFamily: "'Fira Code','Cascadia Code',monospace",
-        overflow: "hidden", minHeight: 0,
+        overflow: "hidden",
+        background: "#0c1017",
+        border: "1px solid rgba(99, 102, 241, 0.25)",
+        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{
-            width: 22, height: 22, borderRadius: 6,
-            background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "0.65rem", fontWeight: 800, color: ACCENT,
-          }}>
-            PS
-          </div>
-          <div>
-            <div style={{ fontSize: "0.58rem", color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Publicis Sapient · AI Backend
-            </div>
-            <div style={{ fontSize: "clamp(0.88rem,1.8vw,1.05rem)", fontWeight: 700, color: "#f5f5f7", letterSpacing: "-0.01em", lineHeight: 1.1 }}>
-              REST API Server
-            </div>
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
-          <span style={{
-            fontSize: "0.55rem", fontWeight: 600, color: "#98c379",
-            background: "rgba(152,195,121,0.12)",
-            padding: "2px 7px", borderRadius: 100,
-            display: "flex", alignItems: "center", gap: 4,
-          }}>
-            <span style={{
-              width: 5, height: 5, borderRadius: "50%",
-              background: "#98c379",
-              animation: "blink 2.5s ease infinite",
-              display: "inline-block",
-            }} />
-            LIVE · 24ms
-          </span>
-          <span style={{ fontSize: "0.52rem", color: "#4b5563" }}>req / session</span>
-          <span style={{ fontSize: "clamp(0.85rem,1.6vw,1rem)", fontWeight: 700, color: ACCENT, letterSpacing: "-0.02em" }}>
-            {reqCount.toLocaleString()}
-          </span>
-        </div>
-      </div>
-
-      {/* Request log stream */}
-      <div style={{
-        flex: 1, minHeight: 0,
-        display: "flex", flexDirection: "column", gap: 4,
-        justifyContent: "flex-end",
-        overflow: "hidden",
-      }}>
-        {logs.length === 0 && (
-          <div style={{ fontSize: "0.55rem", color: "#4b5563" }}>Awaiting requests…</div>
-        )}
-        {logs.map((log, i) => (
-          <div
-            key={`${i}-${log.path}`}
-            style={{
-              display: "flex", gap: 6, alignItems: "center",
-              opacity: 0.3 + (i / logs.length) * 0.7,
-              transition: "opacity 0.4s ease",
-            }}
-          >
-            <span style={{
-              fontSize: "0.55rem", fontWeight: 700, minWidth: 36,
-              color: METHOD_COLOR[log.method] ?? "#abb2bf",
-            }}>
-              {log.method}
-            </span>
-            <span style={{
-              fontSize: "0.55rem", color: "#6b7280",
-              flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-            }}>
-              {log.path}
-            </span>
-            <span style={{
-              fontSize: "0.55rem", fontWeight: 600, flexShrink: 0,
-              color: STATUS_COLOR[log.status] ?? "#abb2bf",
-            }}>
-              {log.status}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Footer: tech badges */}
-      <div style={{
-        borderTop: `1px solid rgba(99,102,241,0.12)`,
-        paddingTop: 8, flexShrink: 0,
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-      }}>
-        <div style={{ display: "flex", gap: 10 }}>
-          {[
-            { label: "Auth", value: "JWT · RBAC", color: "#98c379" },
-            { label: "ORM",  value: "Prisma",     color: ACCENT },
-          ].map(({ label, value, color }) => (
-            <div key={label}>
-              <div style={{ fontSize: "0.45rem", color: "#4b5563", textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
-              <div style={{ fontSize: "0.68rem", fontWeight: 600, color }}>{value}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 5, height: 5, borderRadius: "50%", background: ACCENT, boxShadow: `0 0 6px ${ACCENT}80` }} />
-          <span style={{ fontSize: "0.5rem", color: "#6b7280" }}>Node.js · Express 5</span>
-        </div>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+          objectFit: "cover",
+        }}
+      />
+      {/* Live sync badge */}
+      <div
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 12,
+          background: "rgba(12, 16, 23, 0.8)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(99, 102, 241, 0.3)",
+          borderRadius: 100,
+          padding: "2px 8px",
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          pointerEvents: "none",
+          fontFamily: "var(--font-mono, monospace)",
+          fontSize: "0.58rem",
+          color: "#98c379",
+          letterSpacing: "0.06em",
+        }}
+      >
+        <span
+          style={{
+            width: 5,
+            height: 5,
+            borderRadius: "50%",
+            background: "#98c379",
+            boxShadow: "0 0 6px #98c379",
+          }}
+        />
+        <span>3D LIVE ARCHITECTURE</span>
       </div>
     </div>
   );
