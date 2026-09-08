@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Next Layer of Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       TOKENS & ROOT CONFIGURATION
+       ========================================================================== */
+    :root {
+      --ink: #fafafa;
+      --muted: #a7a6a6;
+      --nav: #b6b5b5;
+      --strip: #8b8a8a;
+      --pill: #ffffff;
+      --pill-ink: #050505;
+      --stage: #050505;
+
+      /* Reference Canvas: 1487 x 1058 */
+      --u: calc(100vh / 1058);
+      --uw: calc(100vw / 1487);
+      --h: clamp(var(--u), calc(var(--u) * .65 + var(--uw) * .35), calc(var(--u) * 1.16));
+    }
+
+    @supports (height: 100dvh) {
+      :root {
+        --u: calc(100dvh / 1058);
+      }
+    }
+
+    /* ==========================================================================
+       BASE & RESET
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--stage);
+      color: var(--ink);
+      font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ==========================================================================
+       STAGE & BACKGROUND VIDEO PLATE
+       ========================================================================== */
+    .stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--stage);
+    }
+
+    @supports (height: 100dvh) {
+      .stage {
+        height: 100dvh;
+      }
+    }
+
+    .plate {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .plate-video {
+      position: absolute;
+      left: 50%;
+      top: calc(1 * var(--u));
+      width: calc(1492 * var(--u));
+      height: calc(1054 * var(--u));
+      transform: translateX(calc(-50% - (0.5 * var(--u))));
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .plate::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image:
+        linear-gradient(to bottom,
+          rgba(5,5,5,0) 78.8%,
+          rgba(5,5,5,.23) 79.6%,
+          rgba(5,5,5,.45) 81.4%,
+          rgba(5,5,5,.75) 83.3%,
+          rgba(5,5,5,.84) 85.2%,
+          rgba(5,5,5,.888) 88%,
+          rgba(5,5,5,.905) 91%,
+          rgba(5,5,5,.96) 95%,
+          #050505 100%),
+        linear-gradient(to right,
+          #050505 calc(50% - 746 * var(--u)),
+          transparent calc(50% - 676 * var(--u)),
+          transparent calc(50% + 676 * var(--u)),
+          #050505 calc(50% + 746 * var(--u)));
+    }
+
+    /* Volumetric Animated Ground Smoke & Fog */
+    .plate-smoke-atmosphere {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: calc(340 * var(--u));
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .smoke-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .smoke-base-mist {
+      background:
+        radial-gradient(ellipse 70% 65% at 54% 96%, rgba(225, 235, 250, 0.22) 0%, rgba(175, 190, 215, 0.12) 40%, transparent 75%),
+        radial-gradient(ellipse 55% 50% at 20% 92%, rgba(195, 210, 230, 0.15) 0%, transparent 62%),
+        radial-gradient(ellipse 60% 55% at 85% 90%, rgba(215, 230, 250, 0.16) 0%, transparent 68%);
+      filter: blur(18px);
+      animation: smokeMistDrift 16s ease-in-out infinite alternate;
+    }
+
+    .smoke-billow-drift {
+      background:
+        radial-gradient(circle 200px at 48% 80%, rgba(240, 245, 255, 0.18) 0%, rgba(185, 200, 225, 0.08) 45%, transparent 72%),
+        radial-gradient(circle 240px at 64% 75%, rgba(255, 255, 255, 0.22) 0%, rgba(205, 220, 240, 0.10) 50%, transparent 76%),
+        radial-gradient(circle 180px at 30% 84%, rgba(190, 205, 225, 0.14) 0%, transparent 60%),
+        radial-gradient(circle 220px at 80% 82%, rgba(210, 225, 245, 0.15) 0%, transparent 68%);
+      filter: blur(26px);
+      animation: smokePlumeBillow 13s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+    }
+
+    .smoke-portal-illumination {
+      background:
+        radial-gradient(ellipse 42% 75% at 58% 86%, rgba(255, 255, 255, 0.26) 0%, rgba(230, 240, 255, 0.12) 36%, rgba(180, 195, 220, 0.04) 65%, transparent 80%);
+      filter: blur(30px);
+      animation: smokeLightScatter 9s ease-in-out infinite alternate;
+    }
+
+    .smoke-wisps {
+      background:
+        radial-gradient(ellipse 95% 45% at 50% 95%, rgba(255, 255, 255, 0.15) 0%, rgba(195, 215, 235, 0.07) 50%, transparent 82%);
+      filter: blur(12px);
+      animation: smokeWispGlide 20s ease-in-out infinite alternate;
+    }
+
+    .smoke-floor-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: calc(52 * var(--u));
+      background: linear-gradient(to bottom, transparent 0%, rgba(5,5,5,0.6) 45%, #050505 100%);
+    }
+
+    @keyframes smokeMistDrift {
+      0% { transform: translate3d(-2.5%, 1%, 0) scale(0.97); opacity: 0.85; }
+      50% { transform: translate3d(2.5%, -2%, 0) scale(1.04); opacity: 1; }
+      100% { transform: translate3d(-1%, -1%, 0) scale(1.01); opacity: 0.88; }
+    }
+
+    @keyframes smokePlumeBillow {
+      0% { transform: translate3d(3%, 2%, 0) scale(1); opacity: 0.78; }
+      50% { transform: translate3d(-3%, -3.5%, 0) scale(1.08); opacity: 1; }
+      100% { transform: translate3d(1.5%, 1%, 0) scale(1.02); opacity: 0.84; }
+    }
+
+    @keyframes smokeLightScatter {
+      0% { opacity: 0.8; transform: scaleX(0.94) translate3d(-1%, 0, 0); }
+      100% { opacity: 1; transform: scaleX(1.1) translate3d(1.5%, -1%, 0); }
+    }
+
+    @keyframes smokeWispGlide {
+      0% { transform: translate3d(-5%, 0, 0) scaleY(0.95); opacity: 0.75; }
+      100% { transform: translate3d(5%, -1%, 0) scaleY(1.08); opacity: 0.95; }
+    }
+
+    /* ==========================================================================
+       TOPBAR & NAVIGATION (DESKTOP)
+       ========================================================================== */
+    .topbar {
+      position: static;
+    }
+
+    .brand {
+      position: absolute;
+      left: calc(75 * var(--u));
+      top: calc(27 * var(--u));
+      width: calc(31.5 * var(--u));
+      height: calc(48.5 * var(--u));
+      display: block;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .brand svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .links {
+      position: absolute;
+      left: 50%;
+      top: calc(51 * var(--u));
+      transform: translate(-50%, -50%);
+      font-size: calc(19.0 * var(--u));
+      font-weight: 400;
+      color: var(--nav);
+      display: flex;
+      align-items: center;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .links a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .links a:hover {
+      color: var(--ink);
+    }
+
+    .links a:nth-child(2) {
+      margin-left: calc(24.5 * var(--u));
+    }
+
+    .links a:nth-child(3) {
+      margin-left: calc(23.5 * var(--u));
+    }
+
+    .links a:nth-child(4) {
+      margin-left: calc(26.0 * var(--u));
+    }
+
+    .pill-nav {
+      position: absolute;
+      right: calc(75.4 * var(--u));
+      top: calc(27 * var(--u));
+      width: calc(175 * var(--u));
+      height: calc(49 * var(--u));
+      background: var(--pill);
+      border-radius: 999px;
+      color: var(--pill-ink);
+      font-size: calc(20.6 * var(--u));
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      z-index: 10;
+      transition: transform 0.25s cubic-bezier(.22, 1, .36, 1), opacity 0.2s ease;
+    }
+
+    .pill-nav:hover {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+
+    .pill-nav > span {
+      display: inline-block;
+      transform: translateY(calc(1 * var(--u)));
+    }
+
+    .burger {
+      display: none;
+    }
+
+    /* ==========================================================================
+       HERO CONTENT (DESKTOP)
+       ========================================================================== */
+    .hero {
+      position: static;
+      z-index: 5;
+    }
+
+    .headline {
+      position: absolute;
+      left: calc(75.5 * var(--u));
+      top: calc(230.5 * var(--u));
+      font-size: calc(71.6 * var(--h));
+      line-height: calc(80.5 * var(--h));
+      font-weight: 400;
+      letter-spacing: calc(0.3 * var(--h));
+      color: var(--ink);
+      white-space: nowrap;
+      margin: 0;
+      z-index: 5;
+    }
+
+    .headline > span {
+      display: block;
+    }
+
+    .sub {
+      position: absolute;
+      left: calc(75.5 * var(--u));
+      top: calc(230.5 * var(--u) + 189.0 * var(--h));
+      font-size: calc(20.7 * var(--h));
+      line-height: calc(23.5 * var(--h));
+      font-weight: 400;
+      word-spacing: calc(1.8 * var(--h));
+      color: var(--muted);
+      margin: 0;
+      z-index: 5;
+    }
+
+    .sub > span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .actions {
+      position: static;
+    }
+
+    .pill-cta {
+      position: absolute;
+      left: calc(74.9 * var(--u));
+      top: calc(230.5 * var(--u) + 264.5 * var(--h));
+      width: calc(175.6 * var(--h));
+      height: calc(50 * var(--h));
+      font-size: calc(20.6 * var(--h));
+      font-weight: 500;
+      background: var(--pill);
+      color: var(--pill-ink);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      z-index: 10;
+      transition: transform 0.25s cubic-bezier(.22, 1, .36, 1), opacity 0.2s ease;
+    }
+
+    .pill-cta:hover {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+
+    .pill-cta > span {
+      display: inline-block;
+      transform: translateY(calc(1 * var(--h)));
+    }
+
+    .ghost {
+      position: absolute;
+      left: calc(74.9 * var(--u) + 220.6 * var(--h));
+      top: calc(230.5 * var(--u) + 279.5 * var(--h));
+      font-size: calc(20.6 * var(--h));
+      font-weight: 500;
+      letter-spacing: calc(0.12 * var(--h));
+      color: #ffffff;
+      text-decoration: none;
+      z-index: 10;
+      white-space: nowrap;
+      transition: opacity 0.25s ease;
+    }
+
+    .ghost:hover {
+      opacity: 0.78;
+    }
+
+    /* ==========================================================================
+       PARTNER STRIP (DESKTOP)
+       ========================================================================== */
+    .logos {
+      position: absolute;
+      width: calc(741 * var(--u));
+      left: 50%;
+      transform: translateX(calc(-50% + 20 * var(--u)));
+      top: 0;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      color: var(--strip);
+    }
+
+    .lg {
+      position: absolute;
+      display: flex;
+      align-items: flex-start;
+      color: var(--strip);
+    }
+
+    .lg .mark {
+      display: block;
+      color: currentColor;
+    }
+
+    .lg .word {
+      font-family: 'IpsumMark', 'Manrope', sans-serif;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      white-space: nowrap;
+      color: inherit;
+    }
+
+    /* lg1 */
+    .lg1 {
+      left: calc(-0.5 * var(--u));
+      top: calc(994.7 * var(--u));
+    }
+    .lg1 .mark {
+      width: calc(30.5 * var(--u));
+      height: calc(31 * var(--u));
+    }
+    .lg1 .word {
+      position: absolute;
+      left: calc(37 * var(--u));
+      top: calc(5.6 * var(--u));
+      font-size: calc(18.1 * var(--u));
+    }
+
+    /* lg2 */
+    .lg2 {
+      left: calc(206.5 * var(--u));
+      top: calc(995.7 * var(--u));
+    }
+    .lg2 .mark {
+      width: calc(24.5 * var(--u));
+      height: calc(30 * var(--u));
+    }
+    .lg2 .word {
+      position: absolute;
+      left: calc(31 * var(--u));
+      top: calc(7.3 * var(--u));
+      font-size: calc(18.5 * var(--u));
+    }
+    .lg2 .dot {
+      display: inline-block;
+      width: 0.09em;
+      height: 0.09em;
+      border-radius: 50%;
+      background: currentColor;
+      vertical-align: 0.62em;
+      margin-left: 0.06em;
+    }
+
+    /* lg3 */
+    .lg3 {
+      left: calc(416.5 * var(--u));
+      top: calc(996.7 * var(--u));
+    }
+    .lg3 .mark {
+      width: calc(28.5 * var(--u));
+      height: calc(28 * var(--u));
+    }
+    .lg3 .word {
+      position: absolute;
+      left: calc(35 * var(--u));
+      top: calc(7.3 * var(--u));
+      font-size: calc(16.15 * var(--u));
+    }
+
+    /* lg4 */
+    .lg4 {
+      left: calc(620.5 * var(--u));
+      top: calc(998.7 * var(--u));
+    }
+    .lg4 .mark {
+      width: calc(28.5 * var(--u));
+      height: calc(25.5 * var(--u));
+    }
+    .lg4 .word {
+      position: absolute;
+      left: calc(37 * var(--u));
+      top: calc(8.3 * var(--u));
+      font-size: calc(15.3 * var(--u));
+    }
+
+    /* ==========================================================================
+       MOBILE / OVERLAY MENU (HIDDEN ON DESKTOP)
+       ========================================================================== */
+    .menu {
+      display: none;
+    }
+
+    /* ==========================================================================
+       ANIMATIONS (PREFERS-REDUCED-MOTION: NO-PREFERENCE)
+       ========================================================================== */
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(calc(14 * var(--u)));
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes riseNav {
+      from {
+        opacity: 0;
+        transform: translate(calc(-50% + 0 * var(--u)), calc(-50% + 14 * var(--u)));
+      }
+      to {
+        opacity: 1;
+        transform: translate(calc(-50% + 0 * var(--u)), calc(-50% + 0 * var(--u)));
+      }
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .brand {
+        animation: rise 0.8s cubic-bezier(.22, 1, .36, 1) both;
+      }
+      .links {
+        animation: riseNav 0.8s cubic-bezier(.22, 1, .36, 1) both;
+      }
+      .pill-nav {
+        animation: rise 0.8s cubic-bezier(.22, 1, .36, 1) both;
+      }
+      .headline {
+        animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.06s both;
+      }
+      .sub {
+        animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.14s both;
+      }
+      .pill-cta {
+        animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.22s both;
+      }
+      .actions .ghost {
+        animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.22s both;
+      }
+      .lg {
+        animation: fade 1.1s cubic-bezier(.22, 1, .36, 1) 0.34s both;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition-duration: 0.001s !important;
+      }
+    }
+
+    /* ==========================================================================
+       PORTRAIT & RESPONSIVE BEHAVIOR (max-aspect-ratio: 11/10)
+       ========================================================================== */
+    @media (max-aspect-ratio: 11/10) {
+      :root {
+        --m: min(calc(100vw / 430), 1.34px);
+        --u: var(--m);
+        --h: var(--m);
+      }
+
+      .stage {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: max(env(safe-area-inset-top), calc(24 * var(--m)))
+                 max(env(safe-area-inset-right), calc(24 * var(--m)))
+                 max(env(safe-area-inset-bottom), calc(28 * var(--m)))
+                 max(env(safe-area-inset-left), calc(24 * var(--m)));
+      }
+
+      .plate-video {
+        inset: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: none;
+        object-fit: cover;
+        object-position: 43% center;
+      }
+
+      .plate::after {
+        background-image:
+          linear-gradient(to bottom,
+            rgba(5,5,5,0.72) 0%,
+            rgba(5,5,5,0.34) 24%,
+            rgba(5,5,5,0.34) 56%,
+            rgba(5,5,5,0.80) 82%,
+            rgba(5,5,5,0.97) 94%,
+            #050505 100%),
+          linear-gradient(to right,
+            rgba(5,5,5,0.86) 0%,
+            rgba(5,5,5,0.66) 42%,
+            rgba(5,5,5,0.20) 78%,
+            rgba(5,5,5,0.10) 100%);
+      }
+
+      /* Topbar in portrait */
+      .topbar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        z-index: 20;
+      }
+
+      .brand {
+        position: static;
+        width: calc(26 * var(--m));
+        height: calc(40 * var(--m));
+      }
+
+      .links {
+        display: none;
+      }
+
+      .pill-nav {
+        display: none;
+      }
+
+      .burger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: calc(5 * var(--m));
+        width: calc(48 * var(--m));
+        height: calc(36 * var(--m));
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        cursor: pointer;
+        padding: 0;
+        z-index: 30;
+      }
+
+      .burger i {
+        display: block;
+        width: calc(18 * var(--m));
+        height: calc(1.5 * var(--m));
+        background: #ffffff;
+        border-radius: 2px;
+        transition: transform 0.35s cubic-bezier(.22, 1, .36, 1), opacity 0.25s ease;
+      }
+
+      .stage.is-open .burger i:first-child {
+        transform: translateY(calc(3.25 * var(--m))) rotate(45deg);
+      }
+
+      .stage.is-open .burger i:last-child {
+        transform: translateY(calc(-3.25 * var(--m))) rotate(-45deg);
+      }
+
+      /* Hero in portrait */
+      .hero {
+        position: relative;
+        z-index: 5;
+        margin-top: auto;
+        margin-bottom: auto;
+        padding: calc(20 * var(--m)) 0;
+      }
+
+      .headline {
+        position: static;
+        font-size: clamp(34px, calc(46 * var(--m)), 54px);
+        line-height: 1.08;
+        letter-spacing: calc(0.3 * var(--m));
+        white-space: normal;
+        margin-bottom: calc(16 * var(--m));
+      }
+
+      .headline > span {
+        display: inline;
+      }
+
+      .sub {
+        position: static;
+        font-size: clamp(15px, calc(17 * var(--m)), 20px);
+        line-height: 1.45;
+        word-spacing: normal;
+        color: var(--muted);
+        margin-bottom: calc(26 * var(--m));
+      }
+
+      .sub > span {
+        display: inline;
+        white-space: normal;
+      }
+
+      .actions {
+        position: static;
+        display: flex;
+        align-items: center;
+        gap: calc(20 * var(--m));
+        flex-wrap: wrap;
+      }
+
+      .pill-cta {
+        position: static;
+        width: auto;
+        min-width: calc(150 * var(--m));
+        height: calc(48 * var(--m));
+        padding: 0 calc(24 * var(--m));
+        font-size: clamp(14px, calc(16 * var(--m)), 18px);
+      }
+
+      .ghost {
+        position: static;
+        font-size: clamp(14px, calc(16 * var(--m)), 18px);
+      }
+
+      /* Logos in portrait: 2x2 grid */
+      .logos {
+        position: relative;
+        width: 100%;
+        left: 0;
+        top: auto;
+        transform: none;
+        bottom: auto;
+        height: auto;
+        z-index: 5;
+        margin-top: auto;
+        padding-top: calc(16 * var(--m));
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: calc(18 * var(--m)) calc(12 * var(--m));
+        align-items: center;
+        justify-items: center;
+      }
+
+      .lg {
+        position: static;
+        display: flex;
+        align-items: center;
+        gap: calc(10 * var(--m));
+      }
+
+      .lg .mark {
+        width: calc(22 * var(--m));
+        height: calc(22 * var(--m));
+      }
+
+      .lg .word {
+        position: static;
+        font-size: clamp(13px, calc(15 * var(--m)), 17px);
+      }
+
+      /* Menu overlay in portrait */
+      .menu {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.98) 100%);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        z-index: 15;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: calc(90 * var(--m)) calc(28 * var(--m)) calc(40 * var(--m));
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.42s cubic-bezier(.22, 1, .36, 1), visibility 0.42s cubic-bezier(.22, 1, .36, 1);
+      }
+
+      .stage.is-open .menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .menu-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+      }
+
+      .menu-eyebrow {
+        font-size: calc(12 * var(--m));
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin-bottom: calc(24 * var(--m));
+        opacity: 0;
+        transform: translateY(calc(12 * var(--m)));
+        transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.22, 1, .36, 1);
+      }
+
+      .menu-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--m));
+      }
+
+      .menu-list li {
+        opacity: 0;
+        transform: translateY(calc(12 * var(--m)));
+        transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.22, 1, .36, 1);
+      }
+
+      .menu-list li a {
+        font-size: max(25px, calc(31 * var(--m)));
+        font-weight: 500;
+        color: var(--ink);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .menu-list li a::after {
+        content: "›";
+        font-size: 1.1em;
+        color: var(--muted);
+        font-weight: 300;
+      }
+
+      .menu-foot {
+        display: flex;
+        flex-direction: column;
+        gap: calc(14 * var(--m));
+        padding-top: calc(24 * var(--m));
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        opacity: 0;
+        transform: translateY(calc(12 * var(--m)));
+        transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.22, 1, .36, 1);
+      }
+
+      .pill-menu {
+        width: 100%;
+        height: calc(48 * var(--m));
+        border-radius: 999px;
+        background: var(--pill);
+        color: var(--pill-ink);
+        font-size: calc(17 * var(--m));
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ghost-menu {
+        text-align: center;
+        color: #ffffff;
+        font-size: calc(16 * var(--m));
+        font-weight: 500;
+        padding: calc(8 * var(--m));
+      }
+
+      .stage.is-open .menu-eyebrow {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.06s;
+      }
+
+      .stage.is-open .menu-list li:nth-child(1) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.10s;
+      }
+
+      .stage.is-open .menu-list li:nth-child(2) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.16s;
+      }
+
+      .stage.is-open .menu-list li:nth-child(3) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.22s;
+      }
+
+      .stage.is-open .menu-list li:nth-child(4) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.28s;
+      }
+
+      .stage.is-open .menu-foot {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.34s;
+      }
+    }
+
+    /* Tablet Portrait (>=600px AND max-aspect-ratio: 11/10) */
+    @media (min-width: 600px) and (max-aspect-ratio: 11/10) {
+      :root {
+        --m: min(calc(100vw / 860), calc(100vh / 760), 1.25px);
+      }
+
+      .plate-video {
+        object-position: 44% center;
+      }
+
+      .plate::after {
+        background-image:
+          linear-gradient(to bottom,
+            rgba(5,5,5,0.66) 0%,
+            rgba(5,5,5,0.28) 24%,
+            rgba(5,5,5,0.30) 56%,
+            rgba(5,5,5,0.78) 82%,
+            rgba(5,5,5,0.96) 94%,
+            #050505 100%),
+          linear-gradient(to right,
+            rgba(5,5,5,0.84) 0%,
+            rgba(5,5,5,0.60) 42%,
+            rgba(5,5,5,0.16) 78%,
+            rgba(5,5,5,0.06) 100%);
+      }
+
+      .headline > span {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .logos {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: calc(16 * var(--m));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Full-bleed looping CloudFront background video plate -->
+    <div class="plate">
+      <video class="plate-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260808_112712_da9d53df-6d27-4b12-bdf6-aa9dc2622bdf.mp4" type="video/mp4">
+      </video>
+      <!-- Volumetric Animated Ground Smoke & Fog Layers -->
+      <div class="plate-smoke-atmosphere" aria-hidden="true">
+        <div class="smoke-layer smoke-base-mist"></div>
+        <div class="smoke-layer smoke-billow-drift"></div>
+        <div class="smoke-layer smoke-portal-illumination"></div>
+        <div class="smoke-layer smoke-wisps"></div>
+        <div class="smoke-floor-fade"></div>
+      </div>
+    </div>
+
+    <!-- Header / Topbar -->
+    <header class="topbar">
+      <a href="#" class="brand" aria-label="Home">
+        <svg viewBox="0 0 31.5 48.5" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="bg1" x1="8" y1="0" x2="34.1" y2="28.9" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#9e9e9e" />
+              <stop offset="0.28" stop-color="#a6a6a6" />
+              <stop offset="0.34" stop-color="#a3a3a3" />
+              <stop offset="0.40" stop-color="#3a3a3a" />
+              <stop offset="0.55" stop-color="#414141" />
+              <stop offset="0.60" stop-color="#7a7a7a" />
+              <stop offset="0.68" stop-color="#8e8e8e" />
+              <stop offset="0.80" stop-color="#a9a9a9" />
+              <stop offset="0.95" stop-color="#c4c4c4" />
+              <stop offset="1" stop-color="#cccccc" />
+            </linearGradient>
+          </defs>
+          <path d="M21.5 0 L21.5 19.5 L31.5 19.5 L31.5 29 L10 48.5 L10 28.5 L0.5 28.5 L0.5 18.5 Z" fill="url(#bg1)" />
+          <rect x="0.5" y="18.5" width="9" height="10" fill="#fdfdfd" />
+          <rect x="22" y="19.5" width="9.5" height="9.5" fill="#fdfdfd" />
+        </svg>
+      </a>
+
+      <nav class="links" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a href="#get-started" class="pill pill-nav">
+        <span>Get Started</span>
+      </a>
+
+      <button class="burger" id="burger" aria-label="Open Menu" aria-expanded="false">
+        <i></i>
+        <i></i>
+      </button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <nav class="menu" id="menu" aria-hidden="true">
+      <div class="menu-inner">
+        <div>
+          <p class="menu-eyebrow">Menu</p>
+          <ul class="menu-list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="menu-foot">
+          <a href="#get-started" class="pill pill-menu">
+            <span>Get Started</span>
+          </a>
+          <a href="#architecture" class="ghost-menu">View Architecture</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Content -->
+    <main class="hero">
+      <h1 class="headline">
+        <span>Sanjit Mathur</span>
+      </h1>
+
+      <div style="width: 48px; height: 2px; background: rgba(255, 255, 255, 0.28); margin: calc(18 * var(--u)) 0 calc(24 * var(--u)) calc(75.5 * var(--u));"></div>
+
+      <p class="sub" style="top: calc(230.5 * var(--u) + 120.0 * var(--h));">
+        <span>Building intelligent systems, modern web applications, and developer tools.</span>
+        <span>Currently at <strong style="color: #fff; font-weight: 700;">Publicis Sapient</strong>, open to new opportunities.</span>
+      </p>
+
+      <div class="actions" style="top: calc(230.5 * var(--u) + 215.0 * var(--h));">
+        <a href="#projects" class="pill pill-cta">
+          <span>VIEW PROJECTS ↗</span>
+        </a>
+        <a href="#contact" class="ghost" style="left: calc(74.9 * var(--u) + 220.6 * var(--h)); top: calc(230.5 * var(--u) + 230.0 * var(--h));">CONTACT ME</a>
+      </div>
+
+      <!-- Experience Trust Bar -->
+      <div style="position: absolute; left: calc(75.5 * var(--u)); top: calc(230.5 * var(--u) + 295.0 * var(--h)); display: flex; align-items: center; gap: calc(12 * var(--u)); flex-wrap: wrap; z-index: 10;">
+        <span style="font-size: calc(12 * var(--u)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #787777;">EXPERIENCE AT:</span>
+        <div style="display: inline-flex; align-items: center; gap: calc(10 * var(--u)); flex-wrap: wrap; font-size: calc(14 * var(--u)); color: #c0bfbf;">
+          <span style="display: inline-flex; align-items: center; gap: calc(6 * var(--u));"><span style="width: 7px; height: 7px; border-radius: 50%; background: #6366f1;"></span>Publicis Sapient</span>
+          <span style="color: rgba(255,255,255,0.2);">·</span>
+          <span style="display: inline-flex; align-items: center; gap: calc(6 * var(--u));"><span style="width: 7px; height: 7px; border-radius: 50%; background: #d5b572;"></span>Baraka Financial</span>
+          <span style="color: rgba(255,255,255,0.2);">·</span>
+          <span style="display: inline-flex; align-items: center; gap: calc(6 * var(--u));"><span style="width: 7px; height: 7px; border-radius: 50%; background: #c4934a;"></span>IndiGo Airlines</span>
+          <span style="color: rgba(255,255,255,0.2);">·</span>
+          <span style="display: inline-flex; align-items: center; gap: calc(6 * var(--u));"><span style="width: 7px; height: 7px; border-radius: 50%; background: #38bdf8;"></span>Lab of Future</span>
+          <span style="color: rgba(255,255,255,0.2);">·</span>
+          <span style="display: inline-flex; align-items: center; gap: calc(6 * var(--u));"><span style="width: 7px; height: 7px; border-radius: 50%; background: #a855f7;"></span>Zywa</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Partner Strip -->
+    <div class="logos">
+      <!-- lg1 -->
+      <div class="lg lg1">
+        <svg class="mark" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <mask id="bite1" maskUnits="userSpaceOnUse">
+            <rect width="30" height="31" fill="white" />
+            <circle cx="19.5" cy="10.5" r="5.1" fill="black" />
+          </mask>
+          <rect x="1.5" y="2" width="27" height="27" rx="4" stroke="currentColor" stroke-width="3.2" mask="url(#bite1)" />
+          <circle cx="19.5" cy="10.5" r="3.2" fill="currentColor" />
+        </svg>
+        <span class="word">logoipsum</span>
+      </div>
+
+      <!-- lg2 -->
+      <div class="lg lg2">
+        <svg class="mark" viewBox="0 0 25 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="0" y="0" width="6.5" height="30" rx="3.25" fill="currentColor" />
+          <mask id="split2" maskUnits="userSpaceOnUse">
+            <rect width="25" height="30" fill="white" />
+            <path d="M17.5 7.5 A7.5 7.5 0 0 1 17.5 22.5 Z" fill="black" />
+          </mask>
+          <circle cx="17.5" cy="15" r="7.5" fill="currentColor" mask="url(#split2)" />
+          <circle cx="17.5" cy="15" r="3" fill="currentColor" />
+        </svg>
+        <span class="word">logoipsum<span class="dot"></span></span>
+      </div>
+
+      <!-- lg3 -->
+      <div class="lg lg3">
+        <svg class="mark" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="14" cy="14" r="12.35" stroke="currentColor" stroke-width="3.1" />
+          <path d="M7 14 C7 10.13 10.13 7 14 7 C14 10.87 17.13 14 21 14" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" />
+          <path d="M21 14 C21 17.87 17.87 21 14 21 C14 17.13 10.87 14 7 14" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" />
+        </svg>
+        <span class="word">logoipsum</span>
+      </div>
+
+      <!-- lg4 -->
+      <div class="lg lg4">
+        <svg class="mark" viewBox="0 0 28 25.5" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 9 C4.5 4 8.5 2.5 13.5 6 C18.5 9.5 23.5 7.5 27 3.5 L27 8.5 C23 12 18 13.5 13.5 10 C9 6.5 4.5 9 1 13.5 Z" fill="currentColor" />
+          <path d="M1.5 17 C6 13 11 15 14.5 17.5 C18 20 23 19 26.5 15" stroke="currentColor" stroke-width="3.05" stroke-linecap="round" />
+          <path d="M1.5 22.5 C6 18.5 11 20.5 14.5 23 C18 25.5 23 24.5 26.5 20.5" stroke="currentColor" stroke-width="3.05" stroke-linecap="round" />
+        </svg>
+        <span class="word">logoipsum</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal JS for Mobile Menu Toggle & State Sync -->
+  <script>
+    (function () {
+      const stage = document.querySelector('.stage');
+      const burger = document.getElementById('burger');
+      const menu = document.getElementById('menu');
+      const menuLinks = menu.querySelectorAll('a');
+
+      function openMenu() {
+        stage.classList.add('is-open');
+        burger.setAttribute('aria-expanded', 'true');
+        burger.setAttribute('aria-label', 'Close Menu');
+        menu.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeMenu() {
+        stage.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Open Menu');
+        menu.setAttribute('aria-hidden', 'true');
+      }
+
+      burger.addEventListener('click', () => {
+        if (stage.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && stage.classList.contains('is-open')) {
+          closeMenu();
+        }
+      });
+
+      menuLinks.forEach((link) => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      const mql = window.matchMedia('(max-aspect-ratio: 11/10)');
+      mql.addEventListener('change', (e) => {
+        if (!e.matches && stage.classList.contains('is-open')) {
+          closeMenu();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

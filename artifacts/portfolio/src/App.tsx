@@ -6,6 +6,7 @@ import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
 import Nav from "./components/Nav";
 import Hero from "./pages/Hero";
+import ExperienceTransition from "./components/ExperienceTransition";
 import Experience from "./pages/Experience";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
@@ -39,7 +40,7 @@ function AppInner() {
         <Nav />
         <main>
           <Hero />
-          <div style={{ padding: "0 var(--section-px)" }}><hr className="section-divider" /></div>
+          <ExperienceTransition />
           <Experience />
           <div style={{ padding: "0 var(--section-px)" }}><hr className="section-divider" /></div>
           <Projects />
