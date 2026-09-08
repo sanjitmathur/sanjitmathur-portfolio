@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import { useLang } from "../components/LanguageContext";
 import PublicisSapientWidget from "../components/widgets/PublicisSapientWidget";
@@ -17,12 +17,14 @@ const jobMeta: { id: JobId; n: string; co: string; period: string; loc: string; 
 
 /**
  * PublicisPinnedJobCard:
- * Open, full-screen stage matching the About section design:
+ * Open stage showcase matching the About section:
  * - NOT a card: no card borders, no card background box.
- * - Widget on LEFT: borderless high-DPI 3D canvas blending seamlessly into #050505 with atmospheric vignette.
+ * - Widget on LEFT: borderless high-DPI 3D canvas blending into #050505.
  * - Text on RIGHT: typography on #050505, 3D scroll sync meter, and 3 synchronized bullets.
  * - No "PHASE XYZ" labels above bullets — just the clean bullet text directly.
- * - Perfectly constrained to fit 100% on the screen below the navbar without clipping.
+ * - Fits 100% on the screen below the navbar without clipping.
+ * - Exact scroll synchronization math restored from commit 59f9c6d:
+ *   currentScroll = stickyTop - rect.top, divided by scrollable = container.offsetHeight - sticky.offsetHeight.
  * - 3 strictly equal time slices (0.00-0.33, 0.33-0.67, 0.67-1.00).
  * - Only unpins to Baraka when the entire widget scroll finishes (progress = 1.0).
  */
@@ -45,23 +47,26 @@ function PublicisPinnedJobCard({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const sticky = stickyRef.current;
+    if (!container || !sticky) return;
 
     let rafId: number;
 
     const onScroll = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        if (!container) return;
+        if (!container || !sticky) return;
         const rect = container.getBoundingClientRect();
-        const totalScroll = container.offsetHeight - window.innerHeight;
+        const stickyTop = parseFloat(window.getComputedStyle(sticky).top) || (window.innerHeight / 2 - 250);
+        const scrollable = container.offsetHeight - sticky.offsetHeight;
 
-        if (totalScroll <= 0) {
+        if (scrollable <= 0) {
           setProgress(0);
           return;
         }
 
-        const p = Math.max(0, Math.min(1, -rect.top / totalScroll));
+        const currentScroll = stickyTop - rect.top;
+        const p = Math.max(0, Math.min(1, currentScroll / scrollable));
         setProgress(p);
       });
     };
@@ -82,44 +87,88 @@ function PublicisPinnedJobCard({
 
   const scrollToBullet = (idx: number) => {
     const container = containerRef.current;
-    if (!container) return;
+    const sticky = stickyRef.current;
+    if (!container || !sticky) return;
     const rect = container.getBoundingClientRect();
-    const totalScroll = container.offsetHeight - window.innerHeight;
+    const stickyTop = parseFloat(window.getComputedStyle(sticky).top) || (window.innerHeight / 2 - 250);
+    const scrollable = container.offsetHeight - sticky.offsetHeight;
     const targetP = (idx + 0.5) / 3;
-    const targetY = window.scrollY + rect.top + targetP * totalScroll;
+    const targetY = window.scrollY + rect.top - stickyTop + targetP * scrollable;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
-
-  const sliceNames = ["Architecture", "Auth & Security", "Reliability & QA"];
 
   return (
     <div ref={containerRef} className="publicis-pinned-container">
       <div ref={stickyRef} className="publicis-sticky-stage">
-        {/* Open stage grid: Widget on LEFT, Text on RIGHT — NO CARD */}
-        <div className="publicis-stage-grid">
-          {/* LEFT: 3D Widget Canvas (Borderless, Atmospheric Vignette) */}
-          <div className="publicis-widget-stage">
+        {/* Background 3D Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
+        <div className="publicis-bg-plate" aria-hidden="true">
+          <div className="publicis-bg-widget">
             <PublicisSapientWidget progress={progress} />
           </div>
+        </div>
 
-          {/* RIGHT: Text Content, 3D Scroll Sync Meter, 3 Bullets */}
+        {/* Foreground Content — Aligned to the Right on #050505 */}
+        <div className="publicis-content-stage">
           <div className="publicis-text-stage">
-            {/* Header: Company & Role */}
+            {/* Header: Company & Role with Timeline presented next to Publicis Sapient on its right */}
             <div style={{ marginBottom: 6 }}>
-              <h2 style={{
-                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
-                fontWeight: 700,
-                fontFamily: "var(--font-display, sans-serif)",
-                letterSpacing: "-0.02em",
-                color: "#ffffff",
-                lineHeight: 1.15,
-                margin: 0,
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: job.accent }} />
+                <span style={{ fontSize: "0.62rem", color: job.accent, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase" }}>
+                  {type} · {job.n}
+                </span>
+              </div>
+
+              {/* Title & Timeline row: Timeline is placed directly next to the heading on its right */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "0.75rem",
+                marginBottom: 4,
               }}>
-                {job.co}
-              </h2>
+                <h2 style={{
+                  fontSize: "clamp(1.85rem, 2.8vw, 2.5rem)",
+                  fontWeight: 700,
+                  fontFamily: "var(--font-display, sans-serif)",
+                  letterSpacing: "-0.02em",
+                  color: "#ffffff",
+                  lineHeight: 1.15,
+                  margin: 0,
+                }}>
+                  {job.co}
+                </h2>
+
+                {/* Timeline info presented next to the heading on its right */}
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                  fontSize: "0.76rem",
+                  color: "var(--muted)",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  padding: "0.24rem 0.65rem",
+                  borderRadius: "100px",
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                }}>
+                  <span style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: job.accent,
+                    boxShadow: `0 0 6px ${job.accent}`,
+                  }} />
+                  <span style={{ color: "#d1d5db" }}>{job.period}</span>
+                  <span style={{ color: "rgba(255, 255, 255, 0.25)" }}>·</span>
+                  <span style={{ color: "var(--muted)", fontSize: "0.72rem" }}>{job.loc}</span>
+                </div>
+              </div>
 
               <div style={{
-                fontSize: "clamp(0.95rem, 1.25vw, 1.1rem)",
+                fontSize: "clamp(0.92rem, 1.2vw, 1.05rem)",
                 color: "#b8b7b7",
                 fontWeight: 500,
                 marginTop: 4,
@@ -135,6 +184,7 @@ function PublicisPinnedJobCard({
                 flexWrap: "wrap",
                 fontSize: "0.76rem",
                 color: "#787777",
+                marginBottom: 6,
               }}>
                 {job.tags.map((t, i) => (
                   <span key={t}>
@@ -144,89 +194,53 @@ function PublicisPinnedJobCard({
               </div>
             </div>
 
-            {/* 3D Scroll Synchronization Meter */}
-            <div className="publicis-sync-meter">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: "50%",
-                    background: "#6366f1",
-                    boxShadow: "0 0 6px #6366f1",
-                  }} />
-                  <span style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: "0.62rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    color: "#818cf8",
-                    textTransform: "uppercase",
-                  }}>
-                    3D SCROLL SYNCHRONIZATION
-                  </span>
-                </div>
-                <span style={{
-                  fontFamily: "var(--font-mono, monospace)",
-                  fontSize: "0.68rem",
-                  fontWeight: 700,
-                  color: "#ffffff",
-                }}>
-                  {Math.round(progress * 100)}%
-                </span>
-              </div>
-
-              {/* Segmented progress bar */}
-              <div style={{
-                width: "100%",
-                height: 4,
-                background: "rgba(255, 255, 255, 0.08)",
-                borderRadius: 2,
-                overflow: "hidden",
-                position: "relative",
+            {/* Key Contributions & Synchronized Progress Header */}
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "1.1rem",
+              marginBottom: "1rem",
+              paddingBottom: "0.5rem",
+              borderBottom: "1px solid rgba(255, 255, 255, 0.07)",
+            }}>
+              <span style={{
+                color: "#8e8e8e",
+                fontSize: "0.68rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
               }}>
-                <div style={{ position: "absolute", left: "33.33%", top: 0, bottom: 0, width: 1, background: "rgba(0,0,0,0.5)", zIndex: 2 }} />
-                <div style={{ position: "absolute", left: "66.66%", top: 0, bottom: 0, width: 1, background: "rgba(0,0,0,0.5)", zIndex: 2 }} />
-                <div style={{
-                  width: `${progress * 100}%`,
-                  height: "100%",
-                  background: "linear-gradient(90deg, #6366f1 0%, #818cf8 50%, #a855f7 100%)",
-                  boxShadow: "0 0 8px rgba(99, 102, 241, 0.8)",
-                  transition: "width 0.05s linear",
-                }} />
-              </div>
+                {keyContrib}
+              </span>
 
+              {/* Minimalist 3D Sync Indicator */}
               <div style={{
                 display: "flex",
-                justifyContent: "space-between",
-                marginTop: 4,
-                fontSize: "0.56rem",
-                color: "#787777",
+                alignItems: "center",
+                gap: 8,
                 fontFamily: "var(--font-mono, monospace)",
+                fontSize: "0.68rem",
+                color: "#818cf8",
+                letterSpacing: "0.06em",
               }}>
-                <span>SLICES: [1] ARCH · [2] AUTH · [3] QA</span>
-                <span style={{ color: "#818cf8" }}>
-                  PHASE 0{activeIdx + 1}/03 // {sliceNames[activeIdx]}
-                </span>
+                <span style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#6366f1",
+                  boxShadow: "0 0 8px #6366f1",
+                  display: "inline-block",
+                }} />
+                <span>3D SYNC · {Math.round(progress * 100)}%</span>
               </div>
             </div>
 
-            {/* Key Contributions Label */}
-            <div style={{
-              color: "#787777",
-              fontSize: "0.66rem",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginBottom: 8,
-            }}>
-              {keyContrib}
-            </div>
-
-            {/* 3 Synchronized Bullets — NO "PHASE XYZ" TEXT ABOVE THEM */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+            {/* 3 Synchronized Bullets — Larger Font Size & Integrated Progress */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.05rem" }}>
               {bullets.map((b, i) => {
                 const isActive = activeIdx === i;
+                const isPast = activeIdx > i;
                 const sliceStart = i / 3;
                 const sliceProgress = Math.max(0, Math.min(1, (progress - sliceStart) / (1 / 3)));
 
@@ -236,34 +250,38 @@ function PublicisPinnedJobCard({
                     onClick={() => scrollToBullet(i)}
                     style={{
                       display: "flex",
-                      gap: "0.75rem",
+                      gap: "0.85rem",
                       alignItems: "flex-start",
-                      padding: "4px 0",
-                      opacity: isActive ? 1 : 0.32,
-                      transform: isActive ? "translateX(4px)" : "none",
+                      padding: "2px 0",
+                      opacity: isActive ? 1 : 0.38,
+                      transform: isActive ? "translateX(5px)" : "none",
                       transition: "opacity 0.25s ease, transform 0.25s ease",
                       cursor: "pointer",
                     }}
                   >
-                    {/* Left Dot Indicator */}
+                    {/* Left Node Indicator */}
                     <div style={{
-                      width: 6,
-                      height: 6,
+                      width: 8,
+                      height: 8,
                       borderRadius: "50%",
-                      background: isActive ? "#6366f1" : "rgba(255, 255, 255, 0.2)",
-                      boxShadow: isActive ? "0 0 8px #6366f1" : "none",
-                      marginTop: "0.42rem",
+                      background: isActive
+                        ? "#6366f1"
+                        : isPast
+                        ? "rgba(99, 102, 241, 0.65)"
+                        : "rgba(255, 255, 255, 0.22)",
+                      boxShadow: isActive ? "0 0 10px #6366f1, 0 0 18px rgba(99, 102, 241, 0.55)" : "none",
+                      marginTop: "0.48rem",
                       flexShrink: 0,
                       transition: "all 0.25s ease",
                     }} />
 
-                    {/* Direct Bullet Text — no extra labels above */}
+                    {/* Bullet Content with Increased Font Size */}
                     <div style={{ flex: 1 }}>
                       <p style={{
                         margin: 0,
-                        fontSize: "clamp(0.78rem, 0.95vw, 0.84rem)",
-                        lineHeight: 1.55,
-                        color: isActive ? "#ffffff" : "#a8a8a8",
+                        fontSize: "clamp(0.92rem, 1.12vw, 1.02rem)",
+                        lineHeight: 1.62,
+                        color: isActive ? "#ffffff" : "#9e9e9e",
                         fontWeight: isActive ? 500 : 400,
                         transition: "color 0.2s ease",
                       }}>
@@ -273,19 +291,19 @@ function PublicisPinnedJobCard({
                       {/* Active slice progress underline bar */}
                       {isActive && (
                         <div style={{
-                          marginTop: 5,
+                          marginTop: 7,
                           width: "100%",
-                          maxWidth: 160,
-                          height: 2,
+                          maxWidth: 220,
+                          height: 2.5,
                           background: "rgba(255, 255, 255, 0.08)",
-                          borderRadius: 1,
+                          borderRadius: 2,
                           overflow: "hidden",
                         }}>
                           <div style={{
                             width: `${sliceProgress * 100}%`,
                             height: "100%",
                             background: "linear-gradient(90deg, #6366f1, #a855f7)",
-                            boxShadow: "0 0 6px #6366f1",
+                            boxShadow: "0 0 8px rgba(99, 102, 241, 0.9)",
                             transition: "width 0.05s linear",
                           }} />
                         </div>
@@ -426,30 +444,31 @@ export default function Experience() {
   const publicisTrans = jobTranslations.publicis;
 
   return (
-    <section id="experience" ref={sectionRef} style={{ background: "#050505", width: "100%", overflow: "hidden" }}>
-      {/* 1. Publicis Sapient: Full-screen open stage (Widget on LEFT, Text on RIGHT) — NOT A CARD, LIKE ABOUT SECTION */}
-      <PublicisPinnedJobCard
-        job={jobMeta[0]}
-        role={publicisTrans.role}
-        type={publicisTrans.type}
-        bullets={publicisTrans.bullets}
-        keyContrib={te.keyContrib}
-      />
-
-      {/* 2. Remaining Commercial & Research Roles: Baraka, IndiGo, Lab */}
-      <div style={{ padding: "var(--section-py) var(--section-px)", maxWidth: "var(--max-w)", margin: "0 auto" }}>
+    <section id="experience" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--bg)" }}>
+      <div style={{ maxWidth: "var(--max-w)", margin: "0 auto" }}>
         <div className="fade-up" style={{ marginBottom: "3.5rem" }}>
           <p className="section-label" style={{ marginBottom: "0.85rem" }}>{te.label}</p>
           <h2 style={{ fontSize: "clamp(1.85rem,4vw,2.25rem)", fontWeight: 600, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text)" }}>
             {te.heading}
           </h2>
         </div>
+        <div>
+          {/* Publicis Sapient: Open Stage Showcase (Widget on LEFT, Text on RIGHT) */}
+          <PublicisPinnedJobCard
+            job={jobMeta[0]}
+            role={publicisTrans.role}
+            type={publicisTrans.type}
+            bullets={publicisTrans.bullets}
+            keyContrib={te.keyContrib}
+          />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-          {jobMeta.slice(1).map((j, i) => {
-            const jt = jobTranslations[j.id];
-            return <JobCard key={j.n} job={j} idx={i + 1} role={jt.role} type={jt.type} bullets={jt.bullets} keyContrib={te.keyContrib} />;
-          })}
+          {/* Remaining Commercial & Research Roles: Baraka, IndiGo, Lab */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            {jobMeta.slice(1).map((j, i) => {
+              const jt = jobTranslations[j.id];
+              return <JobCard key={j.n} job={j} idx={i + 1} role={jt.role} type={jt.type} bullets={jt.bullets} keyContrib={te.keyContrib} />;
+            })}
+          </div>
         </div>
       </div>
     </section>

@@ -102,29 +102,31 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
       ctx.fillRect(0, 0, w, h);
 
       if (img && img.complete && img.naturalWidth > 0) {
-        const imgW = img.naturalWidth;
-        const imgH = img.naturalHeight;
-        const imgRatio = imgW / imgH;
-        const canvasRatio = w / h;
+        const imgRatio = (img.naturalWidth && img.naturalHeight)
+          ? (img.naturalWidth / img.naturalHeight)
+          : (16 / 9);
 
-        let renderW: number;
-        let renderH: number;
-        let offsetX: number;
-        let offsetY: number;
-
-        if (canvasRatio > imgRatio) {
-          renderW = w;
-          renderH = w / imgRatio;
-          offsetX = 0;
-          offsetY = (h - renderH) / 2;
-        } else {
-          renderH = h;
-          renderW = h * imgRatio;
-          offsetX = (w - renderW) / 2;
-          offsetY = 0;
-        }
+        // Scale image to fill 100% of canvas height so widget length matches text length
+        const renderH = h;
+        const renderW = Math.round(h * imgRatio);
+        const offsetX = 0;
+        const offsetY = 0;
 
         ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
+
+        // Right side smooth fade to solid #050505 so text on the right is 100% visible
+        // ONLY right side is faded — left side, top, and bottom have ZERO fade
+        const fadeStart = Math.round(Math.min(w, renderW) * 0.38);
+        const fadeEnd = Math.max(w, renderW);
+        const rightG = ctx.createLinearGradient(fadeStart, 0, fadeEnd, 0);
+        rightG.addColorStop(0, "rgba(5, 5, 5, 0)");
+        rightG.addColorStop(0.22, "rgba(5, 5, 5, 0.4)");
+        rightG.addColorStop(0.55, "rgba(5, 5, 5, 0.88)");
+        rightG.addColorStop(0.82, "#050505");
+        rightG.addColorStop(1, "#050505");
+        ctx.fillStyle = rightG;
+        ctx.fillRect(fadeStart, 0, fadeEnd - fadeStart, h);
+
         lastDrawnFrameRef.current = frameIdx;
       }
     };
@@ -150,15 +152,23 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
 
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && container) {
+      ro = new ResizeObserver(() => {
+        resizeCanvas();
+      });
+      ro.observe(container);
+    }
+
     animRef.current = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resizeCanvas);
+      if (ro) ro.disconnect();
     };
   }, [initialFrameLoaded]);
-
-  const currentFrameNum = Math.min(TOTAL_FRAMES, Math.max(1, Math.floor(progress * (TOTAL_FRAMES - 1)) + 1));
 
   return (
     <div
@@ -167,12 +177,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
         position: "relative",
         width: "100%",
         height: "100%",
-        maxHeight: "100%",
-        overflow: "hidden",
-        background: "#050505",
-        border: "none",
-        boxShadow: "none",
-        borderRadius: 0,
+        background: "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -187,125 +192,6 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
           objectFit: "contain",
         }}
       />
-
-      {/* Seamless atmospheric vignette blending visual into page background #050505 */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background: `
-            radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(5, 5, 5, 0.5) 80%, #050505 100%),
-            linear-gradient(to right, #050505 0%, transparent 12%, transparent 82%, #050505 100%),
-            linear-gradient(to bottom, #050505 0%, transparent 10%, transparent 88%, #050505 100%)
-          `,
-        }}
-      />
-
-      {/* Top Left: HUD Spec badge */}
-      <div
-        style={{
-          position: "absolute",
-          top: 12,
-          left: 14,
-          background: "rgba(8, 12, 20, 0.75)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          borderRadius: 100,
-          padding: "3px 10px",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          pointerEvents: "none",
-          fontFamily: "var(--font-mono, monospace)",
-          fontSize: "0.6rem",
-          color: "rgba(255, 255, 255, 0.7)",
-          letterSpacing: "0.06em",
-        }}
-      >
-        <span style={{ color: "#6366f1", fontWeight: 700 }}>01</span>
-        <span>// CAD ARCHITECTURE</span>
-      </div>
-
-      {/* Top Right: Live sync badge */}
-      <div
-        style={{
-          position: "absolute",
-          top: 12,
-          right: 14,
-          background: "rgba(8, 12, 20, 0.75)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(99, 102, 241, 0.3)",
-          borderRadius: 100,
-          padding: "3px 10px",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          pointerEvents: "none",
-          fontFamily: "var(--font-mono, monospace)",
-          fontSize: "0.6rem",
-          color: "#98c379",
-          letterSpacing: "0.06em",
-        }}
-      >
-        <span
-          style={{
-            width: 5,
-            height: 5,
-            borderRadius: "50%",
-            background: "#98c379",
-            boxShadow: "0 0 6px #98c379",
-          }}
-        />
-        <span>3D LIVE ARCHITECTURE</span>
-      </div>
-
-      {/* Bottom Left: Tech watermark */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 12,
-          left: 14,
-          pointerEvents: "none",
-          fontFamily: "var(--font-mono, monospace)",
-          fontSize: "0.58rem",
-          color: "rgba(255, 255, 255, 0.45)",
-          letterSpacing: "0.08em",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-        }}
-      >
-        <span>NODE.JS</span>
-        <span>·</span>
-        <span>POSTGRESQL</span>
-        <span>·</span>
-        <span>PRISMA</span>
-      </div>
-
-      {/* Bottom Right: Frame counter */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 12,
-          right: 14,
-          background: "rgba(8, 12, 20, 0.75)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          borderRadius: 6,
-          padding: "2px 8px",
-          pointerEvents: "none",
-          fontFamily: "var(--font-mono, monospace)",
-          fontSize: "0.58rem",
-          color: "rgba(255, 255, 255, 0.6)",
-          letterSpacing: "0.05em",
-        }}
-      >
-        FRAME {String(currentFrameNum).padStart(2, "0")} / {TOTAL_FRAMES}
-      </div>
     </div>
   );
 }

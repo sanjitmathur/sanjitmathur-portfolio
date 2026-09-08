@@ -1,4 +1,4 @@
-import { useRef, ReactNode, useEffect, useState } from "react";
+import React, { useRef, ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children: ReactNode;

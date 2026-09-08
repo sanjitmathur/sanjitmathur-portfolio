@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useInView } from "../useInView";
 
 const DOMAINS = ["Airline Bookings", "E-Commerce", "Payments"];

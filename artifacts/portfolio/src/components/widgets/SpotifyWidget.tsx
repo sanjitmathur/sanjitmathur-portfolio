@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 const TRACKS = [
   { title: "Blinding Lights", artist: "The Weeknd", bpm: 171, genre: "Pop" },

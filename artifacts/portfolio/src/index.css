@@ -431,64 +431,82 @@ nav,
 }
 
 /* ============================================================
-   PUBLICIS SHOWCASE (OPEN STAGE, NOT A CARD — LIKE ABOUT SECTION)
+   PUBLICIS SHOWCASE (OPEN STAGE, NOT A CARD — WITH INTEGRATED TIMELINE)
    ============================================================ */
 .publicis-pinned-container {
   position: relative;
-  height: 240vh;
-  margin-bottom: 3rem;
-  background: #050505;
+  height: 220vh;
+  margin-bottom: 2.5rem;
 }
+
+
 .publicis-sticky-stage {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100dvh;
-  width: 100%;
-  background: #050505;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 56px clamp(20px, 4.5vw, 64px) 16px;
-  box-sizing: border-box;
+  top: max(75px, calc(50vh - 250px));
   z-index: 10;
-}
-.publicis-stage-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
   width: 100%;
-  max-width: 1320px;
-  margin: 0 auto;
-  align-items: center;
-  gap: clamp(24px, 4vw, 56px);
-  height: 100%;
-  max-height: calc(100vh - 80px);
-  max-height: calc(100dvh - 80px);
-}
-.publicis-widget-stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-height: clamp(340px, 58vh, 520px);
+  min-height: clamp(420px, 56vh, 520px);
   display: flex;
   align-items: center;
-  justify-content: center;
+  background: #050505;
+  border-radius: 14px;
   overflow: hidden;
 }
+
+/* Background 3D Plate Layer: Matches stage length exactly */
+.publicis-bg-plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.publicis-bg-widget {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Seamless dissolve towards the right behind the text: ONLY right side is faded */
+.publicis-bg-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    linear-gradient(to right,
+      transparent 0%,
+      transparent 35%,
+      rgba(5, 5, 5, 0.45) 48%,
+      rgba(5, 5, 5, 0.9) 64%,
+      #050505 76%,
+      #050505 100%);
+}
+
+/* Foreground Content: Right-aligned text */
+.publicis-content-stage {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem 2rem 1.5rem 0;
+}
+
 .publicis-text-stage {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  width: 100%;
   max-width: 580px;
-}
-.publicis-sync-meter {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 8px 14px;
-  margin: 10px 0 14px;
+  margin-left: auto;
 }
 
 @media (max-width: 900px) {
@@ -497,20 +515,39 @@ nav,
     margin-bottom: 2rem;
   }
   .publicis-sticky-stage {
-    padding-top: 56px;
-    align-items: flex-start;
-    overflow-y: auto;
+    top: 60px;
+    display: block;
+    min-height: auto;
+    border-radius: 12px;
   }
-  .publicis-stage-grid {
-    grid-template-columns: 1fr;
-    height: auto;
-    max-height: none;
-    gap: 16px;
-    padding-bottom: 24px;
+  .publicis-bg-plate {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 240px;
+    margin-bottom: 8px;
   }
-  .publicis-widget-stage {
-    height: clamp(180px, 28vh, 230px);
-    max-height: 240px;
+  .publicis-bg-widget {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .publicis-bg-plate::after {
+    background-image:
+      linear-gradient(to bottom,
+        transparent 0%,
+        transparent 65%,
+        #050505 100%);
+  }
+  .publicis-content-stage {
+    justify-content: center;
+    padding: 0 0.5rem 1.5rem;
+    min-height: auto;
+  }
+  .publicis-text-stage {
+    max-width: 100%;
+    margin-left: 0;
   }
 }
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import { useLang } from "../components/LanguageContext";
 
