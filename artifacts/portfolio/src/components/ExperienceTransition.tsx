@@ -27,6 +27,9 @@ export default function ExperienceTransition() {
       imagesRef.current[0] = img0;
       setInitialFrameLoaded(true);
     };
+    img0.onerror = () => {
+      console.warn("Could not load initial frame:", img0.src);
+    };
 
     // 2. Preload remainder of frames progressively
     for (let i = 1; i < TOTAL_FRAMES; i++) {
@@ -71,7 +74,7 @@ export default function ExperienceTransition() {
       lastDrawnFrame = -1; // force redraw
     };
 
-    // Draw active frame to canvas with aspect-ratio cover
+    // Draw active frame to canvas with responsive desktop/mobile scaling
     const drawFrame = (frameIdx: number) => {
       if (!canvas || !ctx) return;
 
@@ -110,11 +113,20 @@ export default function ExperienceTransition() {
         let offsetY: number;
 
         if (canvasRatio > imgRatio) {
+          // Wide screens: Cover width and center vertically
           renderW = w;
           renderH = w / imgRatio;
           offsetX = 0;
           offsetY = (h - renderH) / 2;
+        } else if (canvasRatio < 1.0) {
+          // Mobile portrait: Scale to fit phone width with slight dramatic bleed (1.18x)
+          // This keeps the airplane fully visible flying across the entire width of the phone
+          renderW = w * 1.18;
+          renderH = renderW / imgRatio;
+          offsetX = (w - renderW) / 2;
+          offsetY = (h - renderH) * 0.52;
         } else {
+          // Standard desktop / landscape
           renderH = h;
           renderW = h * imgRatio;
           offsetX = (w - renderW) / 2;
@@ -139,8 +151,10 @@ export default function ExperienceTransition() {
 
     // Lerp render loop for buttery smooth animation
     const renderLoop = () => {
-      // Smooth dampening factor
-      currentProgress += (targetProgress - currentProgress) * 0.14;
+      // Smooth dampening factor (snappier 0.18 on mobile for responsive touch)
+      const isMobile = window.innerWidth <= 768;
+      const damp = isMobile ? 0.20 : 0.14;
+      currentProgress += (targetProgress - currentProgress) * damp;
 
       if (Math.abs(targetProgress - currentProgress) < 0.0005) {
         currentProgress = targetProgress;
@@ -156,15 +170,23 @@ export default function ExperienceTransition() {
         drawFrame(frameIdx);
       }
 
-      // Animate text position
+      // Animate text position responsively
       if (overlayRef.current && textTrackRef.current) {
         const containerW = overlayRef.current.clientWidth;
         const textW = textTrackRef.current.offsetWidth;
 
-        // Start from left margin (0px), ending with 25% right space
         const startX = 0;
-        const rightSpace = containerW * 0.25;
-        const endX = Math.max(0, containerW - rightSpace - textW);
+        let endX: number;
+
+        if (isMobile) {
+          // On mobile, glide within safe screen margins without clipping
+          const maxTravel = Math.max(0, containerW - textW);
+          endX = maxTravel * 0.95;
+        } else {
+          // On desktop, leave 25% right space
+          const rightSpace = containerW * 0.25;
+          endX = Math.max(0, containerW - rightSpace - textW);
+        }
 
         const currentX = startX + currentProgress * (endX - startX);
         textTrackRef.current.style.transform = `translate3d(${currentX.toFixed(2)}px, 0, 0)`;
@@ -195,7 +217,7 @@ export default function ExperienceTransition() {
       ref={containerRef}
       className="exp-transition-container"
       id="experience-transition"
-      aria-label="Experience Section Transition"
+      aria-label="Work Experience Section Transition"
     >
       <style>{`
         .exp-transition-container {
@@ -211,6 +233,7 @@ export default function ExperienceTransition() {
           top: 0;
           width: 100%;
           height: 100vh;
+          height: 100dvh;
           overflow: hidden;
           display: flex;
           align-items: center;
@@ -250,7 +273,7 @@ export default function ExperienceTransition() {
           border-left: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Repositioned Typography Stage: Elevated in upper-third above flight path */
+        /* Typography Stage: Elevated in upper-third above flight path */
         .exp-typography-stage {
           position: absolute;
           left: 0;
@@ -294,18 +317,31 @@ export default function ExperienceTransition() {
           flex-shrink: 0;
         }
 
+        /* Mobile Optimization */
         @media (max-width: 768px) {
           .exp-transition-container {
-            height: 180vh;
+            height: 145vh; /* Shorter, punchier scroll travel for touchscreens */
+          }
+          .exp-typography-stage {
+            top: clamp(14%, 18vh, 22%); /* Clean upper placement above the aircraft */
+            padding: 0 1.25rem;
           }
           .exp-grid-stage {
             grid-template-columns: repeat(2, 1fr);
+            padding: 0 1.25rem;
           }
           .exp-grid-line-col:nth-child(n+3) {
             display: none;
           }
           .exp-typo-line {
-            font-size: clamp(2.2rem, 9vw, 3.4rem);
+            font-size: clamp(1.75rem, 6.8vw, 2.25rem);
+            letter-spacing: -0.03em;
+          }
+          .exp-circle-dot {
+            width: clamp(14px, 3.5vw, 18px);
+            height: clamp(14px, 3.5vw, 18px);
+            margin-left: 0.75rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
           }
         }
       `}</style>
