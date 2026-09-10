@@ -11,14 +11,15 @@ def extract_publicis_frames(
 ):
     os.makedirs(output_dir, exist_ok=True)
     
-    video_file = None
-    for f in os.listdir(video_dir):
-        if f.startswith("Vertical") and f.endswith(".mp4"):
-            video_file = os.path.join(video_dir, f)
-            break
+    video_file = os.path.join(video_dir, "Publicis (2).mp4")
+    if not os.path.exists(video_file):
+        for f in os.listdir(video_dir):
+            if f.lower().startswith("publicis") and f.endswith(".mp4"):
+                video_file = os.path.join(video_dir, f)
+                break
             
-    if not video_file:
-        raise RuntimeError(f"Could not find vertical code video in {video_dir}")
+    if not video_file or not os.path.exists(video_file):
+        raise RuntimeError(f"Could not find Publicis video in {video_dir}")
 
     cap = cv2.VideoCapture(video_file)
     if not cap.isOpened():

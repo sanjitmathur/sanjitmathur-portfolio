@@ -30,7 +30,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
 
     // Load frame 0 immediately
     const img0 = new Image();
-    img0.src = `${FRAME_PATH}000.webp`;
+    img0.src = `${FRAME_PATH}000.webp?v=publicis-3d`;
     img0.onload = () => {
       if (!isMounted) return;
       imagesRef.current[0] = img0;
@@ -44,7 +44,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
     for (let i = 1; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       const padded = i.toString().padStart(3, "0");
-      img.src = `${FRAME_PATH}${padded}.webp`;
+      img.src = `${FRAME_PATH}${padded}.webp?v=publicis-3d`;
       img.onload = () => {
         if (!isMounted) return;
         imagesRef.current[i] = img;
@@ -141,25 +141,10 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
         if (offCtx) {
           offCtx.clearRect(0, 0, renderW, renderH);
 
-          // 1. Draw raw video frame (neon code tags and symbols)
+          // 1. Draw raw 3D video frame
           offCtx.drawImage(img, 0, 0, renderW, renderH);
 
-          // 2. Subtle electric indigo neon ambient glow over code elements
-          offCtx.save();
-          offCtx.globalCompositeOperation = "screen";
-          const glowG = offCtx.createRadialGradient(
-            renderW * 0.45, renderH * 0.48, renderH * 0.08,
-            renderW * 0.45, renderH * 0.48, renderH * 0.75
-          );
-          glowG.addColorStop(0, "rgba(99, 102, 241, 0.35)");
-          glowG.addColorStop(0.35, "rgba(79, 70, 229, 0.20)");
-          glowG.addColorStop(0.7, "rgba(49, 46, 129, 0.07)");
-          glowG.addColorStop(1, "rgba(0, 0, 0, 0)");
-          offCtx.fillStyle = glowG;
-          offCtx.fillRect(0, 0, renderW, renderH);
-          offCtx.restore();
-
-          // 3. Seamless alpha dissolve on right side (only on desktop where it blends into background plate)
+          // 2. Seamless alpha dissolve on right side (only on desktop where it blends into background plate)
           if (!isMobile) {
             offCtx.save();
             offCtx.globalCompositeOperation = "destination-out";
