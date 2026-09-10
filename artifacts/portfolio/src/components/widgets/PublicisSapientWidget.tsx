@@ -30,7 +30,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
 
     // Load frame 0 immediately
     const img0 = new Image();
-    img0.src = `${FRAME_PATH}000.webp?v=publicis-3d`;
+    img0.src = `${FRAME_PATH}000.webp?v=tech-icons-v1`;
     img0.onload = () => {
       if (!isMounted) return;
       imagesRef.current[0] = img0;
@@ -44,7 +44,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
     for (let i = 1; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       const padded = i.toString().padStart(3, "0");
-      img.src = `${FRAME_PATH}${padded}.webp?v=publicis-3d`;
+      img.src = `${FRAME_PATH}${padded}.webp?v=tech-icons-v1`;
       img.onload = () => {
         if (!isMounted) return;
         imagesRef.current[i] = img;

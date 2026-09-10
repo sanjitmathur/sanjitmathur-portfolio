@@ -11,7 +11,9 @@ def extract_publicis_frames(
 ):
     os.makedirs(output_dir, exist_ok=True)
     
-    video_file = os.path.join(video_dir, "Publicis (2).mp4")
+    video_file = os.path.join(video_dir, "publicis_new.mp4")
+    if not os.path.exists(video_file):
+        video_file = os.path.join(video_dir, "Publicis (2).mp4")
     if not os.path.exists(video_file):
         for f in os.listdir(video_dir):
             if f.lower().startswith("publicis") and f.endswith(".mp4"):
