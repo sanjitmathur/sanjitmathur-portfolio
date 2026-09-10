@@ -316,16 +316,6 @@ export default function ExperienceTransition() {
           white-space: nowrap;
         }
 
-        .exp-circle-dot {
-          display: inline-block;
-          width: clamp(20px, 3.6vw, 44px);
-          height: clamp(20px, 3.6vw, 44px);
-          border-radius: 50%;
-          background: #ffffff;
-          box-shadow: 0 0 32px rgba(255, 255, 255, 0.6);
-          margin-left: clamp(0.75rem, 1.8vw, 1.8rem);
-          flex-shrink: 0;
-        }
 
         /* Mobile Optimization */
         @media (max-width: 768px) {
@@ -347,12 +337,6 @@ export default function ExperienceTransition() {
             font-size: clamp(1.75rem, 6.8vw, 2.25rem);
             letter-spacing: -0.03em;
           }
-          .exp-circle-dot {
-            width: clamp(14px, 3.5vw, 18px);
-            height: clamp(14px, 3.5vw, 18px);
-            margin-left: 0.75rem;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-          }
         }
       `}</style>
 
@@ -373,7 +357,6 @@ export default function ExperienceTransition() {
           <div ref={textTrackRef} className="exp-scroll-track">
             <span className="exp-typo-line">
               Work Experience
-              <span className="exp-circle-dot" />
             </span>
           </div>
         </div>
