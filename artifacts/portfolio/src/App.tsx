@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { ThemeProvider } from "./components/ThemeContext";
 import { LanguageProvider } from "./components/LanguageContext";
 import Loader from "./components/Loader";
-import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
 import Nav from "./components/Nav";
 import Hero from "./pages/Hero";
@@ -27,7 +26,6 @@ function AppInner() {
 
   return (
     <div style={{ background: "var(--bg)", minHeight: "100vh", transition: "background 0.35s ease" }}>
-      {/* <Cursor /> */}
       <Grain />
       {!loaded && (
         <Loader onComplete={() => { setLoaded(true); document.fonts.ready.then(() => setTimeout(() => setShow(true), 80)); }} />

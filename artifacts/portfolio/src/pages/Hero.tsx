@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useRevealChildren } from "../components/useReveal";
 import { useLang } from "../components/LanguageContext";
 
 function TypewriterName({ name }: { name: string }) {
@@ -28,6 +29,8 @@ function TypewriterName({ name }: { name: string }) {
 }
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  useRevealChildren(sectionRef, ".fade-up");
   const { t } = useLang();
 
   const go = (id: string) => {
@@ -35,7 +38,25 @@ export default function Hero() {
       id === "experience" && document.getElementById("experience-transition")
         ? "experience-transition"
         : id;
-    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById(targetId);
+    if (el) {
+      (window as any).__isNavJump = true;
+      document.documentElement.style.scrollBehavior = "auto";
+
+      const navbarHeight = 56;
+      let targetY = 0;
+      if (targetId === "about") {
+        targetY = 0;
+      } else {
+        targetY = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+      }
+
+      window.scrollTo({ top: Math.max(0, targetY), behavior: "instant" as ScrollBehavior });
+
+      setTimeout(() => {
+        (window as any).__isNavJump = false;
+      }, 120);
+    }
   };
 
   const companies = [
@@ -47,7 +68,7 @@ export default function Hero() {
   ];
 
   return (
-    <section id="about" className="hero-section">
+    <section id="about" ref={sectionRef} className="hero-section">
       <style>{`
         .hero-section {
           --hero-bg: #050505;
@@ -404,8 +425,11 @@ export default function Hero() {
           align-items: center;
           gap: 0.75rem;
           flex-wrap: wrap;
+          margin-top: clamp(2.5rem, 6vh, 4.5rem);
           margin-bottom: 0;
           font-size: 0.8rem;
+          position: relative;
+          z-index: 2;
         }
 
         .hero-exp-label {
@@ -413,8 +437,9 @@ export default function Hero() {
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #787777;
+          color: #8a8989;
           margin-right: 0.25rem;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
         }
 
         .hero-exp-list {
@@ -428,10 +453,11 @@ export default function Hero() {
           display: inline-flex;
           align-items: center;
           gap: 0.42rem;
-          color: #c0bfbf;
+          color: #d1d1d1;
           font-weight: 500;
           cursor: pointer;
           transition: color 0.2s ease, transform 0.2s ease;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
         .hero-exp-item:hover {
@@ -472,6 +498,9 @@ export default function Hero() {
           .hero-actions {
             width: 100%;
           }
+          .hero-exp-bar {
+            margin-top: 1.5rem;
+          }
           .hero-btn-primary, .hero-btn-secondary {
             width: 100%;
           }
@@ -500,49 +529,64 @@ export default function Hero() {
       {/* Hero Content */}
       <div className="hero-inner">
         {/* Name Headline with Typewriter */}
-        <h1 className="hero-name">
-          <TypewriterName name={t?.hero?.name || "Sanjit Mathur"} />
-        </h1>
+        <div className="fade-up">
+          <h1 className="hero-name">
+            <TypewriterName name={t?.hero?.name || "Sanjit Mathur"} />
+          </h1>
+        </div>
 
         {/* Thin Divider Line */}
-        <div className="hero-divider" />
+        <div className="fade-up">
+          <div className="hero-divider" />
+        </div>
 
         {/* Subtitle Bio */}
-        <p className="hero-bio">
-          <span>Building intelligent systems, modern web</span>
-          <span>applications, and developer tools. Currently at</span>
-          <span><strong>Publicis Sapient</strong>, open to new opportunities.</span>
-        </p>
+        <div className="fade-up">
+          <p className="hero-bio">
+            <span>Building intelligent systems, modern web</span>
+            <span>applications, and developer tools. Currently at</span>
+            <span><strong>Publicis Sapient</strong>, open to new opportunities.</span>
+          </p>
+        </div>
 
         {/* CTA Buttons */}
-        <div className="hero-actions">
-          <button className="hero-btn-primary clickable" onClick={() => go("projects")}>
-            <span>{t?.hero?.viewProjects ? t.hero.viewProjects.toUpperCase() : "VIEW PROJECTS"}</span>
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-              <path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+        <div className="fade-up">
+          <div className="hero-actions">
+            <button className="hero-btn-primary clickable" onClick={() => go("projects")}>
+              <span>{t?.hero?.viewProjects ? t.hero.viewProjects.toUpperCase() : "VIEW PROJECTS"}</span>
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                <path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
 
-          <button className="hero-btn-secondary clickable" onClick={() => go("contact")}>
-            {t?.hero?.contactMe ? t.hero.contactMe.toUpperCase() : "CONTACT ME"}
-          </button>
+            <button className="hero-btn-secondary clickable" onClick={() => go("contact")}>
+              {t?.hero?.contactMe ? t.hero.contactMe.toUpperCase() : "CONTACT ME"}
+            </button>
+          </div>
         </div>
 
         {/* Experience Trust Bar */}
-        <div className="hero-exp-bar">
-          <span className="hero-exp-label">EXPERIENCE AT:</span>
-          <div className="hero-exp-list">
-            {companies.map((c, i) => (
-              <span
-                key={c.name}
-                className="hero-exp-item clickable"
-                onClick={() => go("experience")}
-              >
-                <span className="hero-exp-dot" style={{ background: c.color, color: c.color }} />
-                <span>{c.name}</span>
-                {i < companies.length - 1 && <span className="hero-exp-sep">·</span>}
-              </span>
-            ))}
+        <div className="fade-up">
+          <div className="hero-exp-bar">
+            <span className="hero-exp-label">EXPERIENCE AT:</span>
+            <div className="hero-exp-list">
+              {companies.map((c, i) => (
+                <span
+                  key={c.name}
+                  className="hero-exp-item clickable"
+                  onClick={() => {
+                    if (c.name.includes("Baraka")) go("exp-baraka");
+                    else if (c.name.includes("IndiGo")) go("exp-indigo");
+                    else if (c.name.includes("Lab")) go("exp-lab");
+                    else go("experience");
+                  }}
+                >
+                  <span className="hero-exp-dot" style={{ background: c.color, color: c.color }} />
+                  <span>{c.name}</span>
+                  {i < companies.length - 1 && <span className="hero-exp-sep">·</span>}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

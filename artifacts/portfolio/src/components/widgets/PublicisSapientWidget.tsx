@@ -17,13 +17,14 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
   const targetProgressRef = useRef<number>(0);
   const currentProgressRef = useRef<number>(0);
   const lastDrawnFrameRef = useRef<number>(-1);
+  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
 
   // Synchronize target progress
   useEffect(() => {
     targetProgressRef.current = Math.max(0, Math.min(1, progress));
   }, [progress]);
 
-  // Progressive frame loading
+  // Progressive frame loading: frame 0 immediately, rest in background
   useEffect(() => {
     let isMounted = true;
 
@@ -55,7 +56,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
     };
   }, []);
 
-  // Canvas draw loop
+  // Canvas draw loop following Experience Card Rule Book
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -81,6 +82,7 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
       if (!canvas || !ctx) return;
 
       let img = imagesRef.current[frameIdx];
+      // Nearest loaded neighbor fallback so canvas never flickers or goes blank
       if (!img) {
         for (let d = 1; d < TOTAL_FRAMES; d++) {
           if (frameIdx - d >= 0 && imagesRef.current[frameIdx - d]) {
@@ -96,36 +98,86 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
 
       const w = canvas.width;
       const h = canvas.height;
+      const cssW = container.clientWidth;
+      const isMobile = cssW <= 900;
 
-      // Background matching page background #050505
-      ctx.fillStyle = "#050505";
-      ctx.fillRect(0, 0, w, h);
+      // Clear main canvas so the ambient plate (.publicis-bg-plate) shines through without cut seams
+      ctx.clearRect(0, 0, w, h);
 
       if (img && img.complete && img.naturalWidth > 0) {
         const imgRatio = (img.naturalWidth && img.naturalHeight)
           ? (img.naturalWidth / img.naturalHeight)
           : (16 / 9);
 
-        // Scale image to fill 100% of canvas height so widget length matches text length
-        const renderH = h;
-        const renderW = Math.round(h * imgRatio);
-        const offsetX = 0;
-        const offsetY = 0;
+        let renderW: number;
+        let renderH: number;
+        let offsetX = 0;
+        let offsetY = 0;
 
-        ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
+        if (isMobile) {
+          renderH = h;
+          renderW = Math.round(h * imgRatio);
+          offsetX = Math.round((w - renderW) / 2);
+          offsetY = 0;
+        } else {
+          // Desktop: scale comfortably to ground visuals and span towards middle
+          renderH = Math.round(h * 1.06);
+          renderW = Math.round(renderH * imgRatio);
+          offsetX = 0;
+          offsetY = Math.round((h - renderH) / 2);
+        }
 
-        // Right side smooth fade to solid #050505 so text on the right is 100% visible
-        // ONLY right side is faded — left side, top, and bottom have ZERO fade
-        const fadeStart = Math.round(Math.min(w, renderW) * 0.38);
-        const fadeEnd = Math.max(w, renderW);
-        const rightG = ctx.createLinearGradient(fadeStart, 0, fadeEnd, 0);
-        rightG.addColorStop(0, "rgba(5, 5, 5, 0)");
-        rightG.addColorStop(0.22, "rgba(5, 5, 5, 0.4)");
-        rightG.addColorStop(0.55, "rgba(5, 5, 5, 0.88)");
-        rightG.addColorStop(0.82, "#050505");
-        rightG.addColorStop(1, "#050505");
-        ctx.fillStyle = rightG;
-        ctx.fillRect(fadeStart, 0, fadeEnd - fadeStart, h);
+        // Setup offscreen canvas to process video frame with alpha dissolve
+        if (!offscreenRef.current) {
+          offscreenRef.current = document.createElement("canvas");
+        }
+        const offCanvas = offscreenRef.current;
+        if (offCanvas.width !== renderW || offCanvas.height !== renderH) {
+          offCanvas.width = renderW;
+          offCanvas.height = renderH;
+        }
+        const offCtx = offCanvas.getContext("2d");
+
+        if (offCtx) {
+          offCtx.clearRect(0, 0, renderW, renderH);
+
+          // 1. Draw raw video frame (neon code tags and symbols)
+          offCtx.drawImage(img, 0, 0, renderW, renderH);
+
+          // 2. Subtle electric indigo neon ambient glow over code elements
+          offCtx.save();
+          offCtx.globalCompositeOperation = "screen";
+          const glowG = offCtx.createRadialGradient(
+            renderW * 0.45, renderH * 0.48, renderH * 0.08,
+            renderW * 0.45, renderH * 0.48, renderH * 0.75
+          );
+          glowG.addColorStop(0, "rgba(99, 102, 241, 0.35)");
+          glowG.addColorStop(0.35, "rgba(79, 70, 229, 0.20)");
+          glowG.addColorStop(0.7, "rgba(49, 46, 129, 0.07)");
+          glowG.addColorStop(1, "rgba(0, 0, 0, 0)");
+          offCtx.fillStyle = glowG;
+          offCtx.fillRect(0, 0, renderW, renderH);
+          offCtx.restore();
+
+          // 3. Seamless alpha dissolve on right side (only on desktop where it blends into background plate)
+          if (!isMobile) {
+            offCtx.save();
+            offCtx.globalCompositeOperation = "destination-out";
+            const fadeW = Math.round(renderW * 0.38);
+            const fadeStart = renderW - fadeW;
+            const maskG = offCtx.createLinearGradient(fadeStart, 0, renderW, 0);
+            maskG.addColorStop(0, "rgba(0, 0, 0, 0)");
+            maskG.addColorStop(0.35, "rgba(0, 0, 0, 0.25)");
+            maskG.addColorStop(0.7, "rgba(0, 0, 0, 0.75)");
+            maskG.addColorStop(1, "rgba(0, 0, 0, 1)");
+            offCtx.fillStyle = maskG;
+            offCtx.fillRect(fadeStart, 0, fadeW, renderH);
+            offCtx.restore();
+          }
+
+          // Composite processed frame to main canvas
+          ctx.drawImage(offCanvas, offsetX, offsetY);
+        }
 
         lastDrawnFrameRef.current = frameIdx;
       }
@@ -133,9 +185,15 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
 
     const loop = () => {
       const target = targetProgressRef.current;
-      currentProgressRef.current += (target - currentProgressRef.current) * 0.16;
-      if (Math.abs(target - currentProgressRef.current) < 0.001) {
+      const isNavJump = (window as any).__isNavJump;
+
+      if (isNavJump || Math.abs(target - currentProgressRef.current) > 0.25) {
         currentProgressRef.current = target;
+      } else {
+        currentProgressRef.current += (target - currentProgressRef.current) * 0.16;
+        if (Math.abs(target - currentProgressRef.current) < 0.001) {
+          currentProgressRef.current = target;
+        }
       }
 
       const frameIdx = Math.min(

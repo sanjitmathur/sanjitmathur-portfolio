@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useRevealChildren } from "./useReveal";
 
 const TOTAL_FRAMES = 120;
 const BASE_URL = import.meta.env.BASE_URL || "/";
@@ -6,6 +7,7 @@ const FRAME_PATH = `${BASE_URL.replace(/\/$/, "")}/airplane-frames/frame_`;
 
 export default function ExperienceTransition() {
   const containerRef = useRef<HTMLElement>(null);
+  useRevealChildren(containerRef, ".fade-up");
   const stickyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -147,17 +149,25 @@ export default function ExperienceTransition() {
 
       const progress = -rect.top / totalScroll;
       targetProgress = Math.max(0, Math.min(1, progress));
+      if ((window as any).__isNavJump) {
+        currentProgress = targetProgress;
+      }
     };
 
     // Lerp render loop for buttery smooth animation
     const renderLoop = () => {
-      // Smooth dampening factor (snappier 0.18 on mobile for responsive touch)
+      // Smooth dampening factor (snappier 0.20 on mobile for responsive touch)
       const isMobile = window.innerWidth <= 768;
       const damp = isMobile ? 0.20 : 0.14;
-      currentProgress += (targetProgress - currentProgress) * damp;
+      const isNavJump = (window as any).__isNavJump;
 
-      if (Math.abs(targetProgress - currentProgress) < 0.0005) {
+      if (isNavJump || Math.abs(targetProgress - currentProgress) > 0.25) {
         currentProgress = targetProgress;
+      } else {
+        currentProgress += (targetProgress - currentProgress) * damp;
+        if (Math.abs(targetProgress - currentProgress) < 0.0005) {
+          currentProgress = targetProgress;
+        }
       }
 
       // Map progress to frame index
@@ -351,7 +361,7 @@ export default function ExperienceTransition() {
         <canvas ref={canvasRef} className="exp-transition-canvas" />
 
         {/* 4-column architectural grid column lines */}
-        <div className="exp-grid-stage">
+        <div className="exp-grid-stage fade-up" style={{ transitionDelay: "0.1s" }}>
           <div className="exp-grid-line-col" />
           <div className="exp-grid-line-col" />
           <div className="exp-grid-line-col" />
@@ -359,7 +369,7 @@ export default function ExperienceTransition() {
         </div>
 
         {/* Monumental Typography Stage (Elevated above flight line) */}
-        <div ref={overlayRef} className="exp-typography-stage">
+        <div ref={overlayRef} className="exp-typography-stage fade-up">
           <div ref={textTrackRef} className="exp-scroll-track">
             <span className="exp-typo-line">
               Work Experience

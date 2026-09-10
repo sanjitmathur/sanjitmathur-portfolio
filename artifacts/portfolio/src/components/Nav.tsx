@@ -98,11 +98,43 @@ export default function Nav() {
   }, [langOpen]);
 
   const go = (id: string) => {
+    setActive(id);
     const targetId =
       id === "experience" && document.getElementById("experience-transition")
         ? "experience-transition"
         : id;
-    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById(targetId);
+    if (el) {
+      (window as any).__isNavJump = true;
+      document.documentElement.style.scrollBehavior = "auto";
+
+      const navbarHeight = 56;
+      let targetY = 0;
+      if (targetId === "about") {
+        targetY = 0;
+      } else {
+        targetY = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+      }
+
+      window.scrollTo({ top: Math.max(0, targetY), behavior: "instant" as ScrollBehavior });
+
+      // Smoothly re-trigger entrance reveal for all fade-up elements in target section
+      const fadeElements = el.querySelectorAll(".fade-up, .r3d, .exp-typography-stage, .publicis-sticky-stage, .baraka-sticky-stage, .indigo-sticky-stage");
+      fadeElements.forEach((child) => {
+        child.classList.remove("in");
+      });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          fadeElements.forEach((child) => {
+            child.classList.add("in");
+          });
+        });
+      });
+
+      setTimeout(() => {
+        (window as any).__isNavJump = false;
+      }, 120);
+    }
     setMenuOpen(false);
   };
 
@@ -126,8 +158,11 @@ export default function Nav() {
         transition: "background 0.4s ease, border-color 0.4s ease",
       }}>
         {/* Logo */}
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="clickable"
-          style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "0.55rem", cursor: "pointer" }}>
+        <button
+          onClick={() => go("about")}
+          className="clickable"
+          style={{ background: "none", border: "none", display: "flex", alignItems: "center", gap: "0.55rem", cursor: "pointer" }}
+        >
           <div style={{ width: 26, height: 26, borderRadius: "6px", background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.35s" }}>
             <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "var(--bg)", letterSpacing: "0.02em", fontFamily: "var(--font-display)", transition: "color 0.35s" }}>SM</span>
           </div>

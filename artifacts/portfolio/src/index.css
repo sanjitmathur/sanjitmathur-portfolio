@@ -44,7 +44,7 @@
 
 /* === RESET === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 
 body {
   background: var(--bg);
@@ -431,21 +431,29 @@ nav,
 }
 
 /* ============================================================
-   PUBLICIS SHOWCASE (OPEN STAGE, NOT A CARD — WITH INTEGRATED TIMELINE)
+   PUBLICIS, BARAKA & INDIGO SHOWCASE (OPEN STAGE, NOT A CARD — WITH INTEGRATED TIMELINE)
    ============================================================ */
-.publicis-pinned-container {
+.publicis-pinned-container,
+.baraka-pinned-container,
+.indigo-pinned-container {
   position: relative;
   height: 220vh;
   margin-bottom: 2.5rem;
 }
 
 
-.publicis-sticky-stage {
+.publicis-sticky-stage,
+.baraka-sticky-stage,
+.indigo-sticky-stage {
+  --stage-h: 480px;
   position: sticky;
-  top: max(75px, calc(50vh - 250px));
+  top: max(68px, calc(50vh + 28px - (var(--stage-h) / 2)));
   z-index: 10;
   width: 100%;
-  min-height: clamp(420px, 56vh, 520px);
+  height: var(--stage-h);
+  min-height: var(--stage-h);
+  max-height: var(--stage-h);
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   background: #050505;
@@ -454,7 +462,9 @@ nav,
 }
 
 /* Background 3D Plate Layer: Matches stage length exactly */
-.publicis-bg-plate {
+.publicis-bg-plate,
+.baraka-bg-plate,
+.indigo-bg-plate {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -464,7 +474,33 @@ nav,
   z-index: 1;
 }
 
-.publicis-bg-widget {
+.publicis-bg-plate {
+  background:
+    radial-gradient(ellipse 60% 70% at 20% 50%, rgba(99, 102, 241, 0.35) 0%, rgba(79, 70, 229, 0.18) 45%, transparent 75%),
+    linear-gradient(to right,
+      #1c2254 0%,
+      #161b42 25%,
+      #101330 42%,
+      #090b1c 56%,
+      #050505 74%,
+      #050505 100%);
+}
+
+.baraka-bg-plate {
+  background:
+    radial-gradient(ellipse 60% 70% at 20% 50%, rgba(213, 181, 114, 0.4) 0%, rgba(180, 130, 45, 0.2) 45%, transparent 75%),
+    linear-gradient(to right,
+      #4a330e 0%,
+      #422c0b 25%,
+      #322006 42%,
+      #1a1003 56%,
+      #050505 74%,
+      #050505 100%);
+}
+
+.publicis-bg-widget,
+.baraka-bg-widget,
+.indigo-bg-widget {
   position: absolute;
   left: 0;
   top: 0;
@@ -484,68 +520,120 @@ nav,
   background-image:
     linear-gradient(to right,
       transparent 0%,
-      transparent 35%,
-      rgba(5, 5, 5, 0.45) 48%,
-      rgba(5, 5, 5, 0.9) 64%,
-      #050505 76%,
+      transparent 40%,
+      rgba(5, 5, 5, 0.4) 52%,
+      rgba(5, 5, 5, 0.88) 64%,
+      #050505 74%,
+      #050505 100%);
+}
+
+.baraka-bg-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    linear-gradient(to right,
+      transparent 0%,
+      transparent 40%,
+      rgba(5, 5, 5, 0.4) 52%,
+      rgba(5, 5, 5, 0.88) 64%,
+      #050505 74%,
+      #050505 100%);
+}
+
+.indigo-bg-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    linear-gradient(to right,
+      transparent 0%,
+      transparent 40%,
+      rgba(5, 5, 5, 0.4) 52%,
+      rgba(5, 5, 5, 0.88) 64%,
+      #050505 74%,
       #050505 100%);
 }
 
 /* Foreground Content: Right-aligned text */
-.publicis-content-stage {
+.publicis-content-stage,
+.baraka-content-stage,
+.indigo-content-stage {
   position: relative;
   z-index: 3;
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 1.5rem 2rem 1.5rem 0;
+  padding: 1.25rem 1.75rem 1.25rem 0;
 }
 
-.publicis-text-stage {
+.publicis-text-stage,
+.baraka-text-stage,
+.indigo-text-stage {
   position: relative;
   width: 100%;
-  max-width: 580px;
+  max-width: clamp(610px, 55vw, 665px);
   margin-left: auto;
 }
 
 @media (max-width: 900px) {
-  .publicis-pinned-container {
+  .publicis-pinned-container,
+  .baraka-pinned-container,
+  .indigo-pinned-container {
     height: 180vh;
     margin-bottom: 2rem;
   }
-  .publicis-sticky-stage {
+  .publicis-sticky-stage,
+  .baraka-sticky-stage,
+  .indigo-sticky-stage {
     top: 60px;
     display: block;
     min-height: auto;
     border-radius: 12px;
   }
-  .publicis-bg-plate {
+  .publicis-bg-plate,
+  .baraka-bg-plate,
+  .indigo-bg-plate {
     position: relative;
     inset: auto;
     width: 100%;
     height: 240px;
     margin-bottom: 8px;
   }
-  .publicis-bg-widget {
+  .publicis-bg-widget,
+  .baraka-bg-widget,
+  .indigo-bg-widget {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
   }
-  .publicis-bg-plate::after {
+  .publicis-bg-plate::after,
+  .baraka-bg-plate::after,
+  .indigo-bg-plate::after {
     background-image:
       linear-gradient(to bottom,
         transparent 0%,
         transparent 65%,
         #050505 100%);
   }
-  .publicis-content-stage {
+  .publicis-content-stage,
+  .baraka-content-stage,
+  .indigo-content-stage {
     justify-content: center;
     padding: 0 0.5rem 1.5rem;
     min-height: auto;
   }
-  .publicis-text-stage {
+  .publicis-text-stage,
+  .baraka-text-stage,
+  .indigo-text-stage {
     max-width: 100%;
     margin-left: 0;
   }

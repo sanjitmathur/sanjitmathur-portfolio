@@ -147,7 +147,14 @@ export default function Contact() {
           © {new Date().getFullYear()} Sanjit Mathur · Built with React & TypeScript
         </div>
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => {
+            (window as any).__isNavJump = true;
+            document.documentElement.style.scrollBehavior = "auto";
+            window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+            setTimeout(() => {
+              (window as any).__isNavJump = false;
+            }, 120);
+          }}
           className="clickable"
           style={{ background: "none", border: "none", fontSize: "0.72rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.06em", cursor: "pointer" }}
         >

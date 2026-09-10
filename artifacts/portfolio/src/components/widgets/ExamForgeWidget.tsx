@@ -21,6 +21,7 @@ export default function ExamForgeWidget() {
 
   const cur = QA_POOL[qIdx % QA_POOL.length];
   const taRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const nextTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setPhase("typing-q");
@@ -28,6 +29,7 @@ export default function ExamForgeWidget() {
     setAText("");
     setGenerating(true);
     if (taRef.current) clearInterval(taRef.current);
+    if (nextTimeoutRef.current) clearTimeout(nextTimeoutRef.current);
 
     let i = 0;
     const tq = setInterval(() => {
@@ -44,7 +46,7 @@ export default function ExamForgeWidget() {
             if (taRef.current) clearInterval(taRef.current);
             setPhase("done");
             setGenerating(false);
-            setTimeout(() => {
+            nextTimeoutRef.current = setTimeout(() => {
               setQIdx(prev => (prev + 1) % QA_POOL.length);
             }, 2500);
           }
@@ -54,6 +56,7 @@ export default function ExamForgeWidget() {
     return () => {
       clearInterval(tq);
       if (taRef.current) clearInterval(taRef.current);
+      if (nextTimeoutRef.current) clearTimeout(nextTimeoutRef.current);
     };
   }, [qIdx]);
 

@@ -16,19 +16,25 @@ export default function LabWidget() {
   const [count, setCount] = useState(0);
   const [blink, setBlink] = useState(true);
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     setLines(0);
     const cur = snippets[snip];
     let l = 0;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     const t = setInterval(() => {
       l++;
       setLines(l);
       if (l >= cur.length) {
         clearInterval(t);
-        setTimeout(() => setSnip(s => (s + 1) % snippets.length), 2200);
+        timeoutRef.current = setTimeout(() => setSnip(s => (s + 1) % snippets.length), 2200);
       }
     }, 500);
-    return () => clearInterval(t);
+    return () => {
+      clearInterval(t);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [snip]);
 
   useEffect(() => {

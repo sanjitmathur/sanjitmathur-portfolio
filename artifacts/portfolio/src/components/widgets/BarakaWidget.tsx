@@ -1,123 +1,263 @@
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "../useInView";
+import React, { useEffect, useRef, useState } from "react";
 
-const BASE = 142.5;
-function rand(min: number, max: number) { return Math.random() * (max - min) + min; }
+const TOTAL_FRAMES = 80;
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const FRAME_PATH = `${BASE_URL.replace(/\/$/, "")}/baraka-frames/frame_`;
 
-function genPoints(n = 24): number[] {
-  const pts: number[] = [BASE];
-  for (let i = 1; i < n; i++) pts.push(Math.max(120, Math.min(170, pts[i - 1] + rand(-3, 3.5))));
-  return pts;
+interface BarakaWidgetProps {
+  progress?: number;
 }
 
-function toPath(pts: number[], w: number, h: number): string {
-  const min = Math.min(...pts), max = Math.max(...pts), range = max - min || 1;
-  return pts.map((v, i) => {
-    const x = (i / (pts.length - 1)) * w;
-    const y = h - ((v - min) / range) * (h - 10) - 5;
-    return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(" ");
-}
+export default function BarakaWidget({ progress = 0 }: BarakaWidgetProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(TOTAL_FRAMES).fill(null));
+  const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
+  const animRef = useRef<number>(0);
+  const targetProgressRef = useRef<number>(0);
+  const currentProgressRef = useRef<number>(0);
+  const lastDrawnFrameRef = useRef<number>(-1);
+  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
 
-export default function BarakaWidget() {
-  const { ref: containerRef, inView } = useInView("200px 0px");
-  const inViewRef = useRef(false);
-  useEffect(() => { inViewRef.current = inView; }, [inView]);
-  const [pts, setPts] = useState(() => genPoints());
-  const [price, setPrice] = useState(142.50);
-  const [delta, setDelta] = useState(+2.34);
-  const [portfolio, setPortfolio] = useState(24_812);
-  const svgRef = useRef<SVGPathElement>(null);
-
+  // Synchronize target progress
   useEffect(() => {
-    const t = setInterval(() => {
-      if (!inViewRef.current) return;
-      const d = rand(-2, 2.5);
-      setPrice(p => { const n = Math.max(130, Math.min(160, p + d)); return +n.toFixed(2); });
-      setDelta(p => +(p + rand(-0.1, 0.12)).toFixed(2));
-      setPortfolio(p => Math.max(23000, Math.min(27000, p + Math.round(rand(-80, 100)))));
-      setPts(prev => { const np = [...prev.slice(1), Math.max(120, Math.min(170, prev[prev.length - 1] + d))]; return np; });
-    }, 1200);
-    return () => clearInterval(t);
+    targetProgressRef.current = Math.max(0, Math.min(1, progress));
+  }, [progress]);
+
+  // Progressive frame loading
+  useEffect(() => {
+    let isMounted = true;
+
+    // Load frame 0 immediately
+    const img0 = new Image();
+    img0.src = `${FRAME_PATH}000.webp`;
+    img0.onload = () => {
+      if (!isMounted) return;
+      imagesRef.current[0] = img0;
+      setInitialFrameLoaded(true);
+    };
+    img0.onerror = () => {
+      console.warn("Could not load Baraka initial frame:", img0.src);
+    };
+
+    // Preload remaining frames
+    for (let i = 1; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const padded = i.toString().padStart(3, "0");
+      img.src = `${FRAME_PATH}${padded}.webp`;
+      img.onload = () => {
+        if (!isMounted) return;
+        imagesRef.current[i] = img;
+      };
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const up = delta >= 0;
-  const w = 260, h = 80;
-  const linePath = toPath(pts, w, h);
-  const areaPath = linePath + ` L${w},${h} L0,${h} Z`;
+  // Canvas draw loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  const candles = Array.from({ length: 8 }, (_, i) => {
-    const o = rand(0, 1), c = rand(0, 1), hi = Math.max(o, c) + rand(0.05, 0.25), lo = Math.min(o, c) - rand(0.05, 0.25);
-    return { o, c, hi, lo, bull: c >= o };
-  });
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      if (!canvas || !container) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      lastDrawnFrameRef.current = -1;
+    };
+
+    const drawFrame = (frameIdx: number) => {
+      if (!canvas || !ctx) return;
+
+      let img = imagesRef.current[frameIdx];
+      if (!img) {
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          if (frameIdx - d >= 0 && imagesRef.current[frameIdx - d]) {
+            img = imagesRef.current[frameIdx - d];
+            break;
+          }
+          if (frameIdx + d < TOTAL_FRAMES && imagesRef.current[frameIdx + d]) {
+            img = imagesRef.current[frameIdx + d];
+            break;
+          }
+        }
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const cssW = container.clientWidth;
+      const isMobile = cssW <= 900;
+
+      // Clear canvas so the rich amber-gold background of .baraka-bg-plate shines through
+      ctx.clearRect(0, 0, w, h);
+
+      if (img && img.complete && img.naturalWidth > 0) {
+        const imgRatio = (img.naturalWidth && img.naturalHeight)
+          ? (img.naturalWidth / img.naturalHeight)
+          : (525 / 540);
+
+        let renderW: number;
+        let renderH: number;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (isMobile) {
+          renderH = h;
+          renderW = Math.round(h * imgRatio);
+          offsetX = Math.round((w - renderW) / 2);
+          offsetY = 0;
+        } else {
+          // On desktop:
+          // Slightly scaled to ground the bars and reach comfortably into the middle
+          renderH = Math.round(h * 1.06);
+          renderW = Math.round(renderH * imgRatio);
+          offsetX = 0;
+          offsetY = Math.round((h - renderH) / 2);
+        }
+
+        // Setup offscreen canvas to process the video frame with smooth alpha dissolve
+        if (!offscreenRef.current) {
+          offscreenRef.current = document.createElement("canvas");
+        }
+        const offCanvas = offscreenRef.current;
+        if (offCanvas.width !== renderW || offCanvas.height !== renderH) {
+          offCanvas.width = renderW;
+          offCanvas.height = renderH;
+        }
+        const offCtx = offCanvas.getContext("2d");
+
+        if (offCtx) {
+          offCtx.clearRect(0, 0, renderW, renderH);
+
+          // 1. Draw raw video frame (arrow, rising bars, radar circles)
+          offCtx.drawImage(img, 0, 0, renderW, renderH);
+
+          // 2. Tint video elements (arrow, glass bars, radar rings) in warm rich gold #d5b572
+          offCtx.save();
+          offCtx.globalCompositeOperation = "color";
+          offCtx.fillStyle = "#d5b572";
+          offCtx.fillRect(0, 0, renderW, renderH);
+          offCtx.restore();
+
+          // 3. Luminous golden neon glow over the surging arrow and bars
+          offCtx.save();
+          offCtx.globalCompositeOperation = "screen";
+          const glowG = offCtx.createRadialGradient(
+            renderW * 0.46, renderH * 0.48, renderH * 0.06,
+            renderW * 0.46, renderH * 0.48, renderH * 0.75
+          );
+          glowG.addColorStop(0, "rgba(235, 195, 110, 0.65)");
+          glowG.addColorStop(0.35, "rgba(213, 181, 114, 0.40)");
+          glowG.addColorStop(0.7, "rgba(140, 95, 25, 0.15)");
+          glowG.addColorStop(1, "rgba(0, 0, 0, 0)");
+          offCtx.fillStyle = glowG;
+          offCtx.fillRect(0, 0, renderW, renderH);
+          offCtx.restore();
+
+          // 4. Soft seamless alpha dissolve on right side (only on desktop where it blends into background plate)
+          if (!isMobile) {
+            offCtx.save();
+            offCtx.globalCompositeOperation = "destination-out";
+            const fadeW = Math.round(renderW * 0.38);
+            const fadeStart = renderW - fadeW;
+            const maskG = offCtx.createLinearGradient(fadeStart, 0, renderW, 0);
+            maskG.addColorStop(0, "rgba(0, 0, 0, 0)");
+            maskG.addColorStop(0.35, "rgba(0, 0, 0, 0.25)");
+            maskG.addColorStop(0.7, "rgba(0, 0, 0, 0.75)");
+            maskG.addColorStop(1, "rgba(0, 0, 0, 1)");
+            offCtx.fillStyle = maskG;
+            offCtx.fillRect(fadeStart, 0, fadeW, renderH);
+            offCtx.restore();
+          }
+
+          // Render processed golden video to main canvas
+          ctx.drawImage(offCanvas, offsetX, offsetY);
+        }
+
+        lastDrawnFrameRef.current = frameIdx;
+      }
+    };
+
+    const loop = () => {
+      const target = targetProgressRef.current;
+      const isNavJump = (window as any).__isNavJump;
+
+      if (isNavJump || Math.abs(target - currentProgressRef.current) > 0.25) {
+        currentProgressRef.current = target;
+      } else {
+        currentProgressRef.current += (target - currentProgressRef.current) * 0.16;
+        if (Math.abs(target - currentProgressRef.current) < 0.001) {
+          currentProgressRef.current = target;
+        }
+      }
+
+      const frameIdx = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.floor(currentProgressRef.current * (TOTAL_FRAMES - 1)))
+      );
+
+      if (frameIdx !== lastDrawnFrameRef.current) {
+        drawFrame(frameIdx);
+      }
+
+      animRef.current = requestAnimationFrame(loop);
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && container) {
+      ro = new ResizeObserver(() => {
+        resizeCanvas();
+      });
+      ro.observe(container);
+    }
+
+    animRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resizeCanvas);
+      if (ro) ro.disconnect();
+    };
+  }, [initialFrameLoaded]);
 
   return (
     <div
       ref={containerRef}
       style={{
+        position: "relative",
         width: "100%",
         height: "100%",
-        background: "#0d1117",
-        borderRadius: 12,
-        padding: "clamp(10px, 2vw, 14px) clamp(12px, 2.3vw, 16px)",
+        background: "transparent",
         display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        fontFamily: "var(--font)",
-        overflow: "hidden",
-        minHeight: 0,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, minHeight: 0 }}>
-        <div>
-          <div style={{ fontSize: "0.6rem", color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase" }}>BRAK · NYSE</div>
-          <div style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", fontWeight: 700, color: "#f5f5f7", letterSpacing: "-0.02em", lineHeight: 1.1 }}>${price.toFixed(2)}</div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, flexShrink: 0 }}>
-          <span style={{ fontSize: "0.65rem", fontWeight: 600, color: up ? "#22c55e" : "#ef4444", background: up ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 100, whiteSpace: "nowrap" }}>
-            {up ? "▲" : "▼"} {Math.abs(delta).toFixed(2)}%
-          </span>
-          <span style={{ fontSize: "0.55rem", color: "#4b5563" }}>Portfolio</span>
-          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#22c55e" }}>${portfolio.toLocaleString()}</span>
-        </div>
-      </div>
-
-      {/* Line chart */}
-      <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
-        <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="baraka-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={up ? "#22c55e" : "#ef4444"} stopOpacity="0.25" />
-              <stop offset="100%" stopColor={up ? "#22c55e" : "#ef4444"} stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path d={areaPath} fill="url(#baraka-area)" />
-          <path ref={svgRef} d={linePath} fill="none" stroke={up ? "#22c55e" : "#ef4444"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          {/* Current price dot */}
-          {(() => {
-            const last = pts[pts.length - 1];
-            const min = Math.min(...pts), max = Math.max(...pts), range = max - min || 1;
-            const cy = h - ((last - min) / range) * (h - 10) - 5;
-            return <circle cx={w} cy={cy} r={3} fill={up ? "#22c55e" : "#ef4444"} />;
-          })()}
-        </svg>
-      </div>
-
-      {/* Candlesticks */}
-      <div style={{ display: "flex", gap: 3, alignItems: "flex-end", height: 20, flexShrink: 0 }}>
-        {candles.map((c, i) => {
-          const barH = Math.max(4, Math.abs(c.c - c.o) * 20);
-          const wickH = Math.min(16, (c.hi - c.lo) * 18);
-          return (
-            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", height: "100%" }}>
-              <div style={{ width: 1, height: wickH, background: c.bull ? "#22c55e" : "#ef4444", opacity: 0.5 }} />
-              <div style={{ width: "100%", height: barH, background: c.bull ? "#22c55e" : "#ef4444", borderRadius: 1 }} />
-            </div>
-          );
-        })}
-        <span style={{ fontSize: "0.48rem", color: "#4b5563", letterSpacing: "0.05em", whiteSpace: "nowrap", alignSelf: "center" }}>1D</span>
-      </div>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+          objectFit: "contain",
+        }}
+      />
     </div>
   );
 }
