@@ -33,10 +33,16 @@ function AppInner() {
       )}
       <div style={{
         opacity: show ? 1 : 0,
+        transition: "opacity 0.6s ease 0.05s",
+        pointerEvents: show ? "auto" : "none",
+      }}>
+        <Nav />
+      </div>
+      <div style={{
+        opacity: show ? 1 : 0,
         transform: show ? "none" : "translateY(16px)",
         transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s",
       }}>
-        <Nav />
         <main>
           <Hero />
           <ExperienceTransition />
