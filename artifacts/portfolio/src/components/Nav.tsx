@@ -119,7 +119,7 @@ export default function Nav() {
       window.scrollTo({ top: Math.max(0, targetY), behavior: "instant" as ScrollBehavior });
 
       // Smoothly re-trigger entrance reveal for all fade-up elements in target section
-      const fadeElements = el.querySelectorAll(".fade-up, .r3d, .exp-typography-stage, .publicis-sticky-stage, .baraka-sticky-stage, .indigo-sticky-stage");
+      const fadeElements = el.querySelectorAll(".fade-up, .r3d, .exp-typography-stage, .publicis-sticky-stage, .baraka-sticky-stage, .indigo-sticky-stage, .lab-sticky-stage");
       fadeElements.forEach((child) => {
         child.classList.remove("in");
       });

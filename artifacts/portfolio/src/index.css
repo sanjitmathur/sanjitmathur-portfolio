@@ -431,11 +431,12 @@ nav,
 }
 
 /* ============================================================
-   PUBLICIS, BARAKA & INDIGO SHOWCASE (OPEN STAGE, NOT A CARD — WITH INTEGRATED TIMELINE)
+   PUBLICIS, BARAKA, INDIGO & LAB SHOWCASE (OPEN STAGE, NOT A CARD — WITH INTEGRATED TIMELINE)
    ============================================================ */
 .publicis-pinned-container,
 .baraka-pinned-container,
-.indigo-pinned-container {
+.indigo-pinned-container,
+.lab-pinned-container {
   position: relative;
   height: 220vh;
   margin-bottom: 2.5rem;
@@ -444,7 +445,8 @@ nav,
 
 .publicis-sticky-stage,
 .baraka-sticky-stage,
-.indigo-sticky-stage {
+.indigo-sticky-stage,
+.lab-sticky-stage {
   --stage-h: 480px;
   position: sticky;
   top: max(68px, calc(50vh + 28px - (var(--stage-h) / 2)));
@@ -464,7 +466,8 @@ nav,
 /* Background 3D Plate Layer: Matches stage length exactly */
 .publicis-bg-plate,
 .baraka-bg-plate,
-.indigo-bg-plate {
+.indigo-bg-plate,
+.lab-bg-plate {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -498,9 +501,22 @@ nav,
       #050505 100%);
 }
 
+.lab-bg-plate {
+  background:
+    radial-gradient(ellipse 60% 70% at 20% 50%, rgba(184, 137, 90, 0.32) 0%, rgba(56, 189, 248, 0.14) 45%, transparent 75%),
+    linear-gradient(to right,
+      #1b2738 0%,
+      #151f2d 25%,
+      #0e1622 42%,
+      #080d14 56%,
+      #050505 74%,
+      #050505 100%);
+}
+
 .publicis-bg-widget,
 .baraka-bg-widget,
-.indigo-bg-widget {
+.indigo-bg-widget,
+.lab-bg-widget {
   position: absolute;
   left: 0;
   top: 0;
@@ -559,10 +575,27 @@ nav,
       #050505 100%);
 }
 
+.lab-bg-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    linear-gradient(to right,
+      transparent 0%,
+      transparent 40%,
+      rgba(5, 5, 5, 0.4) 52%,
+      rgba(5, 5, 5, 0.88) 64%,
+      #050505 74%,
+      #050505 100%);
+}
+
 /* Foreground Content: Right-aligned text */
 .publicis-content-stage,
 .baraka-content-stage,
-.indigo-content-stage {
+.indigo-content-stage,
+.lab-content-stage {
   position: relative;
   z-index: 3;
   width: 100%;
@@ -576,7 +609,8 @@ nav,
 
 .publicis-text-stage,
 .baraka-text-stage,
-.indigo-text-stage {
+.indigo-text-stage,
+.lab-text-stage {
   position: relative;
   width: 100%;
   max-width: clamp(610px, 55vw, 665px);
@@ -586,13 +620,15 @@ nav,
 @media (max-width: 900px) {
   .publicis-pinned-container,
   .baraka-pinned-container,
-  .indigo-pinned-container {
+  .indigo-pinned-container,
+  .lab-pinned-container {
     height: 180vh;
     margin-bottom: 2rem;
   }
   .publicis-sticky-stage,
   .baraka-sticky-stage,
-  .indigo-sticky-stage {
+  .indigo-sticky-stage,
+  .lab-sticky-stage {
     top: 60px;
     display: block;
     min-height: auto;
@@ -600,7 +636,8 @@ nav,
   }
   .publicis-bg-plate,
   .baraka-bg-plate,
-  .indigo-bg-plate {
+  .indigo-bg-plate,
+  .lab-bg-plate {
     position: relative;
     inset: auto;
     width: 100%;
@@ -609,7 +646,8 @@ nav,
   }
   .publicis-bg-widget,
   .baraka-bg-widget,
-  .indigo-bg-widget {
+  .indigo-bg-widget,
+  .lab-bg-widget {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -617,7 +655,8 @@ nav,
   }
   .publicis-bg-plate::after,
   .baraka-bg-plate::after,
-  .indigo-bg-plate::after {
+  .indigo-bg-plate::after,
+  .lab-bg-plate::after {
     background-image:
       linear-gradient(to bottom,
         transparent 0%,
@@ -626,14 +665,16 @@ nav,
   }
   .publicis-content-stage,
   .baraka-content-stage,
-  .indigo-content-stage {
+  .indigo-content-stage,
+  .lab-content-stage {
     justify-content: center;
     padding: 0 0.5rem 1.5rem;
     min-height: auto;
   }
   .publicis-text-stage,
   .baraka-text-stage,
-  .indigo-text-stage {
+  .indigo-text-stage,
+  .lab-text-stage {
     max-width: 100%;
     margin-left: 0;
   }

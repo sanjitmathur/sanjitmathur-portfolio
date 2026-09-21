@@ -929,6 +929,309 @@ function IndiGoPinnedJobCard({
   );
 }
 
+/**
+ * LabPinnedJobCard:
+ * Open stage showcase matching Publicis Sapient, Baraka Financial, and IndiGo:
+ * - NOT a card: no card borders, no card background box.
+ * - Widget on LEFT: borderless high-DPI canvas rendering Lab of Future's video frames blending into #050505.
+ * - Text on RIGHT: typography on #050505, scroll sync meter, and synchronized bullets.
+ * - Exactly centered in viewport with 480px height (--stage-h: 480px).
+ * - Exact scroll synchronization math matching Publicis, Baraka & IndiGo:
+ *   currentScroll = stickyTop - rect.top, divided by scrollable = container.offsetHeight - sticky.offsetHeight.
+ * - Equal time slices across bullets (1/N each).
+ * - Clicking any bullet smoothly scrolls to that bullet's slice.
+ */
+function LabPinnedJobCard({
+  job,
+  role,
+  type,
+  bullets,
+  keyContrib,
+}: {
+  job: typeof jobMeta[0];
+  role: string;
+  type: string;
+  bullets: string[];
+  keyContrib: string;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const sticky = stickyRef.current;
+    if (!container || !sticky) return;
+
+    let rafId: number;
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (!container || !sticky) return;
+        const rect = container.getBoundingClientRect();
+        const stickyTop = parseFloat(window.getComputedStyle(sticky).top) || (window.innerHeight / 2 - 240);
+        const scrollable = container.offsetHeight - sticky.offsetHeight;
+
+        if (scrollable <= 0) {
+          setProgress(0);
+          return;
+        }
+
+        const currentScroll = stickyTop - rect.top;
+        const p = Math.max(0, Math.min(1, currentScroll / scrollable));
+        setProgress(p);
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const sliceCount = bullets.length || 2;
+  const activeIdx = Math.min(sliceCount - 1, Math.floor(progress * sliceCount));
+  const sliceProgress = Math.max(0, Math.min(1, (progress - activeIdx / sliceCount) * sliceCount));
+
+  const scrollToBullet = (idx: number) => {
+    const container = containerRef.current;
+    const sticky = stickyRef.current;
+    if (!container || !sticky) return;
+    const rect = container.getBoundingClientRect();
+    const stickyTop = parseFloat(window.getComputedStyle(sticky).top) || (window.innerHeight / 2 - 240);
+    const scrollable = container.offsetHeight - sticky.offsetHeight;
+    const targetP = (idx + 0.5) / sliceCount;
+    const targetY = window.scrollY + rect.top - stickyTop + targetP * scrollable;
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  };
+
+  return (
+    <div ref={containerRef} id="exp-lab" className="lab-pinned-container">
+      <div ref={stickyRef} className="lab-sticky-stage fade-up">
+        {/* Background 3D/Video Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
+        <div className="lab-bg-plate" aria-hidden="true">
+          <div className="lab-bg-widget">
+            <LabWidget progress={progress} />
+          </div>
+        </div>
+
+        {/* Foreground Content — Aligned to the Right on #050505 */}
+        <div className="lab-content-stage">
+          <div className="lab-text-stage">
+            {/* Header: Company & Role with Timeline presented next to Lab of Future on its right */}
+            <div style={{ marginBottom: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: job.accent }} />
+                <span style={{ fontSize: "0.62rem", color: job.accent, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase" }}>
+                  {type} · {job.n}
+                </span>
+              </div>
+
+              {/* Title & Timeline row */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "0.45rem 0.75rem",
+                marginBottom: 2,
+              }}>
+                <h2 style={{
+                  fontSize: "clamp(1.75rem, 2.4vw, 2.25rem)",
+                  fontWeight: 700,
+                  fontFamily: "var(--font-display, sans-serif)",
+                  letterSpacing: "-0.02em",
+                  color: "#ffffff",
+                  lineHeight: 1.15,
+                  margin: 0,
+                  whiteSpace: "nowrap",
+                }}>
+                  {job.co}
+                </h2>
+
+                {/* Timeline info */}
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  fontSize: "0.71rem",
+                  color: "var(--muted)",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  padding: "0.2rem 0.55rem",
+                  borderRadius: "100px",
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}>
+                  <span style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: job.accent,
+                    boxShadow: `0 0 6px ${job.accent}`,
+                  }} />
+                  <span style={{ color: "#d1d5db" }}>{job.period}</span>
+                  <span style={{ color: "rgba(255, 255, 255, 0.25)" }}>·</span>
+                  <span style={{ color: "var(--muted)", fontSize: "0.68rem" }}>{job.loc}</span>
+                </div>
+              </div>
+
+              <div style={{
+                fontSize: "clamp(0.88rem, 1.1vw, 0.98rem)",
+                color: "#b8b7b7",
+                fontWeight: 500,
+                marginBottom: 6,
+              }}>
+                {role}
+              </div>
+
+              {/* Tags */}
+              <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                {job.tags.map((t) => (
+                  <span
+                    key={t}
+                    style={{
+                      fontSize: "0.68rem",
+                      padding: "0.18rem 0.55rem",
+                      borderRadius: "6px",
+                      background: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                      color: "#b0b0b0",
+                      fontWeight: 500,
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Scroll Progress Meter Bar */}
+            <div style={{
+              margin: "12px 0 10px 0",
+              background: "rgba(255, 255, 255, 0.05)",
+              borderRadius: "100px",
+              height: 3,
+              width: "100%",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                height: "100%",
+                width: `${Math.round(progress * 100)}%`,
+                background: `linear-gradient(90deg, ${job.accent}, #eab308)`,
+                boxShadow: `0 0 10px ${job.accent}`,
+                transition: "width 0.06s linear",
+              }} />
+            </div>
+
+            {/* Key Contributions Section Label */}
+            <div style={{
+              fontSize: "0.66rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#8e8e8e",
+              marginBottom: 8,
+            }}>
+              {keyContrib}
+            </div>
+
+            {/* Synchronized Bullets with Highlighted Active Box */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+              {bullets.map((b, i) => {
+                const isActive = activeIdx === i;
+                const isPast = activeIdx > i;
+
+                return (
+                  <div
+                    key={i}
+                    onClick={() => scrollToBullet(i)}
+                    style={{
+                      display: "flex",
+                      gap: "0.85rem",
+                      alignItems: "flex-start",
+                      padding: "0.5rem 0.75rem",
+                      borderRadius: "8px",
+                      background: isActive
+                        ? "rgba(255, 255, 255, 0.04)"
+                        : "transparent",
+                      border: isActive
+                        ? "1px solid rgba(255, 255, 255, 0.08)"
+                        : "1px solid transparent",
+                      cursor: "pointer",
+                      transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                      position: "relative",
+                    }}
+                  >
+                    {/* Active/Past Dot Indicator */}
+                    <div style={{
+                      width: 7,
+                      height: 7,
+                      borderRadius: "50%",
+                      background: isActive
+                        ? job.accent
+                        : isPast
+                        ? `${job.accent}a6`
+                        : "rgba(255, 255, 255, 0.22)",
+                      boxShadow: isActive ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
+                      marginTop: "0.4rem",
+                      flexShrink: 0,
+                      transition: "all 0.25s ease",
+                    }} />
+
+                    {/* Bullet Content */}
+                    <div style={{ flex: 1 }}>
+                      <p style={{
+                        margin: 0,
+                        fontSize: "clamp(0.85rem, 1.0vw, 0.94rem)",
+                        lineHeight: 1.55,
+                        color: isActive ? "#ffffff" : "#9e9e9e",
+                        fontWeight: isActive ? 500 : 400,
+                        transition: "color 0.2s ease",
+                      }}>
+                        {b}
+                      </p>
+
+                      {/* Active slice progress underline bar */}
+                      {isActive && (
+                        <div style={{
+                          marginTop: 6,
+                          width: "100%",
+                          maxWidth: 220,
+                          height: 2.5,
+                          background: "rgba(255, 255, 255, 0.08)",
+                          borderRadius: 2,
+                          overflow: "hidden",
+                        }}>
+                          <div style={{
+                            width: `${sliceProgress * 100}%`,
+                            height: "100%",
+                            background: `linear-gradient(90deg, ${job.accent}, #eab308)`,
+                            boxShadow: `0 0 8px ${job.accent}`,
+                            transition: "width 0.05s linear",
+                          }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function JobCard({
   job,
   idx,
@@ -1066,6 +1369,7 @@ export default function Experience() {
   const publicisTrans = jobTranslations.publicis;
   const barakaTrans = jobTranslations.baraka;
   const indigoTrans = jobTranslations.indigo;
+  const labTrans = jobTranslations.lab;
 
   return (
     <section id="experience" ref={sectionRef} style={{ padding: "var(--section-py) var(--section-px)", background: "var(--bg)" }}>
@@ -1104,13 +1408,24 @@ export default function Experience() {
             keyContrib={te.keyContrib}
           />
 
-          {/* Remaining Commercial & Research Roles: Lab */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-            {jobMeta.slice(3).map((j, i) => {
-              const jt = jobTranslations[j.id];
-              return <JobCard key={j.n} job={j} idx={i + 3} role={jt.role} type={jt.type} bullets={jt.bullets} keyContrib={te.keyContrib} />;
-            })}
-          </div>
+          {/* Lab of Future: Open Stage Showcase (Widget on LEFT, Text on RIGHT) */}
+          <LabPinnedJobCard
+            job={jobMeta[3]}
+            role={labTrans.role}
+            type={labTrans.type}
+            bullets={labTrans.bullets}
+            keyContrib={te.keyContrib}
+          />
+
+          {/* Remaining Commercial & Research Roles (if any) */}
+          {jobMeta.length > 4 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+              {jobMeta.slice(4).map((j, i) => {
+                const jt = jobTranslations[j.id];
+                return <JobCard key={j.n} job={j} idx={i + 4} role={jt.role} type={jt.type} bullets={jt.bullets} keyContrib={te.keyContrib} />;
+              })}
+            </div>
+          )}
         </div>
       </div>
     </section>

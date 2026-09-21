@@ -1,93 +1,255 @@
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "../useInView";
+import React, { useEffect, useRef, useState } from "react";
 
-const snippets = [
-  ["import React from 'react';", "const App = () => {", "  return <Dashboard />;", "};"],
-  ["def train_model(X, y):", "  lr = LogisticRegression()", "  lr.fit(X, y)", "  return lr"],
-  ["const router = express.Router();", "router.get('/api/students',", "  async (req, res) => {", "    res.json(await db.all());"],
-];
+const TOTAL_FRAMES = 80;
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const FRAME_PATH = `${BASE_URL.replace(/\/$/, "")}/lab-frames/frame_`;
 
-export default function LabWidget() {
-  const { ref: containerRef, inView } = useInView("200px 0px");
-  const inViewRef = useRef(false);
-  useEffect(() => { inViewRef.current = inView; }, [inView]);
-  const [snip, setSnip] = useState(0);
-  const [lines, setLines] = useState(0);
-  const [count, setCount] = useState(0);
-  const [blink, setBlink] = useState(true);
+interface LabWidgetProps {
+  progress?: number;
+}
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+export default function LabWidget({ progress = 0 }: LabWidgetProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(TOTAL_FRAMES).fill(null));
+  const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
+  const animRef = useRef<number>(0);
+  const targetProgressRef = useRef<number>(0);
+  const currentProgressRef = useRef<number>(0);
+  const lastDrawnFrameRef = useRef<number>(-1);
+  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Synchronize target progress
   useEffect(() => {
-    setLines(0);
-    const cur = snippets[snip];
-    let l = 0;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    const t = setInterval(() => {
-      l++;
-      setLines(l);
-      if (l >= cur.length) {
-        clearInterval(t);
-        timeoutRef.current = setTimeout(() => setSnip(s => (s + 1) % snippets.length), 2200);
-      }
-    }, 500);
-    return () => {
-      clearInterval(t);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    targetProgressRef.current = Math.max(0, Math.min(1, progress));
+  }, [progress]);
+
+  // Progressive frame loading: frame 0 immediately, remainder in background
+  useEffect(() => {
+    let isMounted = true;
+
+    // Load frame 0 immediately for instant paint
+    const img0 = new Image();
+    img0.src = `${FRAME_PATH}000.webp`;
+    img0.onload = () => {
+      if (!isMounted) return;
+      imagesRef.current[0] = img0;
+      setInitialFrameLoaded(true);
     };
-  }, [snip]);
+    img0.onerror = () => {
+      console.warn("Could not load Lab initial frame:", img0.src);
+    };
 
-  useEffect(() => {
-    const t = setInterval(() => setBlink(b => !b), 530);
-    return () => clearInterval(t);
+    // Preload remaining frames in background
+    for (let i = 1; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const padded = i.toString().padStart(3, "0");
+      img.src = `${FRAME_PATH}${padded}.webp`;
+      img.onload = () => {
+        if (!isMounted) return;
+        imagesRef.current[i] = img;
+      };
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
+  // Canvas draw loop following Experience Card Rule Book
   useEffect(() => {
-    let n = 0;
-    const t = setInterval(() => {
-      n += 7;
-      if (n >= 500) { setCount(500); clearInterval(t); } else setCount(n);
-    }, 25);
-    return () => clearInterval(t);
-  }, []);
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  const colors = ["#e06c75", "#61afef", "#98c379", "#c678dd", "#e5c07b", "#61afef"];
-  const cur = snippets[snip];
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      if (!canvas || !container) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      lastDrawnFrameRef.current = -1;
+    };
+
+    const drawFrame = (frameIdx: number) => {
+      if (!canvas || !ctx) return;
+
+      let img = imagesRef.current[frameIdx];
+      // Nearest loaded neighbor fallback so canvas never flickers or goes blank
+      if (!img) {
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          if (frameIdx - d >= 0 && imagesRef.current[frameIdx - d]) {
+            img = imagesRef.current[frameIdx - d];
+            break;
+          }
+          if (frameIdx + d < TOTAL_FRAMES && imagesRef.current[frameIdx + d]) {
+            img = imagesRef.current[frameIdx + d];
+            break;
+          }
+        }
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const cssW = container.clientWidth;
+      const isMobile = cssW <= 900;
+
+      // Clear main canvas so the ambient plate (.lab-bg-plate) shines through without hard cut seams
+      ctx.clearRect(0, 0, w, h);
+
+      if (img && img.complete && img.naturalWidth > 0) {
+        const imgRatio = (img.naturalWidth && img.naturalHeight)
+          ? (img.naturalWidth / img.naturalHeight)
+          : (16 / 9);
+
+        let renderW: number;
+        let renderH: number;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (isMobile) {
+          renderH = h;
+          renderW = Math.round(h * imgRatio);
+          offsetX = Math.round((w - renderW) / 2);
+          offsetY = 0;
+        } else {
+          // Desktop: scale comfortably to ground visuals and span towards middle
+          renderH = Math.round(h * 1.06);
+          renderW = Math.round(renderH * imgRatio);
+          offsetX = 0;
+          offsetY = Math.round((h - renderH) / 2);
+        }
+
+        // Setup offscreen canvas to process video frame with alpha dissolve
+        if (!offscreenRef.current) {
+          offscreenRef.current = document.createElement("canvas");
+        }
+        const offCanvas = offscreenRef.current;
+        if (offCanvas.width !== renderW || offCanvas.height !== renderH) {
+          offCanvas.width = renderW;
+          offCanvas.height = renderH;
+        }
+        const offCtx = offCanvas.getContext("2d");
+
+        if (offCtx) {
+          offCtx.clearRect(0, 0, renderW, renderH);
+
+          // 1. Draw raw video frame (laptop, circuit board, ESB22 microcontroller)
+          offCtx.drawImage(img, 0, 0, renderW, renderH);
+
+          // 2. Luminous amber/gold screen glow highlighting the ESB22 microcontroller and telemetry
+          offCtx.save();
+          offCtx.globalCompositeOperation = "screen";
+          const glowG = offCtx.createRadialGradient(
+            renderW * 0.44, renderH * 0.62, renderH * 0.05,
+            renderW * 0.44, renderH * 0.62, renderH * 0.60
+          );
+          glowG.addColorStop(0, "rgba(234, 179, 8, 0.42)");
+          glowG.addColorStop(0.35, "rgba(184, 137, 90, 0.22)");
+          glowG.addColorStop(0.7, "rgba(56, 189, 248, 0.08)");
+          glowG.addColorStop(1, "rgba(0, 0, 0, 0)");
+          offCtx.fillStyle = glowG;
+          offCtx.fillRect(0, 0, renderW, renderH);
+          offCtx.restore();
+
+          // 3. Seamless alpha dissolve on right side (only on desktop where it blends into background plate)
+          if (!isMobile) {
+            offCtx.save();
+            offCtx.globalCompositeOperation = "destination-out";
+            const fadeW = Math.round(renderW * 0.38);
+            const fadeStart = renderW - fadeW;
+            const maskG = offCtx.createLinearGradient(fadeStart, 0, renderW, 0);
+            maskG.addColorStop(0, "rgba(0, 0, 0, 0)");
+            maskG.addColorStop(0.35, "rgba(0, 0, 0, 0.25)");
+            maskG.addColorStop(0.7, "rgba(0, 0, 0, 0.75)");
+            maskG.addColorStop(1, "rgba(0, 0, 0, 1)");
+            offCtx.fillStyle = maskG;
+            offCtx.fillRect(fadeStart, 0, fadeW, renderH);
+            offCtx.restore();
+          }
+
+          // Composite processed frame to main canvas
+          ctx.drawImage(offCanvas, offsetX, offsetY);
+        }
+
+        lastDrawnFrameRef.current = frameIdx;
+      }
+    };
+
+    const loop = () => {
+      const target = targetProgressRef.current;
+      const isNavJump = (window as any).__isNavJump;
+
+      if (isNavJump || Math.abs(target - currentProgressRef.current) > 0.25) {
+        currentProgressRef.current = target;
+      } else {
+        currentProgressRef.current += (target - currentProgressRef.current) * 0.16;
+        if (Math.abs(target - currentProgressRef.current) < 0.001) {
+          currentProgressRef.current = target;
+        }
+      }
+
+      const frameIdx = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.floor(currentProgressRef.current * (TOTAL_FRAMES - 1)))
+      );
+
+      if (frameIdx !== lastDrawnFrameRef.current) {
+        drawFrame(frameIdx);
+      }
+
+      animRef.current = requestAnimationFrame(loop);
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && container) {
+      ro = new ResizeObserver(() => {
+        resizeCanvas();
+      });
+      ro.observe(container);
+    }
+
+    animRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resizeCanvas);
+      if (ro) ro.disconnect();
+    };
+  }, [initialFrameLoaded]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#1a1b14", borderRadius: 12, overflow: "hidden", fontFamily: "'Fira Code', 'Cascadia Code', monospace", display: "flex", flexDirection: "column" }}>
-      {/* Editor header */}
-      <div style={{ background: "#14150f", padding: "8px 14px", display: "flex", alignItems: "center", gap: 6, borderBottom: "1px solid rgba(213,181,114,0.08)" }}>
-        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#ff5f57" }} />
-        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#febc2e" }} />
-        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#28c840" }} />
-        <span style={{ fontSize: "0.55rem", color: "#4b5563", marginLeft: 6 }}>app.{snip === 1 ? "py" : snip === 0 ? "tsx" : "js"}</span>
-      </div>
-
-      {/* Code area */}
-      <div style={{ flex: 1, padding: "12px 16px", display: "flex", flexDirection: "column", gap: 3, overflowY: "hidden" }}>
-        {Array.from({ length: 4 }, (_, i) => (
-          <div key={`${snip}-${i}`} style={{ display: "flex", gap: 10, alignItems: "center", opacity: i < lines ? 1 : 0, transform: i < lines ? "translateX(0)" : "translateX(-8px)", transition: "opacity 0.3s ease, transform 0.3s ease" }}>
-            <span style={{ fontSize: "0.5rem", color: "#4b5563", userSelect: "none", width: 12, textAlign: "right" }}>{i + 1}</span>
-            <span style={{ fontSize: "0.65rem", color: colors[i % colors.length], whiteSpace: "pre" }}>
-              {i < lines ? cur[i] : ""}
-            </span>
-            {i === lines - 1 && <span style={{ width: 5, height: "0.65rem", background: "#d5b572", opacity: blink ? 1 : 0, transition: "opacity 0.1s" }} />}
-          </div>
-        ))}
-      </div>
-
-      {/* Footer stat */}
-      <div style={{ borderTop: "1px solid rgba(213,181,114,0.08)", padding: "10px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#d5b572", boxShadow: "0 0 6px rgba(213,181,114,0.6)" }} />
-          <span style={{ fontSize: "0.55rem", color: "#6b7280" }}>Lab of Future · EdTech</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-          <span style={{ fontSize: "1rem", fontWeight: 700, color: "#d5b572", fontFamily: "var(--font)" }}>{count}+</span>
-          <span style={{ fontSize: "0.5rem", color: "#4b5563" }}>students</span>
-        </div>
-      </div>
+    <div
+      ref={containerRef}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        background: "transparent",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+          objectFit: "contain",
+        }}
+      />
     </div>
   );
 }
