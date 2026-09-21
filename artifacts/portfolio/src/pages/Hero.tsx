@@ -575,7 +575,8 @@ export default function Hero() {
                   key={c.name}
                   className="hero-exp-item clickable"
                   onClick={() => {
-                    if (c.name.includes("Baraka")) go("exp-baraka");
+                    if (c.name.includes("Publicis")) go("exp-publicis");
+                    else if (c.name.includes("Baraka")) go("exp-baraka");
                     else if (c.name.includes("IndiGo")) go("exp-indigo");
                     else if (c.name.includes("Lab")) go("exp-lab");
                     else go("experience");

@@ -101,7 +101,7 @@ function PublicisPinnedJobCard({
   };
 
   return (
-    <div ref={containerRef} className={`publicis-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
+    <div ref={containerRef} id="exp-publicis" className={`publicis-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
       <div ref={stickyRef} className="publicis-sticky-stage fade-up">
         {/* Background 3D Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
         <div className="publicis-bg-plate" aria-hidden="true">

@@ -14,19 +14,27 @@ const ScrollAnimationContext = createContext<ScrollAnimationCtx>({
 
 export function ScrollAnimationProvider({ children }: { children: ReactNode }) {
   const [scrollAnimationsEnabled, setScrollAnimationsEnabledState] = useState<boolean>(() => {
-    const saved = localStorage.getItem("sm-scroll-animations");
-    return saved !== null ? saved === "true" : true;
+    try {
+      const saved = localStorage.getItem("sm-scroll-animations");
+      return saved !== null ? saved === "true" : true;
+    } catch {
+      return true;
+    }
   });
 
   const setScrollAnimationsEnabled = (val: boolean) => {
     setScrollAnimationsEnabledState(val);
-    localStorage.setItem("sm-scroll-animations", String(val));
+    try {
+      localStorage.setItem("sm-scroll-animations", String(val));
+    } catch {}
   };
 
   const toggleScrollAnimations = () => {
     setScrollAnimationsEnabledState((prev) => {
       const next = !prev;
-      localStorage.setItem("sm-scroll-animations", String(next));
+      try {
+        localStorage.setItem("sm-scroll-animations", String(next));
+      } catch {}
       return next;
     });
   };

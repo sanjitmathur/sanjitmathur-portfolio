@@ -47,6 +47,7 @@ export default function BarakaWidget({ progress = 0 }: BarakaWidgetProps) {
     imgLast.onload = () => {
       if (!isMounted) return;
       imagesRef.current[TOTAL_FRAMES - 1] = imgLast;
+      lastDrawnFrameRef.current = -1;
     };
 
     // Preload remaining frames
@@ -57,6 +58,9 @@ export default function BarakaWidget({ progress = 0 }: BarakaWidgetProps) {
       img.onload = () => {
         if (!isMounted) return;
         imagesRef.current[i] = img;
+        if (lastDrawnFrameRef.current === i) {
+          lastDrawnFrameRef.current = -1;
+        }
       };
     }
 
