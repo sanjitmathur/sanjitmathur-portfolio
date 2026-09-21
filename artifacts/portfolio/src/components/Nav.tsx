@@ -1,9 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "./ThemeContext";
 import { useLang } from "./LanguageContext";
+import { useScrollAnimation } from "./ScrollAnimationContext";
 import { LANG_META, type Lang } from "../i18n";
 
 const sections = ["about", "experience", "projects", "skills", "contact"];
+
+function ScrollIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="7" />
+      <line x1="12" y1="6" x2="12" y2="10" />
+    </svg>
+  );
+}
 
 function SunIcon() {
   return (
@@ -48,6 +58,7 @@ export default function Nav() {
   const [langOpen, setLangOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
+  const { scrollAnimationsEnabled, toggleScrollAnimations } = useScrollAnimation();
   const langRef = useRef<HTMLDivElement>(null);
 
   const labels: Record<string, string> = {
@@ -199,6 +210,36 @@ export default function Nav() {
 
         {/* Right controls */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          {/* Scroll animation toggle */}
+          <button
+            onClick={toggleScrollAnimations}
+            className="clickable"
+            title={scrollAnimationsEnabled ? "Click to disable scroll animations (locks experience cards to final frame & reveals all text)" : "Click to enable scroll animations"}
+            aria-label="Toggle scroll animations"
+            style={{
+              display: "flex", alignItems: "center", gap: "0.38rem",
+              background: "var(--surface-2)",
+              border: scrollAnimationsEnabled ? "1px solid var(--border)" : "1px solid rgba(225, 29, 72, 0.45)",
+              borderRadius: "100px", padding: "0.32rem 0.65rem",
+              color: scrollAnimationsEnabled ? "var(--text-secondary)" : "var(--text)",
+              fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.02em",
+              transition: "all 0.25s ease",
+              cursor: "pointer",
+            }}>
+            <ScrollIcon />
+            <span style={{
+              display: "inline-block",
+              width: "6px", height: "6px",
+              borderRadius: "50%",
+              background: scrollAnimationsEnabled ? "#22c55e" : "#e11d48",
+              boxShadow: scrollAnimationsEnabled ? "0 0 6px rgba(34,197,94,0.6)" : "0 0 6px rgba(225,29,72,0.6)",
+              transition: "background 0.25s, box-shadow 0.25s",
+            }} />
+            <span className="nav-scroll-text" style={{ whiteSpace: "nowrap" }}>
+              {scrollAnimationsEnabled ? "Scroll FX: On" : "Scroll FX: Off"}
+            </span>
+          </button>
+
           {/* Language selector */}
           <div ref={langRef} style={{ position: "relative" }}>
             <button
@@ -355,6 +396,28 @@ export default function Nav() {
               </button>
             ))}
           </div>
+
+          {/* Scroll animation toggle in mobile menu */}
+          <button
+            onClick={() => { toggleScrollAnimations(); }}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.45rem",
+              padding: "0.4rem 0.85rem", borderRadius: "100px",
+              background: "var(--surface-2)",
+              color: "var(--text)",
+              border: scrollAnimationsEnabled ? "1px solid var(--border)" : "1px solid rgba(225,29,72,0.45)",
+              fontSize: "0.72rem", fontWeight: 500, cursor: "pointer",
+              transition: "all 0.2s",
+            }}>
+            <ScrollIcon />
+            <span style={{
+              display: "inline-block",
+              width: "6px", height: "6px", borderRadius: "50%",
+              background: scrollAnimationsEnabled ? "#22c55e" : "#e11d48",
+              boxShadow: scrollAnimationsEnabled ? "0 0 6px rgba(34,197,94,0.6)" : "none",
+            }} />
+            <span>{scrollAnimationsEnabled ? "Scroll FX: On" : "Scroll FX: Off (Static)"}</span>
+          </button>
 
           <a
             href={resumeUrl}

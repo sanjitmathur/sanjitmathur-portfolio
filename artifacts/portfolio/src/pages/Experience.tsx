@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRevealChildren } from "../components/useReveal";
 import { useLang } from "../components/LanguageContext";
+import { useScrollAnimation } from "../components/ScrollAnimationContext";
 import PublicisSapientWidget from "../components/widgets/PublicisSapientWidget";
 import BarakaWidget from "../components/widgets/BarakaWidget";
 import IndiGoWidget from "../components/widgets/IndiGoWidget";
@@ -44,6 +45,8 @@ function PublicisPinnedJobCard({
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const { scrollAnimationsEnabled } = useScrollAnimation();
+  const effectiveProgress = scrollAnimationsEnabled ? progress : 1.0;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -98,12 +101,12 @@ function PublicisPinnedJobCard({
   };
 
   return (
-    <div ref={containerRef} className="publicis-pinned-container">
+    <div ref={containerRef} className={`publicis-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
       <div ref={stickyRef} className="publicis-sticky-stage fade-up">
         {/* Background 3D Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
         <div className="publicis-bg-plate" aria-hidden="true">
           <div className="publicis-bg-widget">
-            <PublicisSapientWidget progress={progress} />
+            <PublicisSapientWidget progress={effectiveProgress} />
           </div>
         </div>
 
@@ -212,7 +215,7 @@ function PublicisPinnedJobCard({
             }}>
               <div style={{
                 height: "100%",
-                width: `${Math.round(progress * 100)}%`,
+                width: scrollAnimationsEnabled ? `${Math.round(progress * 100)}%` : "100%",
                 background: "linear-gradient(90deg, #6366f1, #a855f7)",
                 boxShadow: "0 0 10px rgba(99, 102, 241, 0.8)",
                 transition: "width 0.06s linear",
@@ -238,24 +241,25 @@ function PublicisPinnedJobCard({
                 const isPast = activeIdx > i;
                 const sliceStart = i / 3;
                 const sliceProgress = Math.max(0, Math.min(1, (progress - sliceStart) / (1 / 3)));
+                const isHighlighted = !scrollAnimationsEnabled || isActive;
 
                 return (
                   <div
                     key={i}
-                    onClick={() => scrollToBullet(i)}
+                    onClick={() => scrollAnimationsEnabled && scrollToBullet(i)}
                     style={{
                       display: "flex",
                       gap: "0.85rem",
                       alignItems: "flex-start",
                       padding: "0.5rem 0.75rem",
                       borderRadius: "8px",
-                      background: isActive
+                      background: isHighlighted
                         ? "rgba(255, 255, 255, 0.04)"
                         : "transparent",
-                      border: isActive
+                      border: isHighlighted
                         ? "1px solid rgba(255, 255, 255, 0.08)"
                         : "1px solid transparent",
-                      cursor: "pointer",
+                      cursor: scrollAnimationsEnabled ? "pointer" : "default",
                       transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                       position: "relative",
                     }}
@@ -265,12 +269,12 @@ function PublicisPinnedJobCard({
                       width: 7,
                       height: 7,
                       borderRadius: "50%",
-                      background: isActive
+                      background: isHighlighted
                         ? job.accent
                         : isPast
                         ? `${job.accent}a6`
                         : "rgba(255, 255, 255, 0.22)",
-                      boxShadow: isActive ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
+                      boxShadow: isHighlighted ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
                       marginTop: "0.4rem",
                       flexShrink: 0,
                       transition: "all 0.25s ease",
@@ -282,15 +286,15 @@ function PublicisPinnedJobCard({
                         margin: 0,
                         fontSize: "clamp(0.85rem, 1.0vw, 0.94rem)",
                         lineHeight: 1.55,
-                        color: isActive ? "#ffffff" : "#9e9e9e",
-                        fontWeight: isActive ? 500 : 400,
+                        color: isHighlighted ? "#ffffff" : "#9e9e9e",
+                        fontWeight: isHighlighted ? 500 : 400,
                         transition: "color 0.2s ease",
                       }}>
                         {b}
                       </p>
 
                       {/* Active slice progress underline bar */}
-                      {isActive && (
+                      {scrollAnimationsEnabled && isActive && (
                         <div style={{
                           marginTop: 6,
                           width: "100%",
@@ -349,6 +353,8 @@ function BarakaPinnedJobCard({
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const { scrollAnimationsEnabled } = useScrollAnimation();
+  const effectiveProgress = scrollAnimationsEnabled ? progress : 1.0;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -403,12 +409,12 @@ function BarakaPinnedJobCard({
   };
 
   return (
-    <div ref={containerRef} id="exp-baraka" className="baraka-pinned-container">
+    <div ref={containerRef} id="exp-baraka" className={`baraka-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
       <div ref={stickyRef} className="baraka-sticky-stage fade-up">
         {/* Background 3D Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
         <div className="baraka-bg-plate" aria-hidden="true">
           <div className="baraka-bg-widget">
-            <BarakaWidget progress={progress} />
+            <BarakaWidget progress={effectiveProgress} />
           </div>
         </div>
 
@@ -517,7 +523,7 @@ function BarakaPinnedJobCard({
             }}>
               <div style={{
                 height: "100%",
-                width: `${Math.round(progress * 100)}%`,
+                width: scrollAnimationsEnabled ? `${Math.round(progress * 100)}%` : "100%",
                 background: `linear-gradient(90deg, ${job.accent}, #eab308)`,
                 boxShadow: `0 0 10px ${job.accent}`,
                 transition: "width 0.06s linear",
@@ -543,24 +549,25 @@ function BarakaPinnedJobCard({
                 const isPast = activeIdx > i;
                 const sliceStart = i / 3;
                 const sliceProgress = Math.max(0, Math.min(1, (progress - sliceStart) / (1 / 3)));
+                const isHighlighted = !scrollAnimationsEnabled || isActive;
 
                 return (
                   <div
                     key={i}
-                    onClick={() => scrollToBullet(i)}
+                    onClick={() => scrollAnimationsEnabled && scrollToBullet(i)}
                     style={{
                       display: "flex",
                       gap: "0.85rem",
                       alignItems: "flex-start",
                       padding: "0.5rem 0.75rem",
                       borderRadius: "8px",
-                      background: isActive
+                      background: isHighlighted
                         ? "rgba(255, 255, 255, 0.04)"
                         : "transparent",
-                      border: isActive
+                      border: isHighlighted
                         ? "1px solid rgba(255, 255, 255, 0.08)"
                         : "1px solid transparent",
-                      cursor: "pointer",
+                      cursor: scrollAnimationsEnabled ? "pointer" : "default",
                       transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                       position: "relative",
                     }}
@@ -570,12 +577,12 @@ function BarakaPinnedJobCard({
                       width: 7,
                       height: 7,
                       borderRadius: "50%",
-                      background: isActive
+                      background: isHighlighted
                         ? job.accent
                         : isPast
                         ? `${job.accent}a6`
                         : "rgba(255, 255, 255, 0.22)",
-                      boxShadow: isActive ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
+                      boxShadow: isHighlighted ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
                       marginTop: "0.4rem",
                       flexShrink: 0,
                       transition: "all 0.25s ease",
@@ -587,15 +594,15 @@ function BarakaPinnedJobCard({
                         margin: 0,
                         fontSize: "clamp(0.85rem, 1.0vw, 0.94rem)",
                         lineHeight: 1.55,
-                        color: isActive ? "#ffffff" : "#9e9e9e",
-                        fontWeight: isActive ? 500 : 400,
+                        color: isHighlighted ? "#ffffff" : "#9e9e9e",
+                        fontWeight: isHighlighted ? 500 : 400,
                         transition: "color 0.2s ease",
                       }}>
                         {b}
                       </p>
 
                       {/* Active slice progress underline bar */}
-                      {isActive && (
+                      {scrollAnimationsEnabled && isActive && (
                         <div style={{
                           marginTop: 6,
                           width: "100%",
@@ -654,6 +661,8 @@ function IndiGoPinnedJobCard({
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const { scrollAnimationsEnabled } = useScrollAnimation();
+  const effectiveProgress = scrollAnimationsEnabled ? progress : 1.0;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -709,12 +718,12 @@ function IndiGoPinnedJobCard({
   };
 
   return (
-    <div ref={containerRef} id="exp-indigo" className="indigo-pinned-container">
+    <div ref={containerRef} id="exp-indigo" className={`indigo-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
       <div ref={stickyRef} className="indigo-sticky-stage fade-up">
         {/* Background 3D Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
         <div className="indigo-bg-plate" aria-hidden="true">
           <div className="indigo-bg-widget">
-            <IndiGoWidget progress={progress} />
+            <IndiGoWidget progress={effectiveProgress} />
           </div>
         </div>
 
@@ -822,7 +831,7 @@ function IndiGoPinnedJobCard({
             }}>
               <div style={{
                 height: "100%",
-                width: `${Math.round(progress * 100)}%`,
+                width: scrollAnimationsEnabled ? `${Math.round(progress * 100)}%` : "100%",
                 background: `linear-gradient(90deg, ${job.accent}, #eab308)`,
                 boxShadow: `0 0 10px ${job.accent}`,
                 transition: "width 0.06s linear",
@@ -846,24 +855,25 @@ function IndiGoPinnedJobCard({
               {bullets.map((b, i) => {
                 const isActive = i === activeIdx;
                 const isPast = i < activeIdx;
+                const isHighlighted = !scrollAnimationsEnabled || isActive;
 
                 return (
                   <div
                     key={i}
-                    onClick={() => scrollToBullet(i)}
+                    onClick={() => scrollAnimationsEnabled && scrollToBullet(i)}
                     style={{
                       display: "flex",
                       gap: "0.85rem",
                       alignItems: "flex-start",
                       padding: "0.5rem 0.75rem",
                       borderRadius: "8px",
-                      background: isActive
+                      background: isHighlighted
                         ? "rgba(255, 255, 255, 0.04)"
                         : "transparent",
-                      border: isActive
+                      border: isHighlighted
                         ? "1px solid rgba(255, 255, 255, 0.08)"
                         : "1px solid transparent",
-                      cursor: "pointer",
+                      cursor: scrollAnimationsEnabled ? "pointer" : "default",
                       transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                       position: "relative",
                     }}
@@ -873,12 +883,12 @@ function IndiGoPinnedJobCard({
                       width: 7,
                       height: 7,
                       borderRadius: "50%",
-                      background: isActive
+                      background: isHighlighted
                         ? job.accent
                         : isPast
                         ? `${job.accent}a6`
                         : "rgba(255, 255, 255, 0.22)",
-                      boxShadow: isActive ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
+                      boxShadow: isHighlighted ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
                       marginTop: "0.4rem",
                       flexShrink: 0,
                       transition: "all 0.25s ease",
@@ -890,15 +900,15 @@ function IndiGoPinnedJobCard({
                         margin: 0,
                         fontSize: "clamp(0.85rem, 1.0vw, 0.94rem)",
                         lineHeight: 1.55,
-                        color: isActive ? "#ffffff" : "#9e9e9e",
-                        fontWeight: isActive ? 500 : 400,
+                        color: isHighlighted ? "#ffffff" : "#9e9e9e",
+                        fontWeight: isHighlighted ? 500 : 400,
                         transition: "color 0.2s ease",
                       }}>
                         {b}
                       </p>
 
                       {/* Active slice progress underline bar */}
-                      {isActive && (
+                      {scrollAnimationsEnabled && isActive && (
                         <div style={{
                           marginTop: 6,
                           width: "100%",
@@ -957,6 +967,8 @@ function LabPinnedJobCard({
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const { scrollAnimationsEnabled } = useScrollAnimation();
+  const effectiveProgress = scrollAnimationsEnabled ? progress : 1.0;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -1012,12 +1024,12 @@ function LabPinnedJobCard({
   };
 
   return (
-    <div ref={containerRef} id="exp-lab" className="lab-pinned-container">
+    <div ref={containerRef} id="exp-lab" className={`lab-pinned-container ${!scrollAnimationsEnabled ? "scroll-disabled" : ""}`}>
       <div ref={stickyRef} className="lab-sticky-stage fade-up">
         {/* Background 3D/Video Plate Layer — Expansive, fades seamlessly into #050505 on right border */}
         <div className="lab-bg-plate" aria-hidden="true">
           <div className="lab-bg-widget">
-            <LabWidget progress={progress} />
+            <LabWidget progress={effectiveProgress} />
           </div>
         </div>
 
@@ -1125,7 +1137,7 @@ function LabPinnedJobCard({
             }}>
               <div style={{
                 height: "100%",
-                width: `${Math.round(progress * 100)}%`,
+                width: scrollAnimationsEnabled ? `${Math.round(progress * 100)}%` : "100%",
                 background: `linear-gradient(90deg, ${job.accent}, #eab308)`,
                 boxShadow: `0 0 10px ${job.accent}`,
                 transition: "width 0.06s linear",
@@ -1149,24 +1161,25 @@ function LabPinnedJobCard({
               {bullets.map((b, i) => {
                 const isActive = activeIdx === i;
                 const isPast = activeIdx > i;
+                const isHighlighted = !scrollAnimationsEnabled || isActive;
 
                 return (
                   <div
                     key={i}
-                    onClick={() => scrollToBullet(i)}
+                    onClick={() => scrollAnimationsEnabled && scrollToBullet(i)}
                     style={{
                       display: "flex",
                       gap: "0.85rem",
                       alignItems: "flex-start",
                       padding: "0.5rem 0.75rem",
                       borderRadius: "8px",
-                      background: isActive
+                      background: isHighlighted
                         ? "rgba(255, 255, 255, 0.04)"
                         : "transparent",
-                      border: isActive
+                      border: isHighlighted
                         ? "1px solid rgba(255, 255, 255, 0.08)"
                         : "1px solid transparent",
-                      cursor: "pointer",
+                      cursor: scrollAnimationsEnabled ? "pointer" : "default",
                       transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                       position: "relative",
                     }}
@@ -1176,12 +1189,12 @@ function LabPinnedJobCard({
                       width: 7,
                       height: 7,
                       borderRadius: "50%",
-                      background: isActive
+                      background: isHighlighted
                         ? job.accent
                         : isPast
                         ? `${job.accent}a6`
                         : "rgba(255, 255, 255, 0.22)",
-                      boxShadow: isActive ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
+                      boxShadow: isHighlighted ? `0 0 10px ${job.accent}, 0 0 18px ${job.accent}8c` : "none",
                       marginTop: "0.4rem",
                       flexShrink: 0,
                       transition: "all 0.25s ease",
@@ -1193,15 +1206,15 @@ function LabPinnedJobCard({
                         margin: 0,
                         fontSize: "clamp(0.85rem, 1.0vw, 0.94rem)",
                         lineHeight: 1.55,
-                        color: isActive ? "#ffffff" : "#9e9e9e",
-                        fontWeight: isActive ? 500 : 400,
+                        color: isHighlighted ? "#ffffff" : "#9e9e9e",
+                        fontWeight: isHighlighted ? 500 : 400,
                         transition: "color 0.2s ease",
                       }}>
                         {b}
                       </p>
 
                       {/* Active slice progress underline bar */}
-                      {isActive && (
+                      {scrollAnimationsEnabled && isActive && (
                         <div style={{
                           marginTop: 6,
                           width: "100%",

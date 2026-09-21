@@ -40,8 +40,17 @@ export default function PublicisSapientWidget({ progress = 0 }: PublicisSapientW
       console.warn("Could not load Publicis initial frame:", img0.src);
     };
 
+    // Load last frame immediately for static view when animations are disabled
+    const imgLast = new Image();
+    const lastPadded = (TOTAL_FRAMES - 1).toString().padStart(3, "0");
+    imgLast.src = `${FRAME_PATH}${lastPadded}.webp?v=tech-icons-v1`;
+    imgLast.onload = () => {
+      if (!isMounted) return;
+      imagesRef.current[TOTAL_FRAMES - 1] = imgLast;
+    };
+
     // Preload remaining frames
-    for (let i = 1; i < TOTAL_FRAMES; i++) {
+    for (let i = 1; i < TOTAL_FRAMES - 1; i++) {
       const img = new Image();
       const padded = i.toString().padStart(3, "0");
       img.src = `${FRAME_PATH}${padded}.webp?v=tech-icons-v1`;

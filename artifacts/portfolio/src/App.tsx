@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "./components/ThemeContext";
 import { LanguageProvider } from "./components/LanguageContext";
+import { ScrollAnimationProvider } from "./components/ScrollAnimationContext";
 import Loader from "./components/Loader";
 import Grain from "./components/Grain";
 import Nav from "./components/Nav";
@@ -56,7 +57,9 @@ export default function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <AppInner />
+        <ScrollAnimationProvider>
+          <AppInner />
+        </ScrollAnimationProvider>
       </LanguageProvider>
     </ThemeProvider>
   );
